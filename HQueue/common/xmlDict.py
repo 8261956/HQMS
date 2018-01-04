@@ -48,7 +48,6 @@ def build_dict(elem):
         dict_ = {}
 
         for subelem in elem:
-            print subelem.tag
             if subelem.tag in dict_:
                 if not isinstance(dict_[subelem.tag], list):
                     dict_[subelem.tag] = [dict_[subelem.tag]]
