@@ -166,6 +166,8 @@ class SyncSource():
             time.sleep(12)
             #更新本地资源表
             vManager.getInnerSourceDict()
+            #test end
+            return
 
 def visitorSync(ksdm,sync_time):
     """
