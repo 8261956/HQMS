@@ -84,7 +84,7 @@ def InqOnDuty(time,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 =
         data = duty["dataset"]
         return data["row"]
     else:
-        print "FAILED" + duty["RspMsg"]
+        print "FAILED" + duty["RspMsg"]["_text"]
         return  None
 
 
@@ -146,7 +146,7 @@ def InqQueueList(ksdm,ghrq,time_flag,ysdm = "",inPara1 = "",inPara2 = "",inPara3
         data = ret["dataset"]
         return data["row"]
     else:
-        print "FAILED" + ret["RspMsg"]
+        print "FAILED" + ret["RspMsg"]["_text"]
         return  None
 
 vManager = VisitorManager()
