@@ -1,0 +1,35 @@
+# 微信查询医院接口
+
+## 获取医院列表
+
+接口地址: http://192.168.17.187/hqueue\_wx/manager/hospital
+
+方法: POST
+
+参数:
+
+```json
+{
+    "action": "getHospitalList"
+}
+```
+
+返回内容：
+
+```json
+{
+    "errInfo": "none ",
+    "rescode": "200",
+    "detail": {
+        "num": 1,
+        "list": [
+            {
+                "hospitalName": "义乌中医医院",
+                "id": 4,
+                "descText": null
+            }
+        ]
+    }
+}
+```
+ 
