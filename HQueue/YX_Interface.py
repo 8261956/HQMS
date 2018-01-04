@@ -230,7 +230,7 @@ def getWeatherTest():
 
 
 print "-----InqOnDuty : ------"
-InqOnDuty("2017.10.19","2017.10.26")
+InqOnDuty("2017.06.01","2017.06.19")
 
 #print "-----InqDoctorList : ------"
 #InqDoctorList("01")
