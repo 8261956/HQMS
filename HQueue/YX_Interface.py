@@ -75,15 +75,15 @@ def InqOnDuty(time,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 =
     print "start dict"
     _xml = ET.fromstring(ret.encode('utf-8'))
     duty = XML.build_dict(_xml)
-    print "dyty Dict:"
+    print "duty Dict:"
     print (duty)
-    data = duty["dataset"]
     RspCode = duty["RspCode"]["_text"]
     if RspCode == 1:
         return "NO DATA"
     elif RspCode < 0:
         return  "FAILED" + duty["RspMsg"]
     print "DUTY DATA INQUIRE OK"
+    data = duty["dataset"]
     return data["row"]
 
 def InqDoctorList(type,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
