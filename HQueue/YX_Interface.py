@@ -176,7 +176,7 @@ def visitorSync(ksdm,sync_time):
     :param sync_time:       查询时刻之后的新增患者
     :return:
     """
-    currentDate = time.strftime("%Y-%m-%d", time.localtime())
+    currentDate = time.strftime("%Y.%m.%d", time.localtime())
     vList = InqQueueList(ksdm=ksdm,ghrq = currentDate,time_flag=sync_time)
     DBTIME = sync_time
     for item in vList:
@@ -234,6 +234,9 @@ InqOnDuty("2017.10.19","2017.10.26")
 
 #print "-----InqDoctorList : ------"
 #InqDoctorList("01")
+
+print "------queueList : test------"
+InqQueueList(ksdm="",ghrq = "2017.10.19",time_flag="2017/10/19 02:00:00")
 
 print "------SyncSource : run() ------"
 SyncSource().run()
