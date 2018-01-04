@@ -46,6 +46,7 @@ def MainMethod(SourceName , OpNum , OpControl ,OpData , Picture = None):
     d["OpControl"] = OpControl
     d["OpData"] = OpData
     c = getClient()
+    print "OpData:  " + OpData
     # 调用方法访问数据
     res = c.service.MainMethod(d)
     print "MainMethod res:"
@@ -148,7 +149,7 @@ vManager = VisitorManager()
 
 class SyncSource():
     def __init__(self):
-        sync_time = time.strftime("%Y/%m/%d", time.localtime()) + " 00:00:01"
+        self.sync_time = time.strftime("%Y/%m/%d", time.localtime()) + " 00:00:01"
 
     def run(self):
         while(1):
