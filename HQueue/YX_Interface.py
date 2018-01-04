@@ -224,6 +224,9 @@ def getWeatherTest():
 print "-----InqOnDuty : ------"
 InqOnDuty("2017.12.28")
 
+print "-----InqDoctorList : ------"
+InqDoctorList("01")
+
 print "------SyncSource : run() ------"
 SyncSource().run()
 
