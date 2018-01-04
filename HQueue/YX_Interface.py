@@ -80,8 +80,10 @@ def InqOnDuty(time,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 =
     RspCode = duty["RspCode"]["_text"]
     RspCode = int(RspCode)
     if RspCode == 1:
+        print "NO DATA"
         return "NO DATA"
     elif RspCode < 0:
+        print "FAILED" + duty["RspMsg"]
         return  "FAILED" + duty["RspMsg"]
     print "DUTY DATA INQUIRE OK"
     data = duty["dataset"]
@@ -218,10 +220,9 @@ def getWeatherTest():
 
 
 
-print "InqOnDuty : "
+print "-----InqOnDuty : ------"
 InqOnDuty("2017.12.28")
-print "InqQueueList : "
-InqQueueList(ksdm = "enk1")
-print "SyncSource : run() "
+
+print "------SyncSource : run() ------"
 SyncSource().run()
 
