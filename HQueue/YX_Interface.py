@@ -53,7 +53,7 @@ def MainMethod(SourceName , OpNum , OpControl ,OpData , Picture = None):
     print res
     return res
 
-def InqOnDuty(time,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
+def InqOnDuty(starttime,endtime,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
     """
     获得排班接口
     :param time: time格式 2017.08.01
@@ -61,7 +61,8 @@ def InqOnDuty(time,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 =
     :return: 排班数据字典
     """
     d = OrderedDict()
-    d["time"] = str(time)
+    d["starttime"] = str(starttime)
+    d["endtime"] = str(endtime)
     d["inPara1"] = str(inPara1)
     d["inPara2"] = str(inPara2)
     d["inPara3"] = str(inPara3)
@@ -227,7 +228,7 @@ def getWeatherTest():
 
 
 print "-----InqOnDuty : ------"
-InqOnDuty("2017.12.28")
+InqOnDuty("2017.10.19","2017.10.26")
 
 #print "-----InqDoctorList : ------"
 #InqDoctorList("01")
