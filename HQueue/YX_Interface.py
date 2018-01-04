@@ -78,6 +78,7 @@ def InqOnDuty(time,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 =
     print "duty Dict:"
     print (duty)
     RspCode = duty["RspCode"]["_text"]
+    RspCode = int(RspCode)
     if RspCode == 1:
         return "NO DATA"
     elif RspCode < 0:
