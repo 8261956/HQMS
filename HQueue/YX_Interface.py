@@ -85,7 +85,7 @@ def InqOnDuty(time,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 =
         return data["row"]
     else:
         print "FAILED" + duty["RspMsg"]["_text"]
-        return  None
+        return  {}
 
 
 def InqDoctorList(type,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
@@ -147,7 +147,7 @@ def InqQueueList(ksdm,ghrq,time_flag,ysdm = "",inPara1 = "",inPara2 = "",inPara3
         return data["row"]
     else:
         print "FAILED" + ret["RspMsg"]["_text"]
-        return  None
+        return  {}
 
 vManager = VisitorManager()
 
