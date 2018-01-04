@@ -46,7 +46,7 @@ def MainMethod(SourceName , OpNum , OpControl ,OpData , Picture = None):
     d["OpControl"] = OpControl
     d["OpData"] = OpData
     c = getClient()
-    print "OpData:  " + OpData
+    print "OpControl :  " + OpControl
     # 调用方法访问数据
     res = c.service.MainMethod(d)
     print "MainMethod res:"
