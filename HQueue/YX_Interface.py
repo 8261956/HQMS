@@ -79,16 +79,14 @@ def InqOnDuty(time,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 =
     print "duty Dict:"
     print (duty)
     RspCode = duty["RspCode"]["_text"]
-    RspCode = int(RspCode)
-    if RspCode == 1:
-        print "NO DATA"
-        return "NO DATA"
-    elif RspCode < 0:
+    if RspCode == "0":
+        print "DUTY DATA INQUIRE OK"
+        data = duty["dataset"]
+        return data["row"]
+    else:
         print "FAILED" + duty["RspMsg"]
-        return  "FAILED" + duty["RspMsg"]
-    print "DUTY DATA INQUIRE OK"
-    data = duty["dataset"]
-    return data["row"]
+        return  None
+
 
 def InqDoctorList(type,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
     """
@@ -141,9 +139,15 @@ def InqQueueList(ksdm,ghrq,time_flag,ysdm = "",inPara1 = "",inPara2 = "",inPara3
     print "start dict"
     _xml = ET.fromstring(ret.encode('utf-8'))
     ret = XML.build_dict(_xml)
-    print "vList Dict:"
-    print (ret)
-    return ret["dataset"]["row"]
+
+    RspCode = ret["RspCode"]["_text"]
+    if RspCode == "0":
+        print "DATA INQUIRE OK"
+        data = ret["dataset"]
+        return data["row"]
+    else:
+        print "FAILED" + ret["RspMsg"]
+        return  None
 
 vManager = VisitorManager()
 
