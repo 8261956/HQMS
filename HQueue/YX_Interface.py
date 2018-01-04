@@ -160,6 +160,7 @@ class SyncSource():
             dbTimeStr = visitorSync("",self.sync_time)
             dbTime = datetime.datetime.strptime(dbTimeStr, '%Y/%m/%d %H:%M:%S')
             sync_time = dbTime - datetime.timedelta(seconds=3)
+            print "Sync Time : " + sync_time
             sync_time = sync_time.strftime('%Y/%m/%d %H:%M:%S')
             time.sleep(12)
             #更新本地资源表
@@ -174,7 +175,7 @@ def visitorSync(ksdm,sync_time):
     """
     currentDate = time.strftime("%Y-%m-%d", time.localtime())
     vList = InqQueueList(ksdm=ksdm,ghrq = currentDate,time_flag=sync_time)
-    DBTIME = ""
+    DBTIME = sync_time
     for item in vList:
         registTime = item["REGISTTIME"]["_text"]
 
