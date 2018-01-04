@@ -217,19 +217,10 @@ def getWeatherTest():
 
 
 
-s = OrderedDict()
-s["name"] = "GOOG"
-s["shares"] = 100
-s["price"]  =  490.1
-c = {"001":"wang"}
-s["child"] = c
-e = XML.dict2xml("stock",s)
-print e
-print ET.tostring(e)
-
-InqOnDuty("2017.11.03")
-#InqDoctorList(type = "01")
+print "InqOnDuty : "
+InqOnDuty("2017.12.28")
+print "InqQueueList : "
 InqQueueList(ksdm = "enk1")
-
+print "SyncSource : run() "
 SyncSource().run()
 
