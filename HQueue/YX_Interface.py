@@ -145,7 +145,7 @@ def InqQueueList(ksdm,ghrq,time_flag,ysdm = "",inPara1 = "",inPara2 = "",inPara3
     if RspCode == "0":
         print "DATA INQUIRE OK"
         data = ret["dataset"]
-        return data["row"]
+        return list(data["row"])
     else:
         print "FAILED" + ret["RspMsg"]["_text"]
         return  {}
@@ -192,7 +192,7 @@ def visitorSync(ksdm,sync_time):
             "snumber" : item["SNUMBER"]["_text"],
             "orderType" : item["ORDERTYPE"]["_text"],
             "workerID" : item["DOCTORID"]["_text"],
-            "workerName" : item["WORKERNAME"]["_text"],
+            "workerName" : item["DOCTORNAME"]["_text"],
             "department" : item["DEPARTMENT"]["_text"],
             "cardID" : item["CARDID"]["_text"],
             "personID": item["PERSONID"]["_text"],
@@ -229,8 +229,8 @@ def getWeatherTest():
 
 
 
-print "-----InqOnDuty : ------"
-InqOnDuty("2017.06.01","2017.06.19")
+#print "-----InqOnDuty : ------"
+#InqOnDuty("2017.06.01","2017.06.19")
 
 #print "-----InqDoctorList : ------"
 #InqDoctorList("01")
