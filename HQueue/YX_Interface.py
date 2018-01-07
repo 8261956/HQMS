@@ -182,7 +182,7 @@ def visitorSync(ksdm,sync_time):
     ret = InqQueueList(ksdm=ksdm,ghrq = currentDate,time_flag=sync_time)
     if isinstance(ret, dict):
         vList.append(ret)
-    else isinstance(ret, list):
+    elif isinstance(ret, list):
         vList = ret
     DBTIME = sync_time
     for item in vList:
