@@ -158,14 +158,16 @@ class SyncSource():
 
     def run(self):
         while(1):
+            #更新本地资源表
+            vManager.getInnerSourceDict()
+            #同步外部源
             print "Sync Time : " + self.sync_time
             dbTimeStr = visitorSync("",self.sync_time)
             dbTime = datetime.datetime.strptime(dbTimeStr, '%Y/%m/%d %H:%M:%S')
             sync_time = dbTime - datetime.timedelta(seconds=3)
             self.sync_time = sync_time.strftime('%Y/%m/%d %H:%M:%S')
             time.sleep(12)
-            #更新本地资源表
-            vManager.getInnerSourceDict()
+            #同步本地源
             vManager.syncLocal()
             #test end
             #return
