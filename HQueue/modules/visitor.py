@@ -152,7 +152,7 @@ class VisitorManager:
         for k,v in v_import.iteritems():
             if k == 'registTime' or k == 'registDate':
                 continue
-            if k == 'orderDate' or k == 'orderTime':
+            if k == 'orderDate' or k == 'orderTime' or k == 'age':
                 continue
             if str(v_source[k]) != str(v):
                 print "unmatch import "+ str(v)+ " source " + str(v_source[k])
