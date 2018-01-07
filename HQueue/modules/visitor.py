@@ -26,6 +26,7 @@ class VisitorManager:
         self.queueInfo = queueInfo.QueueInfoInterface()
         self.visitorList = []
         self.innerSourceDict = {}
+        self.importSourceDict = []
         pass
 
     def getInnerSourceDict(self):
