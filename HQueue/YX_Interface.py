@@ -145,7 +145,7 @@ def InqQueueList(ksdm,ghrq,time_flag,ysdm = "",inPara1 = "",inPara2 = "",inPara3
     if RspCode == "0":
         print "DATA INQUIRE OK"
         data = ret["dataset"]
-        return list(data["row"])
+        return data["row"]
     else:
         print "FAILED" + ret["RspMsg"]["_text"]
         return  {}
@@ -177,7 +177,12 @@ def visitorSync(ksdm,sync_time):
     :return:
     """
     currentDate = time.strftime("%Y.%m.%d", time.localtime())
-    vList = InqQueueList(ksdm=ksdm,ghrq = currentDate,time_flag=sync_time)
+    vList = []
+    ret = InqQueueList(ksdm=ksdm,ghrq = currentDate,time_flag=sync_time)
+    if isinstance(ret, dict):
+        vList.append(ret)
+    else isinstance(ret, list):
+        vList = ret
     DBTIME = sync_time
     for item in vList:
         registTime = item["REGISTTIME"]["_text"]
