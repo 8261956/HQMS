@@ -66,7 +66,7 @@ def list2Str(list):
     return strOut
 
 def str2List(str):
-    if str == "":
+    if str == "" or str is None:
         return []
     else:
         return str.split(',')
