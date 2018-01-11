@@ -40,14 +40,15 @@ def sourceSync(threadName, delay, station):
         # try:
         # 同步每个分诊台数据
 
-        try:
+        #try:
+        if 1:
             if integrateType == "VIEW":
                 VisitorManager().syncSource()
                 VisitorManager().syncLocal()
             elif integrateType == "WEBSERVICE":
                 SyncSource().run()
-        except Exception as e:
-            print "Exception:" + str(e)
+        #except Exception as e:
+        #    print "Exception:" + str(e)
         # 计数
         print "%s: %s" % (threadName, time.ctime(time.time()))
         counter += 1
