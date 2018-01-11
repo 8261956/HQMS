@@ -222,6 +222,17 @@ def visitor_append(THF,visitor):
     else:
         pass  # 处理退号
 
+def ExternSourceQueueList():
+    doctorList = InqDoctorList("01")
+    qList = []
+    for d in doctorList:
+        qName = d["DEPARTMENT"].get("_text","") 
+        dName = d["NAME"].get("_text","") 
+        qList.append(qName+dName)
+        print qName+dName
+    return qList
+
+
 def getWeatherTest():
     # WebService的地址
     url = 'http://ws.webxml.com.cn/WebServices/WeatherWS.asmx?wsdl'
@@ -241,7 +252,8 @@ def getWeatherTest():
 #InqOnDuty("2017.06.01","2017.06.19")
 
 print "-----InqDoctorList : ------"
-InqDoctorList("01")
+#InqDoctorList("01")
+ExternSourceQueueList()
 
 #print "------queueList : test------"
 #InqQueueList(ksdm="",ghrq = "2017.10.19",time_flag="2017/10/19 02:00:00")

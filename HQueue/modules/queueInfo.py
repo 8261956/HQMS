@@ -159,8 +159,8 @@ class QueueInfoInterface:
             print choseQueueList
             queueList = list(set(sourceQueueList) - set(choseQueueList))
             return queueList
-        else if integrateType == "WEBVIEW":
-            
+        elif integrateType == "WEBVIEW":
+            pass
 
     def getChoseQueueList(self, stationID):
         queueList = self.getList({"stationID": stationID})
