@@ -7,7 +7,8 @@ import xml.etree.ElementTree as ET
 from collections import OrderedDict
 import common.xmlDict as XML
 from DBIO.DBBase import DBLocal
-from modules.visitor import VisitorManager
+#from modules.visitor import VisitorManager
+import modules.visitor 
 
 YX_url = "http://192.168.11.77:8082/HISWebService.asmx?WSDL"
 
@@ -143,7 +144,7 @@ def InqQueueList(ksdm,ghrq,time_flag,ysdm = "",inPara1 = "",inPara2 = "",inPara3
         print "FAILED" + ret["RspMsg"]["_text"]
         return  {}
 
-vManager = VisitorManager()
+vManager = modules.visitor.VisitorManager()
 
 class SyncSource():
     def __init__(self):
