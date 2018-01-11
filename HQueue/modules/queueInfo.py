@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import sys
-sys.path.append("..")
-
 
 import os, datetime, time, math, web, json, copy, re
 os.environ['NLS_LANG'] = 'SIMPLIFIED CHINESE_CHINA.UTF8'
@@ -10,6 +8,8 @@ from common.func import packOutput, str2List, list2Str, checkSession, \
 from common.config import integrateType
 import HQueue.DBIO.DBBase as DB
 from scene import SceneInterface
+
+sys.path.append("../..")
 import YX_Interface
 
 class QueueInfoInterface:
