@@ -7,6 +7,7 @@ from common.func import packOutput, str2List, list2Str, checkSession, \
 from common.config import integrateType
 import HQueue.DBIO.DBBase as DB
 from scene import SceneInterface
+from YX_Interface import ExternSourceQueueList
 
 class QueueInfoInterface:
     def POST(self,name):
@@ -160,7 +161,10 @@ class QueueInfoInterface:
             queueList = list(set(sourceQueueList) - set(choseQueueList))
             return queueList
         elif integrateType == "WEBVIEW":
-            pass
+            sourceQueueList = ExternSourceQueueList()
+            choseQueueList = self.getChoseQueueList(stationID)
+            queueList = list(set(sourceQueueList) - set(choseQueueList))
+            return queueList
 
     def getChoseQueueList(self, stationID):
         queueList = self.getList({"stationID": stationID})
