@@ -4,6 +4,7 @@ import web, json,copy
 from common.func import packOutput, checkSession,getNecessaryPara
 import HQueue.DBIO.DBBase as DB
 from HQueue.DBIO.DBBase import ImportTableFromView
+from common.config import integrateType
 
 visitor_para_name =  ("id","name","age","queue", "snumber" ,"orderDate","orderTime" ,"registDate", "registTime" , "VIP" ,
                       "orderType","workerID","workerName","descText","status","department","cardID","personID",
@@ -127,8 +128,11 @@ class StationInterface:
         elif action == "sourceTest":
             print(" Controller  source Test  ")
             data = json.loads(web.data())
-            importFunc = ImportTableFromView(self, "test_visitor_Config", visitor_para_name)
-            ret = importFunc.testImportSource(data)
+            if integrateType == "VIEW":
+                importFunc = ImportTableFromView(self, "test_visitor_Config", visitor_para_name)
+                ret = importFunc.testImportSource(data)
+            else:
+                ret = "success"
             if ret == "success":
                 resultJson = {"testResult": "success"}
             else:
@@ -138,7 +142,11 @@ class StationInterface:
         elif action == "sourceConfigTest":
             print(" Controller  source config test ")
             data = json.loads(web.data())
-            ret = importConfigInterface().sourceTest("test_visitor_Config",data)
+            if integrateType == "VIEW":
+                ret = importConfigInterface().sourceTest("test_visitor_Config",data)
+            else:
+                ret = {"result" : "success" , "sql" : ""}
+
             if ret["result"] == "success":
                 resultJson = {"testResult": "success", "testSql": ret["sql"]}
             else:

@@ -240,12 +240,12 @@ def getWeatherTest():
 #print "-----InqOnDuty : ------"
 #InqOnDuty("2017.06.01","2017.06.19")
 
-#print "-----InqDoctorList : ------"
-#InqDoctorList("01")
+print "-----InqDoctorList : ------"
+InqDoctorList("01")
 
 #print "------queueList : test------"
 #InqQueueList(ksdm="",ghrq = "2017.10.19",time_flag="2017/10/19 02:00:00")
 
-print "------SyncSource : run() ------"
-SyncSource().run()
+#print "------SyncSource : run() ------"
+#SyncSource().run()
 

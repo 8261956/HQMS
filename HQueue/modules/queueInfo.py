@@ -4,6 +4,7 @@ import os, datetime, time, math, web, json, copy, re
 os.environ['NLS_LANG'] = 'SIMPLIFIED CHINESE_CHINA.UTF8'
 from common.func import packOutput, str2List, list2Str, checkSession, \
     CachedGetValue, CahedSetValue
+from common.config import integrateType
 import HQueue.DBIO.DBBase as DB
 from scene import SceneInterface
 
@@ -143,20 +144,23 @@ class QueueInfoInterface:
 
     def getSourceQueueList(self,inputData):
         stationID = inputData["stationID"]
-        visitorSource = DB.StationVisitor()
-        visitorSource.SourceLoad(stationID)
-        sql = "select DISTINCT(queue) from " + visitorSource.getView()
-        print sql
-        res = visitorSource.DBSource.select(visitorSource.getView(),what="DISTINCT(queue)")
-        colName = visitorSource.getColName("queue")
-        sourceQueueList = []
-        for item in res:
-            sourceQueueList.append(item[colName])
-        choseQueueList = self.getChoseQueueList(stationID)
-        print sourceQueueList
-        print choseQueueList
-        queueList = list(set(sourceQueueList) - set(choseQueueList))
-        return queueList
+        if integrateType == "VIEW":
+            visitorSource = DB.StationVisitor()
+            visitorSource.SourceLoad(stationID)
+            sql = "select DISTINCT(queue) from " + visitorSource.getView()
+            print sql
+            res = visitorSource.DBSource.select(visitorSource.getView(),what="DISTINCT(queue)")
+            colName = visitorSource.getColName("queue")
+            sourceQueueList = []
+            for item in res:
+                sourceQueueList.append(item[colName])
+            choseQueueList = self.getChoseQueueList(stationID)
+            print sourceQueueList
+            print choseQueueList
+            queueList = list(set(sourceQueueList) - set(choseQueueList))
+            return queueList
+        else if integrateType == "WEBVIEW":
+            
 
     def getChoseQueueList(self, stationID):
         queueList = self.getList({"stationID": stationID})

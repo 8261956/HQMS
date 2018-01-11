@@ -19,6 +19,7 @@ backupTime = _config.get("global","backupTime")
 deadTime = _config.get("global","deadTime")
 currentDayOnly = _config.get("global","currentDayOnly")
 AutoSyncFinish = _config.get("global","AutoSyncFinish")
+integrateType = _config.get("global","integrateType")
 
 memcached_host = _config.get('memcached', 'host')
 memcached_timeout = int(_config.get('memcached', 'timeout'))
