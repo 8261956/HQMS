@@ -33,6 +33,7 @@ class QueueInfoInterface:
             try:
                 queueInfo = self.getInfo(webData)
                 queueInfo["workerLimit"] = str2List(queueInfo["workerLimit"])
+                queueInfo["filter"] = "queue=\'%s\'" %queueInfo["filter"]
                 return packOutput(queueInfo)
             except Exception as e:
                 return packOutput({}, code="500", errorInfo=str(e))
