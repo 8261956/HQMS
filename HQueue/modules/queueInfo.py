@@ -9,7 +9,6 @@ from common.config import integrateType
 import HQueue.DBIO.DBBase as DB
 from scene import SceneInterface
 
-sys.path.append("../..")
 import YX_Interface
 
 class QueueInfoInterface:

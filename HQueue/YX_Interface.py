@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
-import sys
-sys.path.append("..")
+import sys,os
 
 import time,datetime
 from suds.client import Client
@@ -9,6 +8,9 @@ import xml.etree.ElementTree as ET
 from collections import OrderedDict
 import common.xmlDict as XML
 from DBIO.DBBase import DBLocal
+
+BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))　　#__file__获取执行文件相对路径，整行为取上一级的上一级目录
+sys.path.append(BASE_DIR)　　#添加路径
 from modules.visitor import VisitorManager
 #import modules.visitor 
 
