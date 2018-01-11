@@ -47,7 +47,7 @@ def sourceSync(threadName, delay, station):
             elif integrateType == "WEBSERVICE":
                 SyncSource().run()
         except Exception as e:
-            print str(e)
+            print "Exception:" + str(e)
         # 计数
         print "%s: %s" % (threadName, time.ctime(time.time()))
         counter += 1
