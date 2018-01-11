@@ -186,26 +186,26 @@ def visitorSync(ksdm,sync_time):
         vList = ret
     DBTIME = sync_time
     for item in vList:
-        registTime = item["REGISTTIME"]["_text"]
+        registTime = item["REGISTTIME"].get("_text","")
 
         visitor = {
             "id" : item["ID"]["_text"],
             "name": item["NAME"]["_text"],
-            "age" : item["BRITHDAY"]["_text"],
+            "age" : item["BRITHDAY"].get("_text",""),
             "queue" : item["DEPARTMENT"]["_text"] + item["DOCTORNAME"]["_text"],
             "registDate" : registTime,
             "registTime" : registTime,
-            "snumber" : item["SNUMBER"]["_text"],
-            "orderType" : item["ORDERTYPE"]["_text"],
-            "workerID" : item["DOCTORID"]["_text"],
-            "workerName" : item["DOCTORNAME"]["_text"],
-            "department" : item["DEPARTMENT"]["_text"],
-            "cardID" : item["CARDID"]["_text"],
-            "personID": item["PERSONID"]["_text"],
-            "phone" : item["PHONE"]["_text"],
+            "snumber" : item["SNUMBER"].get("_text",""),
+            "orderType" : item["ORDERTYPE"].get("_text",""),
+            "workerID" : item["DOCTORID"].get("_text",""),
+            "workerName" : item["DOCTORNAME"].get("_text",""),
+            "department" : item["DEPARTMENT"].get("_text",""),
+            "cardID" : item["CARDID"].get("_text",""),
+            "personID": item["PERSONID"].get("_text",""),
+            "phone" : item["PHONE"].get("_text",""),
             "VIP" : int(item["EMERGENCY"].get("_text","0"))
         }
-        THF = item["THF"]["_text"]
+        THF = item["THF"].get("_text","N")
         DBTIME = item["DBTIME"]["_text"]
         visitor_append(THF,visitor)
 
