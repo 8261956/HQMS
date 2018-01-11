@@ -220,6 +220,7 @@ def visitor_append(THF,visitor):
     else:
         # 处理退号
         vManager.sigVisitorFinished(visitor["name"],visitor["id"])
+        print "sigVisitorFinished ok :" + visitor["name"] + visitor["id"]
 
 def ExternSourceQueueList():
     doctorList = InqDoctorList("01")
