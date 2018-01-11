@@ -11,8 +11,8 @@ from DBIO.DBBase import DBLocal
 
 BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))　　#__file__获取执行文件相对路径，整行为取上一级的上一级目录
 sys.path.append(BASE_DIR)　　#添加路径
-from modules.visitor import VisitorManager
-#import modules.visitor 
+#from modules.visitor import VisitorManager
+import modules.visitor 
 
 YX_url = "http://192.168.11.77:8082/HISWebService.asmx?WSDL"
 
@@ -148,7 +148,7 @@ def InqQueueList(ksdm,ghrq,time_flag,ysdm = "",inPara1 = "",inPara2 = "",inPara3
         print "FAILED" + ret["RspMsg"]["_text"]
         return  {}
 
-vManager = VisitorManager()
+vManager = modules.visitor.VisitorManager()
 
 class SyncSource():
     def __init__(self):
