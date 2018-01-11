@@ -9,8 +9,6 @@ from common.config import integrateType
 import HQueue.DBIO.DBBase as DB
 from scene import SceneInterface
 
-import YX_Interface
-
 class QueueInfoInterface:
     def POST(self,name):
 
@@ -163,7 +161,8 @@ class QueueInfoInterface:
             queueList = list(set(sourceQueueList) - set(choseQueueList))
             return queueList
         elif integrateType == "WEBVIEW":
-            sourceQueueList = YX_Interface.ExternSourceQueueList()
+            from YX_Interface import ExternSourceQueueList
+            sourceQueueList = ExternSourceQueueList()
             choseQueueList = self.getChoseQueueList(stationID)
             queueList = list(set(sourceQueueList) - set(choseQueueList))
             return queueList
