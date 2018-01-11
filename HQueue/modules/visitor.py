@@ -91,6 +91,18 @@ class VisitorManager:
                 QueueDataController().updateVisitor(para)
             print "stationID %d  local sync ok" % stationID
 
+    def sigVisitorFinished(self,name,vID):
+        vList = self.db.where("visitor_local_data", name=name ,id = vID)
+        if vList is not None:
+            v = vList.first()
+            vUpdate = {
+                "id" : vID,
+                "stationID" : v["stationID"],
+                "status" : "finish"
+            } 
+            VisitorLocalInterface.edit(vUpdate)
+            #self.db.update("visitor_local_data", where={"id" : vID} ,**vUpdate)
+
     def getOldTime(self):
         now = int(time.time())
         buckupTime = now - int(cfg.backupTime)

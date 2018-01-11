@@ -4,6 +4,8 @@ import os, sys, time
 os.environ['NLS_LANG'] = 'SIMPLIFIED CHINESE_CHINA.UTF8'
 import DBIO.DBBase as DB
 from modules.visitor import VisitorManager
+from common.config import integrateType
+from YX_Interface import SyncSource
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -39,8 +41,11 @@ def sourceSync(threadName, delay, station):
         # 同步每个分诊台数据
 
         try:
-            VisitorManager().syncSource()
-            VisitorManager().syncLocal()
+            if integrateType == "VIEW":
+                VisitorManager().syncSource()
+                VisitorManager().syncLocal()
+            elif integrateType == "WEBSERVICE":
+                SyncSource().run()
         except Exception as e:
             print str(e)
         # 计数

@@ -11,17 +11,6 @@ from modules.visitor import VisitorManager
 
 YX_url = "http://192.168.11.77:8082/HISWebService.asmx?WSDL"
 
-class Input:
-    SourceName = ""
-    OpNum = ""
-    OpControl = ""
-    OpData = ""
-    def __init__(self,SourceName,OpNum,OpControl,OpData):
-        self.SourceName = SourceName
-        self.OpNum = OpNum
-        self.OpControl = OpControl
-        self.OpData = OpData
-
 
 def getClient():
     print "getWebService func In"
@@ -224,7 +213,8 @@ def visitor_append(THF,visitor):
     if THF == 'N':
         vManager.add(visitor)
     else:
-        pass  # 处理退号
+        # 处理退号
+        vManager.sigVisitorFinished(visitor["name"],visitor["id"])
 
 def ExternSourceQueueList():
     doctorList = InqDoctorList("01")
@@ -262,6 +252,6 @@ def getWeatherTest():
 #print "------queueList : test------"
 #InqQueueList(ksdm="",ghrq = "2017.10.19",time_flag="2017/10/19 02:00:00")
 
-print "------SyncSource : run() ------"
-SyncSource().run()
+#print "------SyncSource : run() ------"
+#SyncSource().run()
 
