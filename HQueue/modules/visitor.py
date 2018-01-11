@@ -93,7 +93,7 @@ class VisitorManager:
 
     def sigVisitorFinished(self,name,vID):
         vList = self.db.where("visitor_local_data", name=name ,id = vID)
-        if vList is not None:
+        if len(vList) != 0:
             v = vList.first()
             vUpdate = {
                 "id" : vID,
