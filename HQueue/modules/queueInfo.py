@@ -41,11 +41,15 @@ class QueueInfoInterface:
 
         elif action == "add":
             webData["workerLimit"] = list2Str( webData["workerLimit"])
+            qFilter = webData["filter"]
+            webData["filter"] = qFilter[7,-1]
             ret = self.add(webData)
             return packOutput({})
 
         elif action == "edit":
             webData["workerLimit"] = list2Str( webData["workerLimit"])
+            qFilter = webData["filter"]
+            webData["filter"] = qFilter[7,-1]
             id = self.edit(webData)
             return packOutput({})
 
@@ -148,12 +152,8 @@ class QueueInfoInterface:
     def getSourceQueueList(self,inputData):
         stationID = inputData["stationID"]
         if integrateType == "VIEW":
-            visitorSource = DB.StationVisitor()
-            visitorSource.SourceLoad(stationID)
-            sql = "select DISTINCT(queue) from " + visitorSource.getView()
-            print sql
-            res = visitorSource.DBSource.select(visitorSource.getView(),what="DISTINCT(queue)")
-            colName = visitorSource.getColName("queue")
+            from station import importConfigInterface
+            res = importConfigInterface().getSourceDistinct(stationID)
             sourceQueueList = []
             for item in res:
                 sourceQueueList.append(item[colName])

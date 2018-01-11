@@ -256,6 +256,20 @@ class ImportTableFromView:
         finally:
             return result
 
+    def getSource(self):
+        configList = DBLocal.select("import_config", where={"type": self.type})
+        if len(configList) == 0:
+            return None
+        else:
+            configInfo = dict(configList[0])
+            db_config = convertDBConfig(**configInfo)
+            if config["DBType"] == "mssql":
+                self.DBSource = MSSQLController(config).MSSQLDB
+            else:
+                self.DBSource = web.database(**db_config)
+            sql = configInfo["importSQL"]
+            return self.DBSource,sql
+
     def close(self):
         # close cursor
         self.DBSource._db_cursor().close()
