@@ -26,6 +26,7 @@ class QueueInfoInterface:
             for item in list:
                 queue = item.copy()
                 queue["workerLimit"] = str2List(queue["workerLimit"])
+                queue["filter"] = "queue=\'%s\'" %queue["filter"]
                 resultJson["list"].append(queue)
             return packOutput(resultJson)
 
