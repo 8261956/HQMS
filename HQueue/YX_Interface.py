@@ -108,11 +108,15 @@ def InqDoctorList(type,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPar
     ret = MainMethod("qh","002",ET.tostring(date),"")
     print "start dict"
     _xml = ET.fromstring(ret.encode('utf-8'))
-    dList = XML.build_dict(_xml)
-    print "dList Dict:"
-    print (dList)
-    return dList
-
+    retDict = XML.build_dict(_xml)
+    RspCode = retDict["RspCode"]["_text"]
+    if RspCode == "0":
+        print "DUTY DATA INQUIRE OK"
+        data = retDict["dataset"]
+        return data["row"]
+    else:
+        print "FAILED" + retDict["RspMsg"]["_text"]
+        return  {}
 
 def InqQueueList(ksdm,ghrq,time_flag,ysdm = "",inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
     """
