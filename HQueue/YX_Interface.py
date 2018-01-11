@@ -9,8 +9,8 @@ from collections import OrderedDict
 import common.xmlDict as XML
 from DBIO.DBBase import DBLocal
 
-BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))　　#__file__获取执行文件相对路径，整行为取上一级的上一级目录
-sys.path.append(BASE_DIR)　　#添加路径
+BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE_DIR)
 #from modules.visitor import VisitorManager
 import modules.visitor 
 
