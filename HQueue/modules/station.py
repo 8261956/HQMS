@@ -54,12 +54,11 @@ class importConfigInterface:
         res = importFunc.testImportSourceConfig(data)
         return res
 
-    def getSourceDistinct(self,stationID)
-        id = getNecessaryPara(data,"id")
-        s = self.db.select("stationSet",where = {"id":id}).first()
+    def getSourceDistinct(self,stationID):
+        s = self.db.select("stationSet",where = {"id":stationID}).first()
         type = s["importSource"]
         importFunc = ImportTableFromView(self, type, visitor_para_name)
-        dbSource , sqlView = importFunc.getSource();
+        dbSource,sqlView = importFunc.getSource()
         ret = dbSource.select(sqlView,what="DISTINCT(queue)")
         return ret
 

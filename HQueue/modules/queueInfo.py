@@ -156,14 +156,19 @@ class QueueInfoInterface:
             res = importConfigInterface().getSourceDistinct(stationID)
             sourceQueueList = []
             for item in res:
-                sourceQueueList.append(item[colName])
+                sourceQueueList.append(item["queue"])
             choseQueueList = self.getChoseQueueList(stationID)
             print sourceQueueList
             print choseQueueList
             queueList = list(set(sourceQueueList) - set(choseQueueList))
-            return queueList
-        elif integrateType == "WEBVIEW":
+            ret = []
+            for q in queueList:
+                ret.append("queue=\'%s\'"%q)
+            return ret
+        elif integrateType == "WEBSERVICE":
+            sys.path.append("../..")
             from YX_Interface import ExternSourceQueueList
+            print "import YX_Interface ok "
             sourceQueueList = ExternSourceQueueList()
             choseQueueList = self.getChoseQueueList(stationID)
             queueList = list(set(sourceQueueList) - set(choseQueueList))
@@ -174,9 +179,7 @@ class QueueInfoInterface:
         choseQueueList = []
         for item in queueList:
             filter = item["filter"]
-            filter = re.findall(r'queue=\'(.*)\'', filter)
-            queue = filter[0]
-            choseQueueList.append(queue)
+            choseQueueList.append(filter)
         return choseQueueList
 
     def getSceneSupportList(self,inputData):

@@ -263,8 +263,8 @@ class ImportTableFromView:
         else:
             configInfo = dict(configList[0])
             db_config = convertDBConfig(**configInfo)
-            if config["DBType"] == "mssql":
-                self.DBSource = MSSQLController(config).MSSQLDB
+            if configInfo["DBType"] == "mssql":
+                self.DBSource = MSSQLController(configInfo).MSSQLDB
             else:
                 self.DBSource = web.database(**db_config)
             sql = configInfo["importSQL"]
