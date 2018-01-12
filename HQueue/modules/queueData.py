@@ -106,11 +106,6 @@ class QueueDataController:
         queueID = inputData["queueID"]       #本队列ID
         stationID = inputData["stationID"]
         filter = "stationID = " + str(stationID) + " and queueID = " + str(queueID) + " and status = \'" + status + "\'"
-
-        workDays, date = QueueInfoInterface().getWorkDays(stationID, queueID)
-        if cfg.currentDayOnly == "1":
-            filter += " and registDate >= \'" + date + "\'"
-
         visitorRank = DB.DBLocal.select("visitor_local_data", where=filter, order="finalScore,originScore")  # 本队列所有访客
         return visitorRank
 
@@ -458,7 +453,7 @@ class VisitorLocalInterface:
         result = DB.DBLocal.update("visitor_local_data",
                                    where="id=$id and stationID=$stationID",
                                    vars={"id": id, "stationID": stationID}, **values)
-        source_update = {"queueID": values["queueID"]}
+        #source_update = {"queueID": values["queueID"]}
         # TODO: 重要！！ 核对此处注释问题，患者转移时会不会影响，视图应该使用右连接？
         """
         DB.DBLocal.update("visitor_source_data",

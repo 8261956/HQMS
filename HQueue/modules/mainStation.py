@@ -395,15 +395,7 @@ class StationMainController:
         for item in visitorList:
             item["waitingNum"] = QueueDataController().getWaitingNum({"stationID":stationID,"queueID":item["queueID"],"id":item["id"]})
             item["waitingTime"] = item["waitingNum"] * 15
-            if cfg.currentDayOnly == "1":
-                workDays, dateStr = QueueInfoInterface().getWorkDays(stationID, item["queueID"])
-                now = datetime.datetime.now()
-                delta = datetime.timedelta(days=(-workDays + 1))
-                n_days = now + delta
-                if item["registDate"] >= n_days.date():
-                    visitorDictList.append(item)
-            else:
-                visitorDictList.append(item)
+            visitorDictList.append(item)
         return visitorDictList
 
     def visitorActiveSet(self,inputData):

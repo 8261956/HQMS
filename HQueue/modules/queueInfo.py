@@ -42,14 +42,16 @@ class QueueInfoInterface:
         elif action == "add":
             webData["workerLimit"] = list2Str( webData["workerLimit"])
             qFilter = webData["filter"]
-            webData["filter"] = qFilter[7,-1]
+            if str(qFilter).startswith("queue="):
+                webData["filter"] = qFilter[7,-1]
             ret = self.add(webData)
             return packOutput({})
 
         elif action == "edit":
             webData["workerLimit"] = list2Str( webData["workerLimit"])
             qFilter = webData["filter"]
-            webData["filter"] = qFilter[7,-1]
+            if str(qFilter).startswith("queue="):
+                webData["filter"] = qFilter[7,-1]
             id = self.edit(webData)
             return packOutput({})
 
