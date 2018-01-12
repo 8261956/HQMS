@@ -161,10 +161,7 @@ class QueueInfoInterface:
             print sourceQueueList
             print choseQueueList
             queueList = list(set(sourceQueueList) - set(choseQueueList))
-            ret = []
-            for q in queueList:
-                ret.append("queue=\'%s\'"%q)
-            return ret
+            return queueList
         elif integrateType == "WEBSERVICE":
             sys.path.append("../..")
             from YX_Interface import ExternSourceQueueList
