@@ -214,8 +214,7 @@ class StationMainController:
         ret.update({"name": queue["name"], "workerOnline": queue["workerOnline"]})
 
         if queue["activeLocal"] == 1:
-            joinSql = self.sqlStatusView(stationID, queueID,"unactive")
-            unactiveList = DB.DBLocal.query(joinSql)  # 未激活的所有访客
+            unactiveList = DB.DBLocal.where("visitor_view_data",stationID = stationID,queueID = queueID ,localStatus = "unactive")  # 未激活的所有访客
             ret["unactiveList"] = []
             for item in unactiveList:
                 ret["unactiveList"].append(item)
