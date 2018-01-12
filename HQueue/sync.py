@@ -55,6 +55,7 @@ def sourceSync(threadName, delay, station):
 
         if (counter / num) >= 10:
             # counter = 0
+            VisitorManager().backupOld()
             print "auto exit to clean up."
             break
 
@@ -66,4 +67,4 @@ if __name__ == '__main__':
     station = map(int, args)
     print station
     print "Source Sync process"
-    sourceSync("Sync Process", 3, station=station)
+    sourceSync("Sync Process", 5, station=station)

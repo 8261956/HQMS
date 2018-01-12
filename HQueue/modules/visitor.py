@@ -103,62 +103,29 @@ class VisitorManager:
             VisitorLocalInterface.edit(vUpdate)
             #self.db.update("visitor_local_data", where={"id" : vID} ,**vUpdate)
 
-    def getOldTime(self):
-        now = int(time.time())
-        buckupTime = now - int(cfg.backupTime)
-        deadTime = now - int(cfg.deadTime)
-
-        self.currentDate = time.strftime("%Y-%m-%d", time.localtime(now))
-        self.oldData = time.strftime("%Y-%m-%d", time.localtime(buckupTime))
-        self.oldTime = time.strftime("%H:%M:%S", time.localtime(buckupTime))
-        self.oldDataTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(buckupTime))
-
-        self.invalidData = time.strftime("%Y-%m-%d", time.localtime(deadTime))
-        self.invalidTime = time.strftime("%H:%M:%S", time.localtime(deadTime))
-        print "get Old Date :" + self.oldData
-        print "get Old Time :" + self.oldTime
-        print "get Old DateTime :" + self.oldDataTime
-        print "get invalid Date :" + self.invalidData
-        print "get invalid Time :" + self.invalidTime
-
-    #已完成叫号过时间的视图
-    def backupView(self,stationID):
-        self.getOldTime()
-        joinView = "(select id,status as localStatus,workStartTime,workEndTime from visitor_local_data where stationID =" + str(stationID) +") as joinView"
-        joinSql = "select * from visitor_source_data  a inner join " + joinView + " on a.id=joinView.id and a.stationID=" + str(stationID) \
-                    + " where (localStatus = 'finish' or localStatus = 'pass') and (workEndTime < \'"+ self.oldDataTime + "\')"
-        print ("join sql: " + joinSql)
-        return joinSql
-
-    #未叫号的过时间的视图 失效时间判断
-    def uncallView(self,stationID):
-        self.getOldTime()
-        joinView = "(select id,status as localStatus,workStartTime,workEndTime from visitor_local_data where stationID =" + str(stationID) +") as joinView"
-        joinSql = "select * from visitor_source_data  a inner join "+ joinView + " on a.id=joinView.id and a.stationID = " +str(stationID) \
-                + " where registDate < \'" + self.invalidData + "\' or (registDate = \'" + self.invalidData + "\' and registTime < \'" + self.invalidTime + "\')"
-        print ("join sql: " + joinSql)
-        return joinSql
-
     def backupOld(self):
-        queueList = self.queueInfo.getList({"stationID": self.stationID})
-        LogOut.info("station %d backupOld" % self.stationID)
+        stationList = StationInterface().getList()
+        for station in stationList:
+            stationID = station["id"]
 
-        #遍历分诊台的队列
-        for queue in queueList:
-            #得到策略的工作时间
-            workDays, dateStr = QueueInfoInterface().getWorkDays(self.stationID, queue["id"])
-            joinView = "(select id, queueID, status as localStatus,workStartTime,workEndTime from visitor_local_data where stationID = %d and queueID = %d) as joinView" \
-                        %(self.stationID , queue["id"])
-            joinSql = "select * from visitor_source_data  a inner join %s on a.id=joinView.id where registDate < %s" % (joinView , dateStr)
-            print ("backupView sql: " + joinSql)
+            queueList = self.queueInfo.getList({"stationID": stationID})
+            LogOut.info("station %d backupOld" % stationID)
 
-            # find the visitors outof date
-            backupList = self.db.query(joinSql)
-            for item in backupList:
-                print "find backup item name: " + item["name"] + " registDate: " + str(item["registDate"]) + " workEndTime: " + str(item["workEndTime"])
-                BackupTableInterface(self.stationID).add(item)
-                VisitorSourceInterface(self.stationID).delete(item)
-                VisitorLocalInterface(self.stationID).delete(item)
+            #遍历分诊台的队列
+            for queue in queueList:
+                #得到策略的工作时间
+                workDays, dateStr = QueueInfoInterface().getWorkDays(stationID, queue["id"])
+                joinSql = "select * from visitor_view_data where queueID = %d and registDate < %s" % (queue["id"] , dateStr)
+                print ("backupView sql: " + joinSql)
+
+                # find the visitors outof date
+                backupList = self.db.query(joinSql)
+                for item in backupList:
+                    print "find backup item name: " + item["name"] + " registDate: " + str(item["registDate"]) + " workEndTime: " + str(item["workEndTime"])
+                    item.pop("lid")
+                    BackupTableInterface(stationID).add(item)
+                    VisitorSourceInterface().delete(item)
+                    VisitorLocalInterface(stationID).delete(item)
 
     def compSource(self,v_import,v_source):
         for k,v in v_import.iteritems():

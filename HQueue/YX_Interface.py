@@ -167,6 +167,7 @@ class SyncSource():
             time.sleep(12)
             #同步本地源
             vManager.syncLocal()
+            vManager.backupOld()
             #test end
             #return
 
