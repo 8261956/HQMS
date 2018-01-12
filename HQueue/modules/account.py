@@ -214,12 +214,12 @@ class StationAccountInterface:
             account["user"] = webData["user"]
             account["password"] = webData["password"]
             account["descText"] = webData["descText"]
-            stationAccount = DB.StationAccount()
+            stationAccount = StationAccount()
             stationAccount.edit(stationID,account)
             return packOutput({})
 
         elif action == "getList":
-            stationAccount = DB.StationAccount()
+            stationAccount = StationAccount()
             resultJson = {"accountList":[]}
             list = stationAccount.getList()
             for item in list:
@@ -228,6 +228,45 @@ class StationAccountInterface:
 
         elif action == "getInfo":
             stationID = webData["stationID"]
-            stationAccount = DB.StationAccount()
+            stationAccount = StationAccount()
             info = stationAccount.getInfo(stationID)
             return packOutput(info)
+
+class StationAccount:
+    def add(self,account):
+        DB.DBLocal.insert("account", stationID=account["stationID"],user=account["user"],password=account["password"], \
+                       type=account["type"],descText=account["descText"])
+        return 1
+
+    def getInfo(self,id):
+        try:
+            ret = DB.DBLocal.where("account", stationID=id)
+            return ret[0]
+        except Exception, e:
+            print Exception, ":", e
+            return -1
+
+    def getList(self):
+        try:
+            ret = DB.DBLocal.select("account")
+            return ret
+        except Exception, e:
+            print Exception, ":", e
+            return -1
+
+    def edit(self,stationID,account):
+        filter = "stationID = \'" + str(stationID) +"\'"
+        try:
+            DB.DBLocal.update("account",filter,user=account["user"],password=account["password"],descText=account["descText"])
+            return 1
+        except Exception, e:
+            print Exception, ":", e
+            return -1
+
+    def delete(self,stationID):
+        filter = "stationID = \'" + str(stationID) + "\'"
+        try:
+            DB.DBLocal.delete("account", filter)
+        except Exception, e:
+            print Exception, ":", e
+            return -1
