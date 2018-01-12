@@ -342,13 +342,10 @@ class StationMainController:
             # raise Exception("[ERR]: visitor status action not support.")
             waitNum = 0
         # 获取队列访客信息，如果等待队列中已经有过号或者复诊的访客，则调整缓冲人数
-        workDays, date = QueueInfoInterface().getWorkDays(stationID, queueID)
         fliter = "stationID=$stationID and queueID=$queueID and status=$status"
-        if cfg.currentDayOnly == "1":
-            fliter += " and registDate >=$date"
         visitorList = DB.DBLocal.select("visitor_local_data",
                                         where=fliter,
-                                        vars={"stationID": stationID, "queueID": queueID, "status": "waiting" ,"date" : date},
+                                        vars={"stationID": stationID, "queueID": queueID, "status": "waiting" },
                                         order="finalScore, originScore")
         visitorNum = len(visitorList)
 
@@ -484,13 +481,10 @@ class StationMainController:
                     name = visitor_bak_list[0]["name"]
 
         # 如果snumber不存在，则根据分诊台下的患者数自动生成一个序号
-        workDays, date = QueueInfoInterface().getWorkDays(stationID, queueID)
         if not snumber:
             where = "stationID=$stationID"
-            if cfg.currentDayOnly == "1":
-                where += " AND registDate>=$date"
             visitor_all = DB.DBLocal.select("visitor_source_data", where=where,
-                                            vars={"stationID": stationID, "date": date})
+                                            vars={"stationID": stationID})
             visitor_all_count = len(visitor_all)
             snumber =  visitor_all_count + 1
         # 如果name不存在，则根据snumber生成一个名字
@@ -499,10 +493,8 @@ class StationMainController:
 
         # 根据队列中的等待、未激活、等待激活的人数，确定总的等待人数
         where = "stationID=$stationID AND queueID=$queueID AND status IN $status"
-        if cfg.currentDayOnly == "1":
-            where += " AND registDate>=$date"
         visitor_wait = DB.DBLocal.select("visitor_local_data", where=where,
-                                         vars={"stationID": stationID, "queueID": queueID, "date": date,
+                                         vars={"stationID": stationID, "queueID": queueID,
                                                "status": ('waiting', 'unactive', 'unactivewaiting')})
         waitNum = len(visitor_wait)
 
