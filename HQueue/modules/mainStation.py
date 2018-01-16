@@ -172,15 +172,6 @@ class StationMainController:
         #select * from visitor_source_data s inner join  (select id,activeLocal,activeLocalTime, workerOnline, prior, locked,vip as localVip,status as localStatus, finalScore,originScore from visitor_local_data ) as l on s.id=l.id
         return
 
-    def sqlVisitorView(self,stationID,visitorID):
-        joinView = "(select id,activeLocal,activeLocalTime, workerOnline, prior, locked,queueID,vip as localVip,status as localStatus from visitor_local_data where stationID =" + str(stationID) + " and " \
-            + "id= \'"+ str(visitorID) + "\') as joinView"
-        LogOut.info("joinView " +joinView)
-        joinSql = "select * from visitor_source_data a inner join "+ joinView + " on a.id=joinView.id and a.stationID=" +str(stationID)
-
-        LogOut.info("join sql: " + joinSql)
-        return joinSql
-
     def getQueueList(self,inputData):
         stationID = inputData["stationID"]
         queueID = inputData["queueID"]
@@ -379,14 +370,13 @@ class StationMainController:
         if paraName not in searchAllow:
             raise Exception("[ERR]: paraName "+ paraName + " not allow.")
 
-        joinView = "(select id,activeLocal,activeLocalTime,locked,queueID,vip as localVip,status as localStatus from visitor_local_data where stationID =" + str(stationID) +\
-            " ) as joinView"
-        LogOut.info("joinView " +joinView)
+        filter = {
+            "stationID" : stationID,
+            str(paraName) : str(paraVal)
+        }
 
-        joinSql = "select * from visitor_source_data a inner join "+ joinView + " on a.id=joinView.id and a.stationID=" +str(stationID)
-        joinSql += " where " + str(paraName) + " = \'" + str(paraVal) +"\'"
+        visitorList = DB.DBLocal.select("visitor_view_data",where = filter,)
 
-        visitorList = DB.DBLocal.query(joinSql)
         visitorDictList = []
         for item in visitorList:
             item["waitingNum"] = QueueDataController().getWaitingNum({"stationID":stationID,"queueID":item["queueID"],"id":item["id"]})
