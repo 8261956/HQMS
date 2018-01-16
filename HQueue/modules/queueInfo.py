@@ -43,7 +43,7 @@ class QueueInfoInterface:
             webData["workerLimit"] = list2Str( webData["workerLimit"])
             qFilter = webData["filter"]
             if str(qFilter).startswith("queue="):
-                webData["filter"] = qFilter[7,-1]
+                webData["filter"] = qFilter[7:-1]
             ret = self.add(webData)
             return packOutput({})
 
@@ -51,7 +51,7 @@ class QueueInfoInterface:
             webData["workerLimit"] = list2Str( webData["workerLimit"])
             qFilter = webData["filter"]
             if str(qFilter).startswith("queue="):
-                webData["filter"] = qFilter[7,-1]
+                webData["filter"] = qFilter[7:-1]
             id = self.edit(webData)
             return packOutput({})
 
