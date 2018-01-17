@@ -201,7 +201,7 @@ def visitorSync(ksdm,sync_time):
             "queue" : item["DEPARTMENT"]["_text"] + item["DOCTORNAME"]["_text"],
             "registDate" : registTime,
             "registTime" : registTime,
-            "snumber" : item["SNUMBER"].get("_text",""),
+            "snumber" : item["SNUMBER"].get("_text","0"),
             "orderType" : item["ORDERTYPE"].get("_text",""),
             "workerID" : item["DOCTORID"].get("_text",""),
             "workerName" : item["DOCTORNAME"].get("_text",""),
