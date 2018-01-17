@@ -48,7 +48,7 @@ class VisitorManager:
             if self.compSource(data, v_source) != 0:
                 print "find visitor %s need update" % str(data["id"])
                 interface = VisitorSourceInterface()
-                interface.edit(v_source)
+                interface.edit(data)
         result = {"result": "success"}
         return result
 
