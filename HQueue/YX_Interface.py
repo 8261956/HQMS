@@ -195,7 +195,7 @@ def visitorSync(ksdm,sync_time):
         registTime = item["REGISTTIME"].get("_text","")
 
         visitor = {
-            "id" : item["ID"]["_text"],
+            "id" : item["ID"]["_text"] + ":" + registTime,
             "name": item["NAME"]["_text"],
             "age" : item["BRITHDAY"].get("_text",""),
             "queue" : item["DEPARTMENT"]["_text"] + item["DOCTORNAME"]["_text"],
