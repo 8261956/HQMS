@@ -246,9 +246,7 @@ class WorkerMainController:
         for item in matchQueue:
             info = {}
             # 判断队列、医生的排班情况
-            filter = item["filter"]
-            filter = re.findall(r'queue=\'(.*)\'', filter)
-            queue = filter[0]
+            queue = item["filter"]
             scheduleList = DB.DBLocal.select("schedule", where={"queue": queue, "workDate": current_date,
                                                                 "workTime": current_time})
             if len(scheduleList) == 0:
