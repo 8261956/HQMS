@@ -134,7 +134,7 @@ class VisitorManager:
             if k == 'orderDate' or k == 'orderTime' or k == 'age':
                 continue
             if str(v_source[k]) != str(v):
-                print "unmatch import "+ str(v)+ " source " + str(v_source[k])
+                print "unmatch ext: %s:%s in %s:%s" %(str(k),str(v),str(k),str(v_source[k]))
                 return -1
         return 0
 
