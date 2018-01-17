@@ -187,6 +187,8 @@ def visitorSync(ksdm,sync_time):
         vList = ret
     DBTIME = sync_time
     for item in vList:
+        if "REGISTTIME" not in item:
+            continue
         registTime = item["REGISTTIME"].get("_text","")
 
         visitor = {
