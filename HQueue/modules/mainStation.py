@@ -211,7 +211,7 @@ class StationMainController:
                 ret["unactiveList"].append(item)
 
         doingList = DB.DBLocal.where("visitor_view_data",stationID = stationID,queueID = queueID ,localStatus = "doing")  # 进行中的所有访客
-        ret["doingList"] = list(doingList)
+        ret["waitingList"] = list(doingList)
 
         waitList = DB.DBLocal.where("visitor_view_data",stationID = stationID,queueID = queueID ,localStatus = "waiting")  # 等待中的所有访客
         ret["waitingList"] = list(waitList)
