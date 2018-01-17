@@ -161,9 +161,10 @@ class SyncSource():
             #同步外部源
             print "Sync Time : " + self.sync_time
             dbTimeStr = visitorSync("",self.sync_time)
-            dbTime = datetime.datetime.strptime(dbTimeStr, '%Y/%m/%d %H:%M:%S')
-            sync_time = dbTime - datetime.timedelta(seconds=3)
-            self.sync_time = sync_time.strftime('%Y/%m/%d %H:%M:%S')
+            if dbTimeStr != -1:
+                dbTime = datetime.datetime.strptime(dbTimeStr, '%Y/%m/%d %H:%M:%S')
+                sync_time = dbTime - datetime.timedelta(seconds=3)
+                self.sync_time = sync_time.strftime('%Y/%m/%d %H:%M:%S')
             time.sleep(12)
             #同步本地源
             vManager.syncLocal()
@@ -181,6 +182,8 @@ def visitorSync(ksdm,sync_time):
     currentDate = time.strftime("%Y.%m.%d", time.localtime())
     vList = []
     ret = InqQueueList(ksdm=ksdm,ghrq = currentDate,time_flag=sync_time)
+    if ret == {}:
+        return -1
     if isinstance(ret, dict):
         vList.append(ret)
     elif isinstance(ret, list):
