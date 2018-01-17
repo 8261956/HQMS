@@ -31,8 +31,8 @@ class LocalVisitor:
         if rankWay == "snumber":
             num = sourceData["snumber"]
             # TODO: V1.21  Test. scene property add morningPrior
-            sceneProperty = str2List(scene.get("property", ""))
-            if "morningPrior" in sceneProperty:
+            sceneProperty = scene.get("property")
+            if sceneProperty["morningPrior"]:
                 if registDateTime.hours >= 12:
                     level = level + 1
             score = (level*levelMask) + (num) * 160
@@ -54,8 +54,8 @@ class LocalVisitor:
             level = 1
         elif (sourceData["orderType"] != 0) and (sourceData["orderType"] is not None):  #访客为预约访客
             # TODO: V1.21  scene property add orderNoPrior
-            sceneProperty = str2List(scene.get("property", ""))
-            if "orderNoPrior" in sceneProperty:
+            sceneProperty = scene.get("property")
+            if sceneProperty["orderNoPrior"]:
                 level = 7
             else:
                 level = 3
