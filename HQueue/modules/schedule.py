@@ -68,9 +68,7 @@ class ScheduleInterface(object):
             raise Exception("[ERR]: endTime should larger than startTime")
 
         queueInfo = QueueInfoInterface().getInfo({"stationID": stationID, "id": queueID})
-        filter = queueInfo["filter"]
-        filter = re.findall(r'queue=\'(.*)\'', filter)
-        queue = filter[0]
+        queue = queueInfo["filter"]
 
         try:
             self.autoGenSchedule(startTime, endTime)
@@ -220,9 +218,7 @@ class ScheduleInterface(object):
         isExpert = schedules.get("isExpert")
         schedule = schedules.get("schedule")
         queueInfo = QueueInfoInterface().getInfo({"stationID": stationID, "id": queueID})
-        filter = queueInfo["filter"]
-        filter = re.findall(r'queue=\'(.*)\'', filter)
-        queue = filter[0]
+        queue = queueInfo["filter"]
         max_date = DB.DBLocal.select("schedule", what="MAX(workDate) as max_date")[0]["max_date"]
         schedule_value = []
         schedule_temp_value = []
@@ -299,9 +295,7 @@ class ScheduleInterface(object):
         isTemporary = data.get("isTemporary", 0)
 
         queueInfo = QueueInfoInterface().getInfo({"stationID": stationID, "id": queueID})
-        filter = queueInfo["filter"]
-        filter = re.findall(r'queue=\'(.*)\'', filter)
-        queue = filter[0]
+        queue = queueInfo["filter"]
 
         if isTemporary == 0:
             DB.DBLocal.delete("schedule", where="queue=$queue AND weekday=$weekday AND workDate>=$workDate",
@@ -691,9 +685,7 @@ class ScheduleInterface(object):
     def _isExpertQueue(self, queueID):
         queueList = DB.DBLocal.select("queueInfo", where={"id": queueID})
         queueInfo = queueList[0]
-        filter = queueInfo["filter"]
-        filter = re.findall(r'queue=\'(.*)\'', filter)
-        queue = filter[0]
+        queue = queueInfo["filter"]
         sql = "SELECT * FROM (SELECT DISTINCT queue, isExpert FROM schedule) view WHERE view.queue='{0}'".format(queue)
         result = DB.DBLocal.query(sql)
         isExpert = result[0]["isExpert"]

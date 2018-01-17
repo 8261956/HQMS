@@ -489,9 +489,7 @@ class StationMainController:
 
         # 获取队列关键字
         queueInfo = QueueInfoInterface().getInfo({"stationID": stationID, "id": queueID})
-        filter = queueInfo["filter"]
-        filter = re.findall(r'queue=\'(.*)\'', filter)
-        queue = filter[0]
+        queue = queueInfo["filter"]
 
         workerID = queueInfo["workerOnline"]
         workerList = DB.DBLocal.select("workers", where="id=$id", vars={"id": workerID})
