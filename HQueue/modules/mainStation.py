@@ -214,7 +214,7 @@ class StationMainController:
         ret["waitingList"] = list(doingList)
 
         waitList = DB.DBLocal.where("visitor_view_data",stationID = stationID,queueID = queueID ,localStatus = "waiting")  # 等待中的所有访客
-        ret["waitingList"] = list(waitList)
+        ret["waitingList"] = ret["waitingList"] + list(waitList)
 
         finishList = DB.DBLocal.where("visitor_view_data",stationID = stationID,queueID = queueID ,localStatus = "pass") # 过号的所有访客
         for item in finishList:
