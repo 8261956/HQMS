@@ -2,6 +2,6 @@
 
 while :;
 do
-	python /home/clear/hqueue/backend/sync.py $*
+	python /home/clear/HQMS/HQueue/sync.py $*
 	sleep 5
 done
