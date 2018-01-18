@@ -213,6 +213,7 @@ class StationInterface:
         account ={
             "stationID" : id,
             "user" : "station" + str(id),
+            "password" : "123456",
             "type" : "station",
             "descText" : data["name"]
         }
