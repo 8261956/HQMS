@@ -5,6 +5,7 @@ from common.func import packOutput, checkSession,getNecessaryPara
 import HQueue.DBIO.DBBase as DB
 from HQueue.DBIO.DBBase import ImportTableFromView
 from common.config import integrateType
+from account import StationAccount
 
 visitor_para_name =  ("id","name","age","queue", "snumber" ,"orderDate","orderTime" ,"registDate", "registTime" , "VIP" ,
                       "orderType","workerID","workerName","descText","status","department","cardID","personID",
@@ -66,6 +67,7 @@ class importConfigInterface:
 class StationInterface:
     def __init__(self):
         self.db = DB.DBLocal
+        self.accout = StationAccount()
         pass
 
     def POST(self,name):
@@ -206,12 +208,22 @@ class StationInterface:
         }
         importConfigInterface().ifAdd(sourceType,data)
         id = self.db.insert("stationSet",**stationInfo)
+
+        # add Accont
+        account ={
+            "stationID" : id,
+            "user" : "station" + str(id),
+            "type" : "station",
+            "descText" : data["name"]
+        }
+        self.accout.add(account)
         return id
 
     def delete(self,data):
         id = getNecessaryPara(data,"id")
         try:
             result = self.db.delete("stationSet", where="id=$id", vars={"id": id})
+            self.accout.delete(id)
             return result
         except Exception, e:
             print Exception, ":", e
