@@ -451,7 +451,7 @@ class StationMainController:
         # 自动生成患者ID
         now = datetime.datetime.now()
         current_date = now.strftime("%Y-%m-%d")
-        current_time = now.strftime("%H:%M:%S")
+        current_time = now.strftime("%Y-%m-%d %H:%M:%S")
         timestamp = int(time.time() * 1000000)
         id = str(stationID) + str(queueID) + str(timestamp)
 
@@ -509,8 +509,6 @@ class StationMainController:
 
         visitor = {
             "id": id,
-            "stationID": stationID,
-            "queueID": queueID,
             "name": name,
             "age": age,
             "queue": queue,
@@ -539,8 +537,9 @@ class StationMainController:
                 visitor.update({key: ""})
         try:
             DB.DBLocal.insert("visitor_source_data", **values)
-        except:
-            raise Exception("[ERR]: insert into visitor_source_data failed.")
+        except Exception,e:
+            print "Exception : %s " %str(e)
+            raise Exception("[ERR]: insert into visitor_source_data failed. %s " %str(e))
 
         para = {"stationID": stationID, "queueID": queueID}
         QueueDataController().updateVisitor(para)
