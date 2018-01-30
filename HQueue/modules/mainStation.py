@@ -472,7 +472,7 @@ class StationMainController:
         # 如果snumber不存在，则根据分诊台下的患者数自动生成一个序号
         if not snumber:
             where = "stationID=$stationID"
-            visitor_all = DB.DBLocal.select("visitor_source_data", where=where,
+            visitor_all = DB.DBLocal.select("visitor_local_data", where=where,
                                             vars={"stationID": stationID})
             visitor_all_count = len(visitor_all)
             snumber =  visitor_all_count + 1
