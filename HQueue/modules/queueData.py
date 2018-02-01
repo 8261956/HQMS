@@ -33,8 +33,10 @@ class LocalVisitor:
             # TODO: V1.21  Test. scene property add morningPrior
             sceneProperty = scene.get("property")
             if sceneProperty["morningPrior"]:
-                if registDateTime.hours >= 12:
-                    level = level + 1
+                #Todo: 判断时间大于12点
+                #if registDateTime.hours >= 12:
+                #    level = level + 1
+                pass
             score = (level*levelMask) + (num) * 160
         elif rankWay == "registTime" or rankWay == "registTimeAndSmart":
             second = (registDateTime - date).total_seconds()
