@@ -29,7 +29,7 @@ class ExtManager(object):
                                   order=order).list()
 
         queue_id_list = []
-        counter = 1
+        counter = 0
         queue_counter = defaultdict(int)
 
         # 获得每个队列的排队人数
@@ -54,14 +54,15 @@ class ExtManager(object):
         for p in patients:
             queueID = p.pop("queueID")
             if queueID not in queue_id_list:
-                counter = 1
+                counter = 0
                 queue_id_list.append(queueID)
-            elif p.localStatus == 'pass':
+
+            localStatus = p.localStatus
+            if localStatus in ('finish', 'doing', 'pass'):
                 pass
             else:
                 counter += 1
 
-            localStatus = p.localStatus
             if localStatus in ('finish', 'doing'):
                 waitNum = 0
             elif localStatus == 'pass':

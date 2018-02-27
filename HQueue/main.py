@@ -34,7 +34,7 @@ urls = (
     '/(hqueue/manager/database)', "DBIO.DBBase.DBInterface",
     '/(hqueue/manager/weixin)', "modules.weixin.WXInterface",
 
-    '/hqueue/manager/ext', "project.ruici.extInterface.ExtInterface"
+    '/hqueue/main/extInterface', "project.ruici.extInterface.ExtInterface"
 )
 
 def OracleTest():
