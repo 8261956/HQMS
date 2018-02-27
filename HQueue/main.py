@@ -33,6 +33,8 @@ urls = (
     '/(hqueue/manager/queueMachine)', "modules.queueMachine.QueueMachineInterface",
     '/(hqueue/manager/database)', "DBIO.DBBase.DBInterface",
     '/(hqueue/manager/weixin)', "modules.weixin.WXInterface",
+
+    '/hqueue/manager/ext', "project.ruici.extInterface.ExtInterface"
 )
 
 def OracleTest():
