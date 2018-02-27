@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-import json, random,time
+import json, random,time, sys, traceback
 from datetime import datetime, date, timedelta
 from web import SQLQuery, SQLParam
 import common.config as cfg
@@ -224,3 +224,33 @@ def list2Dict(list):
     for item in list:
         d[str(item["id"])] = item
     return d
+
+
+def checkPostAction(object,data,suppostAction):
+    token = data.pop("token", None)
+    if token:
+        if not checkSession(token):
+            return packOutput({}, "401", "Token authority failed")
+    action = data.pop("action", None)
+    if action is None:
+        return packOutput({}, code="400", errorInfo='action required')
+    if action not in suppostAction:
+        return packOutput({}, code="400", errorInfo='unsupported action')
+
+    # result = getattr(object, suppostAction[action])(data)
+    # return packOutput(result)
+    try:
+        result = getattr(object, suppostAction[action])(data)
+        return packOutput(result)
+    except Exception as e:
+        exc_traceback = sys.exc_info()[2]
+        error_trace = traceback.format_exc(exc_traceback)
+        error_args = e.args
+        if len(error_args) == 2:
+            code = error_args[0]
+            error_info = str(error_args[1])
+        else:
+            code = "500"
+            error_info = str(e)
+        return packOutput({"errorInfo": str(error_info), "rescode": code},
+                          code=code, errorInfo=error_trace)
