@@ -6,7 +6,7 @@ import json
 import sys
 import traceback
 import web
-from common.func import packOutput, checkSession
+from common.func import packOutput, checkSession, CachedGetValue, CahedSetValue
 from DBIO import DBBase as DB
 from modules.publish import PublishTVInterface
 
@@ -22,6 +22,11 @@ class ExtManager(object):
         Returns: 所有队列所有患者的排队信息。
 
         """
+        key = "_getPatientsInfo_ext"
+        value = CachedGetValue(json.dumps(key))
+        if value != False:
+            return value
+
         if startDate and endDate:
             where = "registDate BETWEEN \'{0}\' AND \'{1}\'".format(
                 startDate, endDate)
@@ -31,7 +36,7 @@ class ExtManager(object):
                "queueID, department, localStatus, " \
                "prior, locked, localVip, VIP, orderType"
         order = "stationID, queueID, finalScore, originScore"
-        patients = self.db.select("visitor_view_data", what=what, where=where,
+        patients = self.db.select("visitor_view_data", what=what,
                                   order=order).list()
 
         queue_id_list = []
@@ -120,6 +125,8 @@ class ExtManager(object):
                 "localStatus": localStatus,
                 "status": status
             })
+
+        CahedSetValue(json.dumps(key), patients, 10)
 
         return patients
 
