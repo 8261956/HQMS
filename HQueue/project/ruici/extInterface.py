@@ -3,10 +3,12 @@
 import datetime
 from collections import defaultdict
 import json
+import sys
+import traceback
 import web
-from HQueue.common.func import checkPostAction
-from HQueue.DBIO import DBBase as DB
-from HQueue.modules.publish import PublishTVInterface
+from common.func import packOutput, checkSession
+from DBIO import DBBase as DB
+from modules.publish import PublishTVInterface
 
 
 class ExtManager(object):
@@ -14,13 +16,17 @@ class ExtManager(object):
     def __init__(self):
         self.db = DB.DBLocal
 
-    def getPatientsInfo(self):
+    def getPatientsInfo(self, startDate=None, endDate=None):
         """查询所有队列所有排队的患者信息。
 
         Returns: 所有队列所有患者的排队信息。
 
         """
-        where = "registDate = \'{0}\'".format(datetime.datetime.now().strftime("%Y-%m-%d"))
+        if startDate and endDate:
+            where = "registDate BETWEEN \'{0}\' AND \'{1}\'".format(
+                startDate, endDate)
+        else:
+            where = "registDate = \'{0}\'".format(datetime.datetime.now().strftime("%Y-%m-%d"))
         what = "id, name, age, snumber, cardID AS userPid, registDate, " \
                "queueID, department, localStatus, " \
                "prior, locked, localVip, VIP, orderType"
@@ -118,6 +124,36 @@ class ExtManager(object):
         return patients
 
 
+def checkPostAction(object,data,suppostAction):
+    token = data.pop("token", None)
+    if token:
+        if not checkSession(token):
+            return packOutput({}, "401", "Token authority failed")
+    action = data.pop("action", None)
+    if action is None:
+        return packOutput({}, code="400", errorInfo='action required')
+    if action not in suppostAction:
+        return packOutput({}, code="400", errorInfo='unsupported action')
+
+    # result = getattr(object, suppostAction[action])(data)
+    # return packOutput(result)
+    try:
+        result = getattr(object, suppostAction[action])(data)
+        return packOutput(result)
+    except Exception as e:
+        exc_traceback = sys.exc_info()[2]
+        error_trace = traceback.format_exc(exc_traceback)
+        error_args = e.args
+        if len(error_args) == 2:
+            code = error_args[0]
+            error_info = str(error_args[1])
+        else:
+            code = "500"
+            error_info = str(e)
+        return packOutput({"errorInfo": str(error_info), "rescode": code},
+                          code=code, errorInfo=error_trace)
+
+
 class ExtInterface(object):
 
     support_action = {
@@ -130,5 +166,7 @@ class ExtInterface(object):
         return result
 
     def allSearch(self, data):
-        result = ExtManager().getPatientsInfo()
+        startDate = data.get("startDate", None)
+        endDate = data.get("endDate", None)
+        result = ExtManager().getPatientsInfo(startDate, endDate)
         return result
