@@ -226,6 +226,7 @@ class SyncManager(object):
         update_visitor_id = [data.id for data in source_visitor]
         insert_visitor_id = list(set(visitor_id_list) ^ set(update_visitor_id))
 
+        values = []
         for data in sync_data:
             id = data.id
             queue_info = data.pop("queue_info", None)
@@ -236,13 +237,14 @@ class SyncManager(object):
                 "stationID": queue_info["stationID"],
                 "queueID": queue_info["id"]
             })
+            values.append(data)
             if id in insert_visitor_id:
                 cached_data = {
                     "id": data.id,
                     "name": data.name,
-                    "age": data.age,
+                    "age": data.get("age", None),
                     "snumber": data.snumber,
-                    "department": data.department,
+                    "department": data.get("department", None),
                     "stationID": queue_info["stationID"],
                     "queueID": queue_info["id"],
                     "stationName": queue_info["stationName"],
@@ -252,8 +254,10 @@ class SyncManager(object):
                 self.cache.setdefault(key, deque([])).append(cached_data)
             else:
                 pass
+
+        # values = sorted(values, key=lambda item: item.keys())
         insert_update_sql = multiple_insert_sql("visitor_source_data",
-                                                sync_data)
+                                                values)
         self.db.query(insert_update_sql)
 
     def _sync_local_data(self, stationID, queueID):
