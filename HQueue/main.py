@@ -35,7 +35,7 @@ urls = (
     '/(hqueue/manager/weixin)', "modules.weixin.WXInterface",
 
     '/hqueue/main/extInterface', "project.ruici.extInterface.ExtInterface",
-    '/hqueue/manager/stationPrinter', "project.ruici.printerInterface.PrinterInterface",
+    '/hqueue/main/stationPrinter', "project.ruici.printerInterface.PrinterInterface",
 )
 
 def OracleTest():

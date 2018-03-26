@@ -16,6 +16,7 @@ htmlPath = _config.get("station", "htmlPath")
 
 
 urlBase = "http://" + server + "/hqueue"
+server_url = _config.get("station", "server_url")
 
 headers = {
     'content-type': 'application/json',
@@ -125,6 +126,19 @@ class Printer():
         output = os.popen(cmd)
         print output
         return
+            # queue = CachedGetValue(json.dumps(key))
+            # while queue and len(queue):
+            #     result = queue.popleft()
+            #     CahedSetValue(json.dumps(key), queue, timeout=300)
+            #     current_time = datetime.datetime.now()
+            #     print "[{0}] new visitor: {1}".format(current_time, result)
+            # time.sleep(2)
+            import requests
+            data = {"action": "getNextVisitor", "stationID": self.stationID}
+            url = os.path.join(server_url, "hqueue/main/stationPrinter")
+            result = requests.post(url, json.dumps(data))
+            print result.json()
+            time.sleep(1)
 
 
 if __name__ == '__main__':
