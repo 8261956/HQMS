@@ -23,10 +23,11 @@ class PrinterManager(object):
         key = "print_stationID_{0}".format(stationID)
         queue = CachedGetValue(json.dumps(key))
         visitor_info = {}
-
+        if queue is False:
+            return {}
         if len(queue):
             visitor_info = queue.popleft()
-            CahedSetValue(json.dumps(key), queue, timeout=0)
+            CahedSetValue(json.dumps(key), queue, timeout=300)
 
             visitor_id = visitor_info["id"]
             where = {"stationID": stationID, "id": visitor_id}
