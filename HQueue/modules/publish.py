@@ -343,7 +343,7 @@ class PublishTVInterface:
 
             # 获取呼叫队列中当前排队的信息
             waitingList = queueList["waitingList"]
-            queueInfo.update({"listNum": len(waitingList)})
+            queueInfo.update({"listNum": len(waitingList), "queueName": queue["name"]})
             for item in waitingList:
                 if item["locked"]:
                     continue

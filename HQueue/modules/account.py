@@ -239,20 +239,26 @@ class StationAccount:
         return 1
 
     def getInfo(self,id):
-        try:
-            ret = DB.DBLocal.where("account", stationID=id)
-            return ret[0]
-        except Exception, e:
-            print Exception, ":", e
-            return -1
+        account = DB.DBLocal.select("account", where={"stationID": id}).first()
+        if not account:
+            raise Exception("account not exist")
+        station = DB.DBLocal.select("stationSet", where={"id": id}).first()
+        if station:
+            account.update({"name": station.name})
+            return account
 
     def getList(self):
-        try:
-            ret = DB.DBLocal.select("account")
-            return ret
-        except Exception, e:
-            print Exception, ":", e
-            return -1
+        accounts = DB.DBLocal.select("account").list()
+        stations = DB.DBLocal.select("stationSet").list()
+        for a in accounts:
+            stationID = a.stationID
+            for s in stations:
+                if s.id == stationID:
+                    a.update({"name": s.name})
+                    break
+
+        return accounts
+
 
     def edit(self,stationID,account):
         filter = "stationID = \'" + str(stationID) +"\'"
