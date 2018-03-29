@@ -4,7 +4,7 @@ import web, datetime, json, sys, traceback
 from common.func import packOutput, str2List, checkSession, list2Str
 from mainStation import StationMainController
 from queueInfo import QueueInfoInterface
-import HQueue.DBIO.DBBase as DB
+import common.DBIO.DBBase as DB
 
 
 class QueueMachineInterface(object):

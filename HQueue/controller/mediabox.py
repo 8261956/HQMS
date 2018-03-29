@@ -2,7 +2,7 @@
 
 import web, json, datetime, requests
 from common.func import packOutput, list2Str, str2List
-from HQueue.DBIO.DBBase import DBLocal as DB
+from common.DBBase import DBLocal as DB
 from common import config as cfg
 
 

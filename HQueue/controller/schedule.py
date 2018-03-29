@@ -4,7 +4,7 @@ import sys, json, re, copy, datetime, time, traceback
 import web
 from common.func import packOutput, str2List, list2Str, convertDBConfig, multiple_insert_sql
 from queueInfo import QueueInfoInterface
-from HQueue.DBIO import DBBase as DB
+from common import DBBase as DB
 
 
 class ScheduleInterface(object):

@@ -2,16 +2,18 @@
 
 import web, json, datetime, copy
 import common.config as cfg
-from common.func import packOutput, checkSession ,str2List,list2Dict
+from common.func import packOutput, checkSession ,str2List,list2Dict,str2Json,json2Str
 from queueInfo import QueueInfoInterface
 from scene import SceneInterface
-import HQueue.DBIO.DBBase as DB
+import common.DBBase as DB
 
 
 finalScoreMax = 999999999
 finalScoreMin = 0
 finalScoreDef = finalScoreMax
 levelMask = 100000000
+POS_STEP = 5
+NORMAL_LEVEL = 9
 
 class LocalVisitor:
     def __init__(self):
@@ -103,8 +105,6 @@ class QueueDataController:
             return packOutput({}, "500", "unsupport action")
 
     def getQueueVisitor(self,inputData,status = "waiting"):
-        # moved updateVisitor to sync process
-        #self.updateVisitor(inputData)
         queueID = inputData["queueID"]       #本队列ID
         stationID = inputData["stationID"]
         filter = "stationID = " + str(stationID) + " and queueID = " + str(queueID) + " and status = \'" + status + "\'"
@@ -197,7 +197,7 @@ class QueueDataController:
                 else:
                     #策略配置中不需要优先延后策略 或普通患者
                     if (priorWaitNum == 0 and InsertInterval == 0) or localItem["originLevel"] != 3:
-                        localItem["finalScore"] = localItem["originScore"] + pos * 5
+                        localItem["finalScore"] = localItem["originScore"] + pos * POS_STEP
                     # 策略配置中配置了优先延后策略 且预约患者
                     else:
                         localItem["prior"] = 4
@@ -310,6 +310,14 @@ class QueueDataController:
             scoreDest = (pre + next) / 2
         return posDest,scoreDest
 
+    def getQueueScoreMax(self,station,queueID):
+        item = DB.DBLocal.query("SELECT MAX(finalScore) FROM visitor_local_data where queueID = $queueID and \
+                status in (\"waiting\",\"doing\",\"finish\")",vars = {"queueID" : queueID}).first()
+        if item is not None:
+            return item["MAX(finalScore)"]
+        else:
+            return 0
+
     def getVisitorScore(self,stationID,queueID,visitorID):
         list = DB.DBLocal.where('visitor_local_data', id = visitorID)
         visitor = list[0]
@@ -338,59 +346,44 @@ class QueueDataController:
                 ret["finalScoreUp"] = item["finalScore"]
             return ret
 
-    def visitorMoveto(self,inputData):
-        stationID = inputData["stationID"]
-        queueID = inputData["queueID"]
-        id = inputData["id"]
-        dest = inputData["dest"]
-        visitor = {}
-        visitor["id"] = id
-        visitor["stationID"] = stationID
-        visitor["queueID"] = dest["queueID"]
-        visitor["status"] = dest["status"]
-        if dest["id"] == "":
-            if dest["queueID"] != queueID:
-                vInfo = DB.DBLocal.where('visitor_local_data', id=id).first()
-                visitor["finalScore"] = vInfo["originScore"]
-        else:
-            destScore = self.getVisitorScore(stationID,dest["queueID"],dest["id"])
-            visitor["finalScore"] = (destScore["finalScore"] + destScore["finalScoreUp"]) / 2
-        VisitorLocalInterface(stationID).edit(visitor)
+    def visitorMoveto(self, data):
+        stationID = data["stationID"]
+        queueID = data["queueID"]
+        vManager = VisitorLocalInterface(stationID)
+        vList = data["vid"]
+        dest = data["dest"]
+
+        for vid in vList:
+            vInfo = vManager.getInfo({"id": vid})
+            vInfo["queueID"] = dest["queueID"]
+            vInfo["status"] = dest["status"]
+            property_json  =  str2Json(vInfo["property"])
+            property_json.update({dest["property"] : dest["value"]})
+            vInfo["property"] = json2Str(property_json)
+            vInfo["tag"] = dest["tag"]
+            scoreMax = self.getQueueScoreMax(stationID,queueID)
+            if scoreMax == 0:
+                vInfo["finalScore"] = NORMAL_LEVEL * levelMask + POS_STEP
+            else:
+                vInfo["finalScore"] = scoreMax + POS_STEP
+            vManager.edit(vInfo)
         return
 
-    def visitorMoveby(self, inputData):
-        stationID = inputData["stationID"]
-        queueID = inputData["queueID"]
-        id = inputData["id"]
-        val = inputData["value"]
-        visitor = {}
-        visitor["id"] = id
-        visitor["stationID"] = stationID
-        ret = self.getQueueVisitor({"stationID":stationID,"queueID":queueID},"waiting")
-        list = []
-        pos = 0
-        destPos = 0
-        found = 0
-        for item in ret:
-            if item["id"] == id:
-                found = 1
-                destPos = pos
-            pos += 1
-            list.append(item)
-        if found == 0:
-            return 0
-        destPos =  destPos + val
-        if destPos >= len(ret):
-            destPos = len(ret) - 1
-        if destPos < 0:
-            destPos = 0
-        destVist = list[destPos]
-        destScore = self.getVisitorScore(stationID,queueID,destVist["id"])
-        if val >= 0:
-            visitor["finalScore"] = (destScore["finalScore"] + destScore["finalScoreDown"]) / 2
-        else:
-            visitor["finalScore"] = (destScore["finalScore"] + destScore["finalScoreUp"]) / 2
-        VisitorLocalInterface(stationID).edit(visitor)
+    def visitorMoveby(self, data):
+        stationID = data["stationID"]
+        queueID = data["queueID"]
+        vManager = VisitorLocalInterface(stationID)
+        vList = data["vid"]
+        value = data["value"]
+
+        for vid in vList:
+            vInfo = vManager.getInfo({"id": vid})
+            vList = DB.DBLocal.select("visitor_view_data",where = "queueID = $queueID and \
+            status in (\'waiting\',\'prepare\',\'doing\')",vars = {"queueID" : queueID})
+            vList = list(vList)
+            # TODO: 前后移动算法添加
+            vManager.edit(vInfo)
+
         return 1
 
     def getWaitingNum(self,inputData):

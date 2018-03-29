@@ -2,7 +2,7 @@
 
 import web, json, copy
 from common.func import packOutput, checkSession
-import HQueue.DBIO.DBBase as DB
+import common.DBBase as DB
 
 
 class CallerInterface:
@@ -72,33 +72,6 @@ class CallerInterface:
         return ret[0]
 
     def add(self,inputData):
-        # stationID = inputData["stationID"]
-        # data = copy.deepcopy(inputData)
-        # if data.has_key("token"):
-        #     del data["token"]
-        # if data.has_key("action"):
-        #     del data["action"]
-        # first = 1
-        # sql = "insert into caller ( "
-        # for key, v in data.iteritems():
-        #     if first != 1:
-        #         sql += ','
-        #     sql += key
-        #     first = 0
-        # sql += " ) values ( "
-        # first = 1
-        # for k, value in data.iteritems():
-        #     if first != 1:
-        #         sql += ','
-        #     sql += '\''
-        #     restr = str(value).replace("'", "\\'")
-        #     sql += restr
-        #     sql += '\''
-        #     first = 0
-        # sql += ")"
-        # print  "auto sql insert caller : sql " + sql
-        # ret = DB.DBLocal.query(sql)
-        # return ret
         data = dict(copy.deepcopy(inputData))
         data.pop("token", None)
         data.pop("action", None)

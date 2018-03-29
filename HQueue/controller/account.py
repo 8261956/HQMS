@@ -5,9 +5,9 @@ import json
 
 import common.func
 import mainWorker
-from common.func import packOutput
+from common.func import packOutput,checkPostAction
 from caller import CallerInterface
-import HQueue.DBIO.DBBase as DB
+import common.DBBase as DB
 
 
 def unicode2str(unicodeStr):
@@ -25,50 +25,6 @@ class LoginInterface(object):
     }
 
     def POST(self,name):
-
-        # webData = json.loads(web.data())
-        #
-        # user = webData["user"]
-        # passwd = webData["passwd"]
-        #
-        # if user == "root" and passwd == "clear!@#":
-        #     ret = {"token": common.func.getToken(user,passwd),
-        #            "userType": "Manager"
-        #            }
-        #     return packOutput(ret)
-        #
-        # #判断是否为分诊台帐号
-        # ret = DB.DBLocal.where("account", user=user,password = passwd)
-        # if len(ret) != 0:
-        #     account = ret[0]
-        #     ret = { "userType": "station","stationID":account["stationID"]}
-        #     ret["token"] = common.func.getToken(user,passwd)
-        # else:
-        #     #判断是否为医生账号
-        #     ret = DB.DBLocal.where("workers", user=user, password=passwd)
-        #
-        #     if len(ret) != 0:
-        #         for account in ret:
-        #             # 判断是否在允许的叫号器上登录
-        #             if "localIP" in webData:
-        #                 account["localIP"] = webData["localIP"]
-        #             caller = mainWorker.WorkerMainController().getCallerInfo(account)
-        #             if caller != {}:            #不合法的医生账户登录
-        #                 ret = {"userType": "worker","stationID": account["stationID"]}
-        #                 ret["callerID"] = caller["id"]
-        #                 onlineMsg = {"stationID":account["stationID"],"callerID":caller["id"],\
-        #                              "workerID":account["id"],"status":"online"}
-        #                 CallerInterface().setWorkerStatus(onlineMsg)
-        #                 ret["token"] = common.func.getToken(user,passwd)
-        #                 return packOutput(ret)
-        #         if "localIP" in webData:
-        #             return packOutput({}, "500", "not allowed caller，ip: " + webData["localIP"])
-        #         else:
-        #             return packOutput({}, "500", "not allowed caller，ip: " + web.ctx.ip)
-        #     else:
-        #         return packOutput({},"500","uncorrect user and password")
-        #
-        # return packOutput(ret)
         data = json.loads(web.data())
 
         action = data.pop("action", None)
@@ -81,8 +37,6 @@ class LoginInterface(object):
             result = getattr(self, self.support_action[action])(data)
             return packOutput(result)
         except Exception as e:
-            # exc_traceback = sys.exc_info()[2]
-            # errorInfo = traceback.format_exc(exc_traceback)
             return packOutput({}, code='500', errorInfo=str(e))
 
     def login(self, data):
@@ -137,19 +91,20 @@ class LoginInterface(object):
             result = self._workerLogin(data)
         else:
             raise Exception("[ERR]: unsupport type to login")
-
         return result
 
     def _managerLogin(self, data):
         user = data.get("user")
         passwd = data.get("passwd")
         token = common.func.getToken(user, passwd)
+        project = DB.DBLocal.select("project").first()
+        project_manager = project.get("manager","root")
+        project_password = project.get("password","clear!@#")
 
-        if user == "root" and passwd == "clear!@#":
+        if user == project_manager and passwd == project_password:
             result = {"userType": "Manager", "token": token}
         else:
             raise Exception("incorrect user or password to login as manager")
-
         return result
 
     def _stationLogin(self, data):
@@ -163,7 +118,6 @@ class LoginInterface(object):
             result = {"userType": "station", "token": token, "stationID": account["stationID"]}
         else:
             raise Exception("incorrect user or password to login stationSet")
-
         return result
 
     def _workerLogin(self, data):
@@ -193,44 +147,45 @@ class LoginInterface(object):
         CallerInterface().setWorkerStatus(onlineMsg)
         # WorkerMainController().setWorkerStatus({"stationID": stationID, "id": workerID, "status": "online"})
         result = {"userType": "worker", "token": token, "stationID": stationID, "callerID": callerID}
-
         return result
 
     def GET(self,name):
         return 1
 
 class StationAccountInterface:
+    support_action = {
+        "edit" : "edit",
+        "getList" : "getList",
+        "getInfo" : "getInfo"
+    }
+
     def POST(self,name):
-        webData = json.loads(web.data())
-        action = webData["action"]
-        if "token" in webData:
-            token = webData["token"]
-            if common.func.checkSession(token) == False:
-                return packOutput({}, "401", "Tocken authority failed")
+        data = json.loads(web.data())
+        return checkPostAction(self, data, self.support_action)
 
-        if action == "edit":
-            account = {}
-            stationID = webData["stationID"]
-            account["user"] = webData["user"]
-            account["password"] = webData["password"]
-            account["descText"] = webData["descText"]
-            stationAccount = StationAccount()
-            stationAccount.edit(stationID,account)
-            return packOutput({})
+    def edit(self,data):
+        account = {}
+        stationID = data["stationID"]
+        account["user"] = data["user"]
+        account["password"] = data["password"]
+        account["descText"] = data["descText"]
+        stationAccount = StationAccount()
+        stationAccount.edit(stationID,account)
+        return {}
 
-        elif action == "getList":
-            stationAccount = StationAccount()
-            resultJson = {"accountList":[]}
-            list = stationAccount.getList()
-            for item in list:
-                resultJson["accountList"].append(item)
-            return packOutput(resultJson)
+    def getList(self,data):
+        stationAccount = StationAccount()
+        resultJson = {"accountList":[]}
+        list = stationAccount.getList()
+        for item in list:
+            resultJson["accountList"].append(item)
+        return resultJson
 
-        elif action == "getInfo":
-            stationID = webData["stationID"]
-            stationAccount = StationAccount()
-            info = stationAccount.getInfo(stationID)
-            return packOutput(info)
+    def getInfo(self,data):
+        stationID = data["stationID"]
+        stationAccount = StationAccount()
+        info = stationAccount.getInfo(stationID)
+        return info
 
 class StationAccount:
     def add(self,account):

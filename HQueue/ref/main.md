@@ -26,21 +26,13 @@ http://192.168.17.187/hqueue/main/station
     "num": 2,
     "list": [
       {
-        "workerOnline": "None",
+        "workerOnline": [D001],
         "id": 1,
-        "tab": [
-          "waiting",
-          "finish"
-        ],
         "name": "队列1"
       },
       {
-        "workerOnline": "None",
+        "workerOnline": [D002],
         "id": 2,
-        "tab": [
-          "waiting",
-          "finish"
-        ],
         "name": "队列2"
       }
     ]
@@ -69,60 +61,49 @@ http://192.168.17.187/hqueue/main/station
   "errInfo": "none ",
   "rescode": "200",
   "detail": {
-    "workerOnline": "None",
+    "workerOnline": [],
     "name": "队列2",
     "waitingList": [
       {
-        "status": "doing",
-        "queueID": 2,
-        "orderTime": "0:10:22",
-        "activeLocalTime": "0:0:0",
-        "activeLocal": 0,
-        "workerID": "D001",
-        "registTime": "23:10:55",
-        "snumber": 1,
-        "id": "V0011",
-        "registDate": "2017-03-31",
+      	"snumber": 1,
         "name": "张三",
-        "orderType": 1,
+        "genders" : "男",
         "age": 14,
+        "type" : "门诊",
+        "cardID" : "1231234",
+        "orderType": "预约",
+        "urgent_lev1" : 1,
+        "urgent_lev2" : 2,
+        "redo": "复诊",
+        "status": "候诊",
+        "other": "",
+        "registTime": "2018-0327 23:10:55",
+        "waitNum" : 0,
+        "waitTime" : 15,
+        
         "stationID": 2,
+        "queueID": 2,
+        "orderTime": "2018-0327 23:10:55",
+        "activeLocalTime": "2018-0327 23:10:55",
         "descText": "肠胃不适",
         "queue": "PM_US",
-        "VIP": 0,
         "workerName": "李医生",
         "department": "内科",
-        "orderDate": "2017-03-31",
-        "originScore": 999999,
-        "finalScore": 999999
+        "id": "V0011",
+        "examPart" : "肝脏",
+        "examMethod" : "DR",
+        "tag" : "属性标签"
+		"rev1" : "",
+        "rev2" : "",
+        "rev3" : "",
+        "rev4" : "",
+        "rev5" : "",
+        "rev6" : "",
       }
     ],
-    "finishList": [
-      {
-        "status": "finish",
-        "queueID": 2,
-        "orderTime": "0:10:22",
-        "activeLocalTime": "0:0:0",
-        "activeLocal": 0,
-        "workerID": "D001",
-        "registTime": "9:9:2",
-        "snumber": 7,
-        "id": "V0025",
-        "registDate": null,
-        "name": "张武4",
-        "orderType": 0,
-        "age": 37,
-        "stationID": 2,
-        "descText": "胃痛",
-        "queue": "PM_US",
-        "VIP": 0,
-        "workerName": "李医生",
-        "department": "内科",
-        "orderDate": null,
-        "originScore": 999999,
-        "finalScore": 999999
-      }
-    ]
+    "finishList": [],
+    "passedList": [],
+    "unactiveList" : [],
   }
 }
 ```
@@ -148,27 +129,104 @@ http://192.168.17.187/hqueue/main/station
   "errInfo": "none ",
   "rescode": "200",
   "detail": {
-    "status": "已预约",
-    "queueID": 2,
-    "orderTime": "0:10:22",
-    "activeLocalTime": "0:0:0",
-    "activeLocal": 0,
-    "workerID": "D001",
-    "registTime": "23:9:0",
-    "localStatus": "waiting",
-    "snumber": 3,
-    "id": "V0021",
-    "registDate": "2017-03-31",
-    "name": "张武",
-    "orderType": 0,
-    "age": 33,
-    "stationID": 2,
-    "descText": "胃痛",
-    "queue": "PM_US",
-    "VIP": 0,
-    "workerName": "李医生",
-    "department": "内科",
-    "orderDate": "2017-03-31"
+      	"snumber": 1,
+        "name": "张三",
+        "genders" : "男",
+        "age": 14,
+        "type" : "门诊",
+        "cardID" : "1231234",
+        "orderType": "预约",
+        "urgent_lev1" : 1,
+        "urgent_lev2" : 2,
+        "redo": "复诊",
+        "status": "候诊",
+        "other": "",
+        "registTime": "2018-0327 23:10:55",
+        "waitNum" : 0,
+        "waitTime" : 15,
+        
+        "stationID": 2,
+        "queueID": 2,
+        "orderTime": "2018-0327 23:10:55",
+        "activeLocalTime": "2018-0327 23:10:55",
+        "descText": "肠胃不适",
+        "queue": "PM_US",
+        "workerName": "李医生",
+        "department": "内科",
+        "id": "V0011",
+        "examPart" : "肝脏",
+        "examMethod" : "DR"
+		"rev1" : "",
+        "rev2" : "",
+        "rev3" : "",
+        "rev4" : "",
+        "rev5" : "",
+        "rev6" : "",
+  }
+}
+```
+##呼叫指定的患者候者
+
+接口地址: http://192.168.17.187/hqueue/main/station
+
+方法: POST
+
+参数:
+```
+{
+  "token": " safe action",
+  "action" : "callPrepare",
+  "stationID" : 2,
+  "queueID" : 1,
+  "vid" : ["V0022","V0023"],
+  "dest" : "护士站"
+}
+```
+返回内容:
+```
+{ 
+  "errInfo": "none ",
+  "rescode": "200",
+  "detail": {
+    "result": "success"
+  }
+}
+```
+说明 : 护士站向服务器发送呼叫候诊请求成功后， 进入发音流程，此处的发声文本内容由护士站软件自行生成 ，例如 请张三到护士站候诊，语音发送到语音盒设备或自行转换在线mp3文件进行播放。
+
+##设置访客过号\锁定\完成\急诊等级\激活\属性标签
+接口地址: http://192.168.17.187/hqueue/main/station
+
+方法: POST
+
+参数:
+```
+{
+  "token": " safe action",
+  "action" : "visitorPropertySet",
+  "stationID" : 2,
+  "queueID" : 2,
+  "vid" : ["V0022","V0023"],
+  "property" :  "passed"  	##"locked","finish","urgentLev","active",
+  "value" : "1"     		 #"排尿锁定","1","2","1"
+}
+
+```
+参数说明 : property 包括 :
+"passed"  value: 0,1
+"locked"  value: "排尿锁定", ("普通锁定","憋尿锁定")
+"finish":  value: 0,1
+"urgentLev" value:  0,1,2,3
+"active" : value: 0,1
+等
+
+返回内容:
+```
+{ 
+  "errInfo": "none ",
+  "rescode": "200",
+  "detail": {
+    "result": "success"
   }
 }
 ```
@@ -186,15 +244,19 @@ http://192.168.17.187/hqueue/main/station
   "action" : "visitorMoveto",
   "stationID" : 2,
   "queueID" : 1,
-  "id" : "V0022",
+  "vid" : ["V0022"],
   "dest" : {
-  	"queueID" : 2,
-    "id" : "D0024",
-    "status" : "waiting"
+        "stationID" : 2,
+        "queueID" : 2,
+        "status" : "waiting",
+        "property" : "locked",
+        "value" : "1",
+        "tag" : "转移患者"
   }
 }
 ```
-第一个ID为访客自身ID, dest中的ID是目标位置的访客ID, 移动后将排在这个ID之前。若目标队列无访客, ID填写""。status是目标队列状态，有unactive,waiting,finsh三种。 
+status是目标队列状态，有unactive,waiting,finsh,passed四种。
+property是转移后属性设定，value是属性的值
 
 返回内容:
 ```
@@ -219,164 +281,8 @@ http://192.168.17.187/hqueue/main/station
   "action" : "visitorMoveby",
   "stationID" : 2,
   "queueID" : 2,
-  "id" : "V0022",
+  "vid" : ["V0022"],
   "value" : -1
-}
-```
-返回内容:
-```
-{ 
-  "errInfo": "none ",
-  "rescode": "200",
-  "detail": {
-    "result": "success"
-  }
-}
-```
-
-##设置访客优先
-
-接口地址: http://192.168.17.187/hqueue/main/station
-
-方法: POST
-
-参数:
-```
-{
-  "token": " safe action",
-  "action" : "visitorProirSet",
-  "stationID" : 2,
-  "queueID" : 2,
-  "id" : "V0022",
-  "prior" : 1
-}
-```
-返回内容:
-```
-{ 
-  "errInfo": "none ",
-  "rescode": "200",
-  "detail": {
-    "result": "success"
-  }
-}
-```
-
-##设置访客锁定
-接口地址: http://192.168.17.187/hqueue/main/station
-
-方法: POST
-
-参数:
-```
-{
-  "token": " safe action",
-  "action" : "visitorLockSet",
-  "stationID" : 2,
-  "queueID" : 2,
-  "id" : "V0022",
-  "locked" : 1
-}
-```
-返回内容:
-```
-{ 
-  "errInfo": "none ",
-  "rescode": "200",
-  "detail": {
-    "result": "success"
-  }
-}
-```
-
-##设置访客完成
-接口地址: http://192.168.17.187/hqueue/main/station
-
-方法: POST
-
-参数:
-```
-{
-  "token": " safe action",
-  "action" : "visitorFinishSet",
-  "stationID" : 2,
-  "queueID" : 2,
-  "id" : "V0022",
-  "finish" : 1
-}
-```
-返回内容:
-```
-{ 
-  "errInfo": "none ",
-  "rescode": "200",
-  "detail": {
-    "result": "success"
-  }
-}
-```
-
-##查询访客
-接口地址: http://192.168.17.187/hqueue/main/station
-
-方法: POST
-
-参数:
-```
-{
-  "token": " safe action",
-  "action" : "visitorSearch",
-  "stationID" : 2,
-  "id" : "D0022"
-}
-```
-返回内容:
-```
-{ 
-  "errInfo": "none ",
-  "rescode": "200",
-  "detail": {
-    "status": "已预约",
-    "queueID": 1,
-    "orderTime": "0:10:22",
-    "activeLocalTime": "0:0:0",
-    "activeLocal": 0,
-    "workerID": "D001",
-    "registTime": "22:11:1",
-    "localStatus": "waiting",
-    "snumber": 4,
-    "id": "D0022",
-    "registDate": null,
-    "name": "刘武1",
-    "orderType": 1,
-    "age": 34,
-    "stationID": 2,
-    "descText": "胃痛",
-    "queue": "AM_US",
-    "VIP": 0,
-    "workerName": "李医生",
-    "department": "内科",
-    "orderDate": null,
-    "waitingTime": 75,
-    "waitingNum": 5
-  }
-}
-```
-
-##激活访客
-接口地址: http://192.168.17.187/hqueue/main/station
-
-方法: POST
-
-参数:
-```
-{
-  "token": " safe action",
-  "action" : "visitorActiveSet",
-  "stationID" : 2,
-  "queueID" : 2,
-  "id" : "V0022",
-  "active" : 1
 }
 ```
 返回内容:
@@ -401,25 +307,25 @@ http://192.168.17.187/hqueue/main/station
   "token": "safe token",
   "action": "addVisitor",
   "stationID": 2,
-  "queueID": 1,
-  "name": "fan",
-  "age": 50,
+  
   "snumber": 1,
-  "VIP": 0,
-  "orderType": 0,
-  "descText": "头疼",
+  "name": "fan",
+  "queueID": 1,
+  
+  "age": 50,
   "cardID": "222222",
   "personID": "111111",
   "phone": "12345678"
+  "property" : {
+  		"redo": "复诊",
+        "locked": 1,
+  }
 }
 ```
 参数说明：
 ```
 选填：
-  - age
-  - orderType: 默认为0
-  - personID
-  - phone
+  - age,cardID,personID,phone,property
 ```
 返回参数：
 ```
@@ -433,8 +339,8 @@ http://192.168.17.187/hqueue/main/station
 ```
 
 
-##前端查询是否有音频要播放
-接口地址: http://192.168.17.187/hqueue/main/worker
+##前端查询语音播放地址
+接口地址: http://192.168.17.187/hqueue/main/station
 
 方法: POST
 
@@ -442,9 +348,8 @@ http://192.168.17.187/hqueue/main/station
 ```
 {
   "token": " safe action",
-  "action" : "AnnounceAsk",
+  "action" : "getMediaBox",
   "stationID" : 2,
-  "clear" : 0
 }
 ```
 返回内容:
@@ -453,8 +358,36 @@ http://192.168.17.187/hqueue/main/station
   "errInfo": "none ",
   "rescode": "200",
   "detail": {
-    "result" : 1,
-    "url": "http://192.168.17.3:19000/media/T001.wav"
+    "result" : "success",
+    "list" : [
+        {
+            "id" : 32,
+            "url": "http://192.168.17.3:19000/"
+        }
+    ]
   }
+}
+```
+
+##前端顺序播放指定文字
+接口地址: http://192.168.17.3:19000/
+
+方法: POST
+
+参数:
+```
+[
+    {"id":"1002","text":"请张三到101诊室就诊"},
+    {"id":"1002","text":"请李四到102诊室就诊"},
+]
+```
+返回内容:
+```
+{
+    "speakingMsg":{"id":"1002","text":"请张三到101诊室就诊"}, 	//正在播放的语音
+    "speechList":[												//未播放的语音列表
+        {"id":"1002","text":"请李四到102诊室就诊"},
+        {"id":"1002","text":"请王五到103诊室就诊"}
+    ]
 }
 ```

@@ -2,7 +2,7 @@
 
 import web, json, copy
 from common.func import packOutput, list2Str, str2List
-from HQueue.DBIO import DBBase as DB
+from common import DBBase as DB
 import common
 
 

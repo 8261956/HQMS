@@ -2,7 +2,7 @@
 
 import os, sys, urllib, threading, time
 import visitor
-import HQueue.DBIO.DBBase as DB
+import common.DBBase as DB
 from common.func import LogOut
 from mainWorker import SendMediaConvert
 

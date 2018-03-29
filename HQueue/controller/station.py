@@ -1,21 +1,21 @@
 # -*- coding: UTF-8 -*-
 
 import web, json,copy
-from common.func import packOutput, checkSession,getNecessaryPara
-import HQueue.DBIO.DBBase as DB
-from HQueue.DBIO.DBBase import ImportTableFromView
+from common.func import packOutput, checkSession,getNecessaryPara,checkPostAction
+import common.DBBase as DB
+from common.DBBase import ImportTableFromView
 from common.config import integrateType
 from account import StationAccount
 
-visitor_para_name =  ("id","name","age","queue", "snumber" ,"orderDate","orderTime" ,"registDate", "registTime" , "VIP" ,
+visitor_para_name =  ("id","name","age","genders","type","queue", "snumber" ,"orderDate","orderTime" ,"registDate", "registTime" , "urgent_lev1","urgent_lev2" ,
                       "orderType","workerID","workerName","descText","status","department","cardID","personID",
                       "phone","rev1","rev2","rev3","rev4","rev5","rev6")
 
-visitor_alias_name =  {"id" : "aliasID","name" : "aliasName","age" : "aliasAge","queue" : "aliasQueue", "snumber" : "aliasSnumber"  ,
+visitor_alias_name =  {"id" : "aliasID","name" : "aliasName","genders":"aliasGenders","type":"aliasType","age" : "aliasAge","queue" : "aliasQueue", "snumber" : "aliasSnumber"  , "urgent_lev1" :"aliasUrgent_lev1","urgent_lev2":"aliasUrgent_lev2",
                        "orderDate" :"aliasOrderDate" ,"orderTime" :"aliasOrderTime" ,"registDate" : "aliasRegistDate", "registTime" :"aliasRegistTime", "VIP" :"aliasVIP",
                       "orderType" : "aliasOrderType","workerID" : "aliasWorkerID","workerName" : "aliasWorkerName","descText" : "aliasDescText","status" : "aliasStatus"
                       ,"department" : "aliasDepartment","cardID" : "aliasCardID","personID" : "aliasPersonID",
-                      "phone" : "aliasPhone"}
+                      "phone" : "aliasPhone","rev1":"aliasRev1","rev2":"aliasRev2","rev3":"aliasRev3","rev4":"aliasRev4","rev5":"aliasRev5","rev6":"aliasRev6"}
 
 
 class importConfigInterface:
@@ -65,111 +65,102 @@ class importConfigInterface:
 
 
 class StationInterface:
+    support_action = {
+        "getList": "getListRet",
+        "getInfo": "getInfoRet",
+        "add" : "addRet",
+        "edit" : "editRet",
+        "delete" : "deleteRet",
+        "sourceTest" : "sourceTest",
+        "sourceConfigTest" : "sourceConfigTest"
+    }
+
     def __init__(self):
         self.db = DB.DBLocal
         self.accout = StationAccount()
         pass
 
     def POST(self,name):
-        webData = json.loads(web.data())
-        action = webData["action"]
-        if "token" in webData:
-            token = webData["token"]
-            if checkSession(token) == False:
-                return packOutput({}, "401", "Tocken authority failed")
+        data = json.loads(web.data())
+        return checkPostAction(self, data, self.support_action)
 
-        if action == "getList":
-            slist = self.getList()
-            num = len(slist)
-            if num == -1:
-                return packOutput({},"500", "getStationList Error")
-            else:
-                resultJson = {"stationNum": num, "stationList": []}
-                for item in slist:
-                    station = {}
-                    station['id'] = item["id"]
-                    station['name'] = item["name"]
-                    resultJson['stationList'].append(station)
-                print " get stationList func ok ,station num " + str(num)
-                return packOutput(resultJson)
-
-        elif action == "getInfo":
-            print (" Controller get stationInfo ")
-            req = json.loads(web.data())
-            stationID = req["stationID"]
-
-            ret = self.getInfo({"id":stationID})
-
-            if ret == {}:
-                return packOutput({},"500", "getStationInfo Error")
-            else:
-                return packOutput(ret)
-
-        elif action == "add":
-            print(" Controller  Add station ")
-            addObj = json.loads(web.data())
-            try:
-                id = self.add(addObj)
-                resultJson = {"stationID": id}
-                return packOutput(resultJson)
-            except Exception, e:
-                print Exception, ":", e
-                return packOutput({},"500","Add station error : " + str(e))
-
-        elif action == "delete":
-            print(" Controller  del station ")
-            req = json.loads(web.data())
-            id = req["stationID"]
-            ret = self.delete({"id":id})
-            if ret == -1:
-                return packOutput({}, "500", "del station error" )
-            else:
-                return packOutput({})
-
-        elif action == "edit":
-            print(" Controller  change station ")
-            data = json.loads(web.data())
-            ret = self.edit(data)
-            if ret != "success":
-                return packOutput({}, "500", "change station error")
-            else:
-                return packOutput({})
-
-        elif action == "sourceTest":
-            print(" Controller  source Test  ")
-            data = json.loads(web.data())
-            if integrateType == "VIEW":
-                importFunc = ImportTableFromView(self, "test_visitor_Config", visitor_para_name)
-                ret = importFunc.testImportSource(data)
-            else:
-                ret = "success"
-            if ret == "success":
-                resultJson = {"testResult": "success"}
-            else:
-                resultJson = {"testResult": "failed"}
-            return packOutput(resultJson)
-
-        elif action == "sourceConfigTest":
-            print(" Controller  source config test ")
-            data = json.loads(web.data())
-            if integrateType == "VIEW":
-                ret = importConfigInterface().sourceTest("test_visitor_Config",data)
-            else:
-                ret = {"result" : "success" , "sql" : ""}
-
-            if ret["result"] == "success":
-                resultJson = {"testResult": "success", "testSql": ret["sql"]}
-            else:
-                resultJson = {"testResult": "failed", "testSql": ret["result"]}
-            return packOutput(resultJson)
-
+    def getListRet(self,data):
+        slist = self.getList()
+        num = len(slist)
+        if num == -1:
+            return packOutput({},"500", "getStationList Error")
         else:
-            return packOutput({},"500","unsupport action")
+            resultJson = {"stationNum": num, "stationList": []}
+            for item in slist:
+                station = {}
+                station['id'] = item["id"]
+                station['name'] = item["name"]
+                resultJson['stationList'].append(station)
+            print " get stationList func ok ,station num " + str(num)
+            return resultJson
 
-    def getList(self,data = {}):
-        ret = self.db.select("stationSet")
-        stationList = list(ret)
-        return stationList
+    def getInfoRet(self,data):
+        stationID = data.get("stationID")
+        ret = self.getInfo({"id":stationID})
+        return ret
+
+    def addRet(self,data):
+        print(" Controller  Add station ")
+        addObj = data
+        try:
+            id = self.add(addObj)
+            resultJson = {"stationID": id}
+            return packOutput(resultJson)
+        except Exception, e:
+            print Exception, ":", e
+            return packOutput({},"500","Add station error : " + str(e))
+
+    def deleteRet(self,data):
+        print(" Controller  del station ")
+        id = data["stationID"]
+        ret = self.delete({"id":id})
+        if ret == -1:
+            return packOutput({}, "500", "del station error" )
+        else:
+            return packOutput({})
+
+    def editRet(self,data):
+        print(" Controller  change station ")
+        ret = self.edit(data)
+        if ret != "success":
+            return packOutput({}, "500", "change station error")
+        else:
+            return packOutput({})
+
+    def sourceTest(self,data):
+        print(" Controller  source Test  ")
+        if integrateType == "VIEW":
+            importFunc = ImportTableFromView(self, "test_visitor_Config", visitor_para_name)
+            ret = importFunc.testImportSource(data)
+        else:
+            ret = "success"
+        if ret == "success":
+            resultJson = {"testResult": "success"}
+        else:
+            resultJson = {"testResult": "failed"}
+        return packOutput(resultJson)
+
+    def sourceConfigTest(self,data):
+        if integrateType == "VIEW":
+            ret = importConfigInterface().sourceTest("test_visitor_Config",data)
+        else:
+            ret = {"result" : "success" , "sql" : ""}
+
+        if ret["result"] == "success":
+            resultJson = {"testResult": "success", "testSql": ret["sql"]}
+        else:
+            resultJson = {"testResult": "failed", "testSql": ret["result"]}
+        return packOutput(resultJson)
+
+    def getList(self):
+        slist = self.db.select("stationSet")
+        slist = list(slist)
+        return slist
 
     def getInfo(self,data = {}):
         id = getNecessaryPara(data,"id")

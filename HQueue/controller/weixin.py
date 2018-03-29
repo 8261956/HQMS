@@ -5,7 +5,7 @@ import json
 import datetime
 import traceback
 import web
-from HQueue.DBIO import DBBase as DB
+from common import DBBase as DB
 from common.func import checkSession, packOutput
 from worker import WorkerInterface
 from schedule import ScheduleInterface

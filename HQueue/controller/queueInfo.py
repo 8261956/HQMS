@@ -6,7 +6,7 @@ os.environ['NLS_LANG'] = 'SIMPLIFIED CHINESE_CHINA.UTF8'
 from common.func import packOutput, str2List, list2Str, checkSession, \
     CachedGetValue, CahedSetValue
 from common.config import integrateType
-import HQueue.DBIO.DBBase as DB
+import common.DBIO.DBBase as DB
 from scene import SceneInterface
 
 class QueueInfoInterface:

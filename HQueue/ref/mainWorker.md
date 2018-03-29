@@ -60,20 +60,12 @@
       {
         "workerOnline": "",
         "id": 4,
-        "tab": [
-          "waiting",
-          "finish"
-        ],
         "name": "队列2",
         "state": "queue and worker"
       },
       {
         "workerOnline": null,
         "id": 25,
-        "tab": [
-          "waiting",
-          "finish"
-        ],
         "name": "队列4",
         "state": "queue not worker"
       }
@@ -112,7 +104,9 @@
   "detail": {
     "workerOnline": "",
     "name": "队列2",
+    "unactiveList" :[],
     "waitingList": [],
+    "passedList" : [],
     "finishList": []
   }
 }
@@ -162,13 +156,16 @@
 ```json
 {
   "token": " safe action",
-  "action" : "visitorAppendQueue",
+  "action" : "visitorMoveto",
   "stationID" : 2,
   "queueID" : 1,
-  "id" : "V0022",
+  "vid" : ["V0022"],
   "dest" : {
-  	"queueID" : 2,
-    "status" : "waiting"
+        "stationID" : 2,
+        "queueID" : 2,
+        "status" : "waiting",
+        "property" : "locked",
+        "value" : "1"
   }
 }
 ```
@@ -183,32 +180,6 @@
 }
 ```
 
-##访客顺序 前进或后退
-接口地址: http://192.168.17.187/hqueue/main/worker
-
-方法: POST
-
-参数:
-```json
-{
-  "token": " safe action",
-  "action" : "visitorMoveby",
-  "stationID" : 2,
-  "queueID" : 2,
-  "id" : "V0022",
-  "value" : -1
-}
-```
-返回内容:
-```json
-{ 
-  "errInfo": "none ",
-  "rescode": "200",
-  "detail": {
-    "result": "success"
-  }
-}
-```
 
 ##呼叫下一位
 接口地址: http://192.168.17.187/hqueue/main/worker
@@ -222,7 +193,7 @@
   "action" : "callNext",
   "stationID" : 2,
   "queueID" :2,
-  "id" : 1
+  "id" : "D002"  #医生ID
 }
 ```
 返回内容:
@@ -255,7 +226,7 @@
   "action": "setDelay",
   "stationID": 71,
   "queueID": 75,
-  "id": "D001"
+  "id": "D001"  #医生ID
 }
 ```
 返回内容:
@@ -282,7 +253,7 @@
   "action": "callPass",
   "stationID": 71,
   "queueID": 75,
-  "id": "D001"
+  "id": "D001" #医生ID
 }
 ```
 返回内容:
@@ -309,7 +280,7 @@
   "stationID" : 2,
   "queueID" :2,
   "visitorID" : "V0021",
-  "id" : "D002"
+  "id" : "D002"  #医生ID
 }
 ```
 返回内容:
@@ -332,12 +303,12 @@
 ```json
 {
   "token": " safe action",
-  "action" : "visitorFinishSet",
+  "action" : "visitorPropertySet",
   "stationID" : 2,
   "queueID" : 2,
-  "visitorID" : "V0022",
-  "id" : "D002",
-  "finish" : 1
+  "vid" : ["V0022","V0023"],
+  "property" : "finish",
+  "value" : "1"
 }
 ```
 返回内容:

@@ -4,11 +4,28 @@
 import os, sys, re, logging, json, copy, hashlib, traceback
 import web
 import common.config as cfg
-from common.func import packOutput, checkSession, convertDBConfig
-import HQueue.DBIO.DBBase as DB
-from HQueue.DBIO.DBBase import MSSQLController
+from common.func import packOutput, checkSession, convertDBConfig,checkPostAction
+import common.DBBase as DB
+from common.DBBase import MSSQLController
 
 class WorkerInterface:
+
+    support_action = {
+        "getList": "getListRet",
+        "getInfo": "getInfo",
+        "addWorker": "manualAddWorker",
+        "editWorker": "editWorker",
+        "delWorker": "delWorker",
+        "testSource": "testSourceRet",
+        "testSourceConfig": "testSourceConfig",
+        "import":"imports",
+        "checkID" : "checkIDRet",
+        "fuzzySearchWorker": "fuzzySearchWorker",
+        "getDepartment" : "getDepartment",
+        "getTitle" : "getTitle",
+        "getWorker" : "getWorker",
+        "getConfig" : "getConfig"
+    }
 
     # 数据库配置项
     db_paras = ("DBType", "host", "port", "user", "passwd", "DBName", "charset", "tableName")
@@ -17,114 +34,39 @@ class WorkerInterface:
     sql_paras = ("id", "name", "title", "department", "descText", "speciality", "headPic")
 
     def POST(self,name):
+        data = json.loads(web.data())
+        return checkPostAction(self, data, self.support_action)
 
-        webData = json.loads(web.data())
+    def getListRet(self,data):
+        list = self.getList(data)
+        num = len(list)
+        resultJson = {"workerNum": num, "workerList": []}
+        for item in list:
+            worker = item.copy()
+            del worker["callerList"]
+            resultJson["workerList"].append(worker)
+        return resultJson
 
-        token = webData.pop("token", None)
-        if "token" in webData:
-            if checkSession(token) == False:
-                return packOutput({}, "401", "Token authority failed")
-        action = webData.pop("action", None)
-
-        if action == "getList":
-            list = self.getList(webData)
-            num = len(list)
-            resultJson = {"workerNum": num, "workerList": []}
-            for item in list:
-                worker = item.copy()
-                del worker["callerList"]
-                resultJson["workerList"].append(worker)
-            return packOutput(resultJson)
-
-        elif action == "getInfo":
-            worker = self.getInfo(webData)
-            return packOutput(worker)
-
-        elif action == "import":
-            try:
-                result = self.imports(webData)
-                return packOutput(result)
-            except Exception as e:
-                exc_traceback = sys.exc_info()[2]
-                errorInfo = traceback.format_exc(exc_traceback)
-                return packOutput({}, code="500", errorInfo=errorInfo)
-
-        elif action == "addWorker":
-            result = self.manualAddWorker(webData)
-            return packOutput(result)
-
-        elif action == "delWorker":
-            result = self.delWorker(webData)
-            return packOutput(result)
-
-        elif action == "editWorker":
-            result = self.editWorker(webData)
-            return packOutput(result)
-
-        elif action == "testSource":
-            ret = self.testImportSource(webData)
-            if ret:
-                resultJson = {"result" : "success" }
-            else:
-                resultJson = {"result": "failed"}
-            return packOutput(resultJson)
-
-        elif action == "testSourceConfig":
-            result = self.testImportSourceConfig(webData)
-            return packOutput(result)
-
-        elif action == "checkID":
-            ret = self.checkConflict(webData)
-            resultJson = {"conflict": ret}
-            return packOutput(resultJson)
-
-        elif action == "fuzzySearchWorker":
-            try:
-                result = self.fuzzySearchWorker(webData)
-                return packOutput(result)
-            except Exception as errorInfo:
-                return packOutput({}, code="400", errorInfo=str(errorInfo))
-
-        elif action == "getDepartment":
-            try:
-                result = self.getDepartment(webData)
-                return packOutput(result)
-            except Exception as errorInfo:
-                return packOutput({}, code="400", errorInfo=str(errorInfo))
-
-        elif action == "getTitle":
-            try:
-                result = self.getTitle(webData)
-                return packOutput(result)
-            except Exception as errorInfo:
-                return packOutput({}, code="400", errorInfo=str(errorInfo))
-
-        elif action == "getWorker":
-            try:
-                result = self.getWorker(webData)
-                return packOutput(result)
-            except Exception as errorInfo:
-                return packOutput({}, code="400", errorInfo=str(errorInfo))
-
-        elif action == "getConfig":
-            try:
-                result = self.getConfig(webData)
-                return packOutput(result)
-            except Exception as errorInfo:
-                return packOutput({}, code="400", errorInfo=str(errorInfo))
-
+    def testSourceRet(self,data):
+        ret = self.testImportSource(data)
+        if ret:
+            resultJson = {"result" : "success" }
         else:
-            return packOutput({},"500","unsupport action")
+            resultJson = {"result": "failed"}
+        return resultJson
 
+    def checkIDRet(self,data):
+        ret = self.checkConflict(data)
+        resultJson = {"conflict": ret}
+        return packOutput(resultJson)
 
-    def getList(self,webData):
-        filter = webData["stationID"]
+    def getList(self,data):
+        filter = data["stationID"]
         ret = DB.DBLocal.where('workers',stationID = filter)
         return ret
 
-    def getInfo(self,webData):
-        ret = DB.DBLocal.where('workers', id = webData["id"])
-        worker = ret[0]
+    def getInfo(self,data):
+        worker = DB.DBLocal.where('workers', id = data["id"]).first()
         return worker
 
     def addWorker(self,inputData):
@@ -222,27 +164,6 @@ class WorkerInterface:
         return config
 
     def imports(self, config):
-        # self.DBSource = web.database(
-        #     dbn = config["DBType"],
-        #     host = config["host"],
-        #     port = int(config["port"]),
-        #     db = config["DBName"],
-        #     user = config["user"],
-        #     pw = config["passwd"],
-        #     charset = config["charset"]
-        # )
-        # tableName = config["table"]
-        # print "DBSource connect ok " + tableName
-        # res = self.DBSource.select(tableName)
-        # view = self.getAliasSql(config)
-        # print "get view :" + view
-        # workerList = self.DBSource.select(view)
-        # for item in workerList:
-        #     item["stationID"] = config["stationID"]
-        #     item["user"] = item["id"]
-        #     item["password"] = "123456"
-        #     self.addWorker(item)
-        # return
 
         db_config = convertDBConfig(**config)
         if config["DBType"] == "mssql":
@@ -286,21 +207,6 @@ class WorkerInterface:
         return result
 
     def getAliasSql(self , config):
-        # configList = ("aliasID", "aliasName", "aliasTitle", "aliasDepartment", "aliasDescText", "aliasHeadPic")
-        # paraList = ("id", "name", "title", "department", "descText", "headPic")
-        #
-        # sourceTable = "(SELECT "
-        # iterPara = iter(paraList)
-        # dot = 0
-        # for conf in configList :
-        #     if config[conf] != "":
-        #         if dot == 0:
-        #             dot = 1
-        #         else:
-        #             sourceTable += " , "
-        #         sourceTable += config[conf]
-        #         sourceTable += " as " + iterPara.next()
-        # sourceTable += " from " + config["table"] +") as workerView"
         tableName = config.pop("tableName")
         tmp = []
         for key, value in config.items():
@@ -494,48 +400,3 @@ class NginxUploadController:
 			  <input type="submit" />
 			  </form>
 			  </body></html>"""
-
-
-
-class headpicUpload:
-
-    def POST(self):
-        myfile = web.input(myfile={}, uptype="")
-        filename = myfile['filename']
-        logging.warning('Upload file ' + filename)
-        name, ext = os.path.splitext(filename)
-        # avoid none ascii issue
-        myMd5 = hashlib.md5()
-
-        if isinstance(name, str):
-            myMd5.update(name.decode('utf8').encode('utf8'))
-        elif isinstance(name, unicode):
-            myMd5.update(name.encode('utf8'))
-
-        dirPath = cfg.headPicPath
-
-        name_md5 = myMd5.hexdigest()
-        ext = ext.lower()
-        newFileName = "%s%s" % (name_md5,ext)
-        dest = os.path.join(dirPath, newFileName)
-        os.rename(myfile['filepath'], dest);
-        rst = {'result': "success", 'upload_path': cfg.upload_http_base + newFileName, 'size': myfile.size}
-        # return '<script>parent.uploadCallback(%s);window.location.href="upload%s.html";</script>'% (json.dumps(rst),myfile.uptype)
-        return packOutput(rst)
-
-
-class WebUploadController:
-
-    def POST(self,name):
-        x = web.input(myfile={})
-        filedir = cfg.headPicPath
-        if 'myfile' in x:
-            filepath = x.myfile.filename.replace('\\', '/')  # replaces the windows-style slashes with linux ones.
-            filename = filepath.split('/')[-1]  # splits the and chooses the last part (the filename with extension)
-            fout = open(filedir + '/' + filename, 'w')  # creates the file where the uploaded file should be stored
-            fout.write(x.myfile.file.read())  # writes the uploaded file to the newly created file.
-            fout.close()  # closes the file, upload complete.
-            rst = {'result': "success", 'upload_path': cfg.upload_http_base + filename, 'size': x.myfile.size}
-            return packOutput(rst)
-
-        raise web.seeother('/upload')

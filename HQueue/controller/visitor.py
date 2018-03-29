@@ -11,8 +11,8 @@ from queueInfo import QueueInfoInterface
 from scene import SceneInterface
 from station import StationInterface,visitor_para_name,visitor_alias_name
 from queueData import LocalVisitor, finalScoreDef
-import HQueue.DBIO.DBBase as DB
-from HQueue.DBIO.DBBase import ImportTableFromView
+import common.DBBase as DB
+from common.DBBase import ImportTableFromView
 
 reload(sys)
 sys.setdefaultencoding('utf-8')

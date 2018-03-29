@@ -2,10 +2,10 @@
 
 import os, sys, time
 os.environ['NLS_LANG'] = 'SIMPLIFIED CHINESE_CHINA.UTF8'
-import DBIO.DBBase as DB
-from modules.visitor import VisitorManager
+import common.DBBase as DB
+from controller.visitor import VisitorManager
 from common.config import integrateType
-from YX_Interface import SyncSource
+from project.yaxin.YX_Interface import SyncSource
 
 reload(sys)
 sys.setdefaultencoding('utf-8')

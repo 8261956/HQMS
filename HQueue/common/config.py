@@ -5,7 +5,7 @@ import ConfigParser
 import os
 
 _config = ConfigParser.ConfigParser()
-_config.read(os.path.join(os.path.dirname(__file__), '../static/config.ini'))
+_config.read(os.path.join(os.path.dirname(__file__), 'config.ini'))
 
 db_host = _config.get('database', 'host')
 db_port = _config.get('database', 'port')

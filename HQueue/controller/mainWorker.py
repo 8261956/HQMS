@@ -11,7 +11,7 @@ from worker import WorkerInterface
 from mainStation import StationMainController
 from scene import SceneInterface
 from mediabox import MediaBoxInterface
-import HQueue.DBIO.DBBase as DB
+import common.DBBase as DB
 
 def GetServiceIP(self):
     myname = socket.getfqdn(socket.gethostname())

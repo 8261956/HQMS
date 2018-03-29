@@ -71,6 +71,11 @@ def str2List(str):
     else:
         return str.split(',')
 
+def json2Str(json_obj):
+    return json.dump(json_obj,ensure_ascii=False)
+def str2Json(str):
+    return json.loads(str)
+
 def createRandomStr32(length=32):
     """产生随机字符串，不长于32位"""
     chars = "abcdefghijklmnopqrstuvwxyz0123456789"

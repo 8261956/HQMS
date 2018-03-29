@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import web, json, datetime
-from HQueue.DBIO.DBBase import DBLocal as DB
+from common.DBBase import DBLocal as DB
 from common.func import packOutput
 
 

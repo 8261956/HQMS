@@ -10,7 +10,7 @@ from queueInfo import QueueInfoInterface
 from mainStation import StationMainController
 from scene import SceneInterface
 
-import HQueue.DBIO.DBBase as DB
+import common.DBBase as DB
 
 class PublishTVInterface:
 
