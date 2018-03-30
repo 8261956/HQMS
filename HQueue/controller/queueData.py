@@ -104,11 +104,16 @@ class QueueDataController:
         else:
             return packOutput({}, "500", "unsupport action")
 
-    def getQueueVisitor(self,inputData,status = "waiting"):
+    def getQueueVisitor(self,inputData,status = ["waiting"]):
         queueID = inputData["queueID"]       #本队列ID
         stationID = inputData["stationID"]
-        filter = "stationID = " + str(stationID) + " and queueID = " + str(queueID) + " and status = \'" + status + "\'"
-        visitorRank = DB.DBLocal.select("visitor_local_data", where=filter, order="finalScore,originScore")  # 本队列所有访客
+        vars = {
+            "stationID" : stationID,
+            "queueID" : queueID,
+            "status" : status
+        }
+        filter = "stationID = $stationID and queueID = $queueID and status IN $status"
+        visitorRank = DB.DBLocal.select("visitor_local_data", where=filter,vars = vars, order="finalScore,originScore")  # 本队列所有访客
         return visitorRank
 
     def updateVisitor(self, inputData):

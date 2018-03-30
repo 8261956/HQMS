@@ -166,7 +166,7 @@ class QueueInfoInterface:
             return queueList
         elif integrateType == "WEBSERVICE":
             sys.path.append("../..")
-            from YX_Interface import ExternSourceQueueList
+            from project.yaxin.YX_Interface import ExternSourceQueueList
             print "import YX_Interface ok "
             sourceQueueList = ExternSourceQueueList()
             choseQueueList = self.getChoseQueueList(stationID)
@@ -406,3 +406,12 @@ class QueueInfoInterface:
         n_days = now + delta
         date = n_days.strftime("%Y%m%d")
         return workDays,date
+
+    def addWorkerOnline(self,queueID,workerID):
+        queue = DB.DBLocal.where('queueInfo', id=queueID).first()
+        if queue is None:
+            raise "queue %d not exist" %queueID
+        workerOnline = str2List(queue["workerOnline"])
+        if workerID not in workerOnline:
+            queue["workerOnline"] = list2Str(workerOnline.append(workerID))
+            self.edit(queue)

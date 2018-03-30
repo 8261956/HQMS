@@ -1,4 +1,33 @@
 # 策略管理接口
+
+[TOC]
+
+##策略字段和说明
+| name        | 说明           |           
+| ------------- |:-------------:|      
+| name      | 名字       | 
+| descText      | 预留描述       | 
+| activeLocal      | 本地激活       | 
+| rankWay      | 排序方式      |
+| output      | 叫号输出      |
+| prepareOutput     | 候者叫号输出      | 
+| soundDoingTimes      | 叫号播报次数      |
+| soundPrepareTimes      | 候诊播报次数      |
+| autoPrepare      | 自动分诊      |
+| defaultPrepareNum      | 默认候诊人数      |  
+| delayTime      | 预留激活延迟时间      |  
+| InsertPassedSeries      | 过号连续插入个数      | 
+| InsertPassedInterval      | 过号插入间隔      | 
+| InsertReviewSeries      | 复诊连续插入个数      |
+| InsertReviewInterval      | 复诊连续插入间隔      |
+| InsertPriorSeries      | 优先连续插入个数      | 
+| InsertPriorInterval      | 优先连续插入间隔      |  
+| priorOlderAge      | 老人优先年龄      | 
+| priorCldAge      | 儿童优先年龄      | 
+| workDays      | 队列数据有效天数      | 
+| autoSyncFinish      | 自动识别完成状态      |  
+| property      | 预留 特性保存区 字典转字符串      | 
+
 ## 添加自定义场景
 
 接口地址： http://192.168.17.187/hqueue/manager/scene
@@ -9,31 +38,32 @@
 
 ```json
 {
-  "token": " safe action",
-  "action": "addScene",
-  "name": "测试",
-  "activeLocal": "1",
-  "rankWay": "registTime",
-  "delayTime": "30",
-  "waitNum": "5",
-  "outputText": "就诊",
-  "passedWaitNum": "5",
-  "reviewWaitNum": "5",
-  "priorNum": "3",
-  "workDays": 1,
-  "InsertPassedSeries": 2,
-  "InsertPassedInterval": 3,
-  "InsertReviewSeries": 2,
-  "InsertReviewInterval": 3,
-  "InsertPriorSeries": 2,
-  "InsertPriorInterval": 3,
-  "property": {
-      "morningPrior": 1,
-      "noPrepare": 1,
-      "callMode": "callByCardID",
-      "autoSyncFinish": 1,
-      "orderNoPrior": 0
-  }
+    "action": "addScene",
+
+    "name": "新策略",
+    "descText": "",
+    "activeLocal": 1,
+    "rankWay": "snumber",
+    "output": "请$name到$pos就诊",
+    "prepareOutput": "请$name等候",
+
+    "soundDoingTimes": 2,
+    "soundPrepareTimes": 1,
+    "autoPrepare": 0,
+    "defaultPrepareNum": 1,
+    "delayTime": 0,
+    "InsertPassedSeries": 2,
+    "InsertPassedInterval": 3,
+    "InsertReviewSeries": 2,
+    "InsertReviewInterval": 3,
+    "InsertPriorSeries": 2,
+    "InsertPriorInterval": 3,
+
+    "priorOlderAge": 65,
+    "priorCldAge": 8,
+    "workDays": 1,
+    "autoSyncFinish": null,
+    "property": {}
 }
 ```
 
@@ -45,7 +75,7 @@
   "rescode": "200",
   "detail": {
     "result": "success",
-    "sceneID": "6"
+    "sceneID": 33
   }
 }
 ```
@@ -59,11 +89,10 @@
   InsertPriorSeries: 优先插入数量，可以连续插入优先患者的数量;
   InsertPriorInterval: 优先插入间隔, 每隔一定间隔可插入优先患者;
   
-  morningPrior: 早上患者优先，值为0或者1;
-  noPrepare: 是否播报"请***准备"，值为0或者1;
-  callMode: 播报方式，值为callByName, callBySnumber, callByCardID;
+  output、prepareOutput中的表达式需由前端根据用户输入选项生成
+  
   autoSyncFinish: 视图删除数据后是否设置患者状态为已完成，值为0或者1;
-  orderNoPrior: 患者预约是否优先，值为0或者1;
+  property 中可添加若干其他熟悉 例如：orderNoPrior:1 患者预约是否优先，值为0或者1;
 ```
 
 
@@ -77,32 +106,33 @@
 
 ```json
 {
-  "token": " safe action",
-  "action": "editScene",
-  "sceneID": "9",
-  "name": "测试",
-  "activeLocal": "1",
-  "rankWay": "registTime",
-  "delayTime": "30",
-  "waitNum": "5",
-  "outputText": "取药",
-  "passedWaitNum": "5",
-  "reviewWaitNum": "5",
-  "priorNum": "3",
-  "workDays": 1,
-  "InsertPassedSeries": 2,
-  "InsertPassedInterval": 3,
-  "InsertReviewSeries": 2,
-  "InsertReviewInterval": 3,
-  "InsertPriorSeries": 2,
-  "InsertPriorInterval": 3,
-  "property": {
-      "morningPrior": 1,
-      "noPrepare": 1,
-      "callMode": "callByCardID",
-      "autoSyncFinish": 1,
-      "orderNoPrior": 0
-  }
+    "action": "editScene",
+    "sceneID" : 33,
+
+    "name": "新策略修改",
+    "descText": "",
+    "activeLocal": 1,
+    "rankWay": "snumber",
+    "output": "请$name到$pos就诊",
+    "prepareOutput": "请$name等候",
+
+    "soundDoingTimes": 2,
+    "soundPrepareTimes": 1,
+    "autoPrepare": 0,
+    "defaultPrepareNum": 1,
+    "delayTime": 0,
+    "InsertPassedSeries": 2,
+    "InsertPassedInterval": 3,
+    "InsertReviewSeries": 2,
+    "InsertReviewInterval": 3,
+    "InsertPriorSeries": 2,
+    "InsertPriorInterval": 3,
+
+    "priorOlderAge": 65,
+    "priorCldAge": 8,
+    "workDays": 1,
+    "autoSyncFinish": null,
+    "property": {}
 }
 ```
 
@@ -138,34 +168,34 @@
 
 ```json
 {
-    "errInfo": "none ",
-    "rescode": "200",
-    "detail": {
-        "activeLocal": 1,
-        "rankWay": "registTime",
-        "waitNum": 5,
-        "delayTime": 30,
-        "name": "测试",
-        "outputText": "就诊",
-        "id": 9,
-        "passedWaitNum": "5",
-        "reviewWaitNum": "5",
-        "priorNum": "3",
-        "workDays": 1,
-        "descText": "测试场景, 需要本地激活, 使用挂号时间进行排序, 播报请**到**就诊",
-        "InsertPassedSeries": 2,
-        "InsertPassedInterval": 3,
-        "InsertReviewSeries": 2,
-        "InsertReviewInterval": 3,
-        "InsertPriorSeries": 2,
-        "InsertPriorInterval": 3,
-        "property": {
-            "morningPrior": 1,
-            "noPrepare": 1,
-            "callMode": "callByCardID",
-            "autoSyncFinish": 1,
-            "orderNoPrior": 0
-        }
-    }
+  "errInfo": "none ",
+  "rescode": "200",
+  "detail": {
+  	"id": 9,
+    "name": "测试",
+    "descText": "",
+    "activeLocal": 1,
+    "rankWay": "snumber",
+    "output": "请$name到$pos就诊",
+    "prepareOutput": "请$name等候",
+    
+    "soundDoingTimes": 2,
+    "soundPrepareTimes": 1,
+    "autoPrepare": 0,
+    "defaultPrepareNum": 1,
+    "delayTime": 0,
+    "InsertPassedSeries": 2,
+    "InsertPassedInterval": 3,
+    "InsertReviewSeries": 2,
+    "InsertReviewInterval": 3,
+    "InsertPriorSeries": 2,
+    "InsertPriorInterval": 3,
+    
+    "priorOlderAge": null,
+    "priorCldAge": null,
+    "workDays": 1
+    "autoSyncFinish": null,
+    "property": {},
+  }
 }
 ```
