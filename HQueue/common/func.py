@@ -246,8 +246,10 @@ def checkPostAction(object,data,suppostAction):
     if action not in suppostAction:
         return packOutput({}, code="400", errorInfo='unsupported action')
 
-    # result = getattr(object, suppostAction[action])(data)
-    # return packOutput(result)
+    result = getattr(object, suppostAction[action])(data)
+    return packOutput(result)
+    '''
+
     try:
         result = getattr(object, suppostAction[action])(data)
         return packOutput(result)
@@ -263,3 +265,4 @@ def checkPostAction(object,data,suppostAction):
             error_info = str(e)
         return packOutput({"errorInfo": str(error_info), "rescode": code},
                           code=code, errorInfo=error_trace)
+    '''

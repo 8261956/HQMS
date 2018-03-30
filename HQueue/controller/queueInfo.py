@@ -110,7 +110,7 @@ class QueueInfoInterface:
         stationID = inputData["stationID"]
         sql = "SELECT q.id, q.name, q.stationID, q.descText, q.filter, " \
               "q.workerOnline, q.workerLimit, q.department, q.isExpert, " \
-              "q.orderAllow, s.id as sceneID, s.name as scene, s.activeLocal " \
+              "s.id as sceneID, s.name as scene, s.activeLocal " \
               "FROM queueInfo AS q LEFT JOIN scene " \
               "AS s ON q.sceneID = s.id WHERE q.stationID=%s" % stationID
         ret = DB.DBLocal.query(sql)

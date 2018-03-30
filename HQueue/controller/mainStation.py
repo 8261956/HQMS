@@ -83,15 +83,15 @@ class StationMainController:
 
         vList = DB.DBLocal.where("visitor_view_data",stationID = stationID,queueID = queueID)
         for item in vList:
-            if item.localStatus == "unactive" :
+            if item.status == "unactive" :
                 ret["unactiveList"].append(item)
-            elif item.localStatus == "doing":
+            elif item.status == "doing":
                 ret["waitingList"].append(item)
-            elif item.localStatus == "prepare":
+            elif item.status == "prepare":
                 ret["waitingList"].append(item)
-            elif item.localStatus == "waiting" :
+            elif item.status == "waiting" :
                 ret["waitingList"].append(item)
-            elif item.localStatus == "finish" :
+            elif item.status == "finish" :
                 ret["finishList"].append(item)
 
         #缓存 value

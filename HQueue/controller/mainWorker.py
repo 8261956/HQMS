@@ -23,13 +23,9 @@ class WorkerMainController:
         "visitorMoveto": "visitorMoveto",
         "callNext" : "callNext",
         "reCall" : "reCall",
-        "setDelay" : "setDelay",
-        "callPass" : "callPass",
         "callVisitor" : "callVisitor",
-        "callEmergency" : "callEmergency",
         "visitorPropertySet" : "visitorPropertySet",
         "setWorkerStatus" : "setWorkerStatus",
-
     }
 
     def POST(self,name):
@@ -46,10 +42,10 @@ class WorkerMainController:
         if stationID:
             where.update({"stationID": stationID})
 
-        callerList = DB.DBLocal.select("caller", where=where)
-        if len(callerList) > 0:
-            caller = callerList[0]
-            return dict(caller)
+        cInfo = DB.DBLocal.select("caller", where=where).first()
+        if cInfo is not None:
+            cInfo["workerLimit"] = str2List(cInfo["workerLimit"])
+            return cInfo
         return {}
 
     def getQueueList(self,inputData):
@@ -95,13 +91,13 @@ class WorkerMainController:
             info["id"] = item["id"]
             info["name"] = item["name"]
             info["workerOnline"] = item["workerOnline"]
-            info["tab"] = ["waiting", "finish"]
             info["state"] = state
             ret["list"].append(info)
         return ret
 
     def getQueueListAll(self,inputData):
-        ret = mainStation.StationMainController().getQueueListAll(inputData ,useCache = 1)
+        inputData["useCache"] = 1
+        ret = mainStation.StationMainController().getQueueListAll(inputData)
         return ret
 
     def getMovetoList(self,inputData):
@@ -129,71 +125,45 @@ class WorkerMainController:
         workerID = inputData["id"]
 
         #修改队列最后在线医生
-        queue = DB.DBLocal.where('queueInfo', queueID=queueID).first()
+        queue = DB.DBLocal.where('queueInfo', id=queueID).first()
         if queue is None:
             raise "queue %d not exist" %queueID
         workerOnline = str2List(queue["workerOnline"])
-        queue["workerOnline"] = list2Str(workerOnline.append(workerID))
-        queueInfo.QueueInfoInterface().edit(queue)
+        if workerID not in workerOnline:
+            queue["workerOnline"] = list2Str(workerOnline.append(workerID))
+            queueInfo.QueueInfoInterface().edit(queue)
         #修改队列进行中人员 且医生为当前医生的 为已完成
         doingList = DB.DBLocal.where('visitor_local_data', stationID=inputData["stationID"] ,queueID = inputData["queueID"]\
                                      ,status = "doing", workerOnline = workerID)
         lastOne = {"id": "","stationID":stationID, "queueID": queueID, "name": "", "status": "finish"}
-        # if passed == 1:
-        #     lastOne["status"] = "pass"
         for item in doingList:
             lastOne["id"] = item["id"]
             lastOne["name"] = item["name"]
             lastOne["workEndTime"] = getCurrentTime()
             VisitorLocalInterface(stationID).edit(lastOne)
         #修改呼叫人员状态改为Doing 呼叫医生改为当前医生
+        #TODO : 完善呼叫 跳过目标不是自身呼叫器的患者，排队列表中是准备状态的患者 患者锁定等属性的判断
         waitList = QueueDataController().getQueueVisitor(inputData)
+        waitList = list(waitList)
         nextOne = parpareOne = {}
+        callerInfo = self.getCallerInfo(inputData)
         for item in waitList:
-            if item["locked"] != 1:
-                nextOne = item
-                nextOne["status"] = "doing"
-                nextOne["workerOnline"] = workerID
-                nextOne["workStartTime"] = getCurrentTime()
-                VisitorLocalInterface(stationID).edit(nextOne)
-                try:
-                    parpareOne = iter(waitList).next()
-                except:
-                    parpareOne = {}
-                self.publish(inputData,lastOne,nextOne,parpareOne,ret)
-                break
+            if item["dest"] not in {None,""}:
+                if callerInfo["pos"] != item["dest"]:
+                    continue
+            #判断locked 等属性
+            nextOne = item
+            nextOne["status"] = "doing"
+            nextOne["workerOnline"] = workerID
+            nextOne["workStartTime"] = getCurrentTime()
+            VisitorLocalInterface(stationID).edit(nextOne)
+            try:
+                parpareOne = iter(waitList).next()
+            except:
+                parpareOne = {}
+            self.publish(inputData,lastOne,nextOne,parpareOne,ret)
+            break
         return  ret
-
-    def setVisitorStatus(self, inputData, action=None):
-        stationID = inputData.get("stationID", None)
-        if stationID is None:
-            raise Exception("[ERR]: stationID required")
-        queueID = inputData.get("queueID", None)
-        if queueID is None:
-            raise Exception("[ERR]: queueID required")
-        workerID = inputData.get("id", None)
-        if workerID is None:
-            raise Exception("[ERR]: workerID required")
-
-        # 修改队列最后登录医生
-        queueInfo.QueueInfoInterface().edit({"stationID": stationID, "id": queueID, "workerOnline": workerID})
-
-        where = {"stationID": stationID, "queueID": queueID, "workerOnline": workerID, "status": "doing"}
-        doingList = DB.DBLocal.select("visitor_local_data", where=where)
-
-        doing = doingList[0]
-        if action == "delay":
-            # 为当前需要设置延后的访客重新设置originScore、finalScore
-            doing["prior"] = 3
-            doing = mainStation.StationMainController().setVisitorStatus(doing, action=action)
-            # 修改需要设置延后的访客状态为"延后"
-            doing["status"] = "waiting"
-        elif action == "pass":
-            doing["prior"] = 2
-            doing = mainStation.StationMainController().setVisitorStatus(doing, action=action)
-            doing["status"] = "pass"
-        doing["workEndTime"] = getCurrentTime()
-        VisitorLocalInterface(stationID).edit(doing)
 
     def callVisitor(self,inputData):
         ret = {}
@@ -201,59 +171,26 @@ class WorkerMainController:
         queueID = inputData["queueID"]
         workerID = inputData["id"]
         visitorID = inputData["visitorID"]
+
+        # TODO : 完善呼叫 跳过目标不是自身呼叫器的患者，排队列表中是准备状态的患者 患者锁定等属性的判断
         # 修改队列最后在线医生
-        queue = {}
-        queue["id"] = queueID
-        queue["stationID"] = stationID
-        queue["workerOnline"] = workerID
-        queueInfo.QueueInfoInterface().edit(queue)
+        queue = DB.DBLocal.where('queueInfo', id=queueID).first()
+        if queue is None:
+            raise "queue %d not exist" % queueID
+        workerOnline = str2List(queue["workerOnline"])
+        if workerID not in workerOnline:
+            queue["workerOnline"] = list2Str(workerOnline.append(workerID))
+            queueInfo.QueueInfoInterface().edit(queue)
         # 修改呼叫人员状态改为Doing 呼叫医生改为当前医生
         selectOne = VisitorLocalInterface(stationID).getInfo({"id": visitorID})
-        if selectOne["locked"] != 1:
-            nextOne = {"id": visitorID, "stationID" :stationID}
-            nextOne["status"] = "doing"
-            nextOne["workerOnline"] = workerID
-            nextOne["workStartTime"] = getCurrentTime()
-            VisitorLocalInterface(stationID).edit(nextOne)
-            nextOne["name"] = selectOne["name"]
-            lastOne = parpareOne = {}
-            self.publish(inputData,lastOne,nextOne,parpareOne,ret)
-        return ret
-
-    def callEmergency(self,inputData):
-        ret = {}
-        stationID = inputData["stationID"]
-        queueID = inputData["queueID"]
-        workerID = inputData["id"]
-        visitorID = inputData["visitorID"]
-
-        #修改队列最后在线医生
-        queue = {}
-        queue["id"] = queueID
-        queue["stationID"] = stationID
-        queue["workerOnline"] = workerID
-        queueInfo.QueueInfoInterface().edit(queue)
-        #修改队列进行中人员 且医生为当前医生的 为已完成
-        doingList = DB.DBLocal.where('visitor_local_data', stationID=inputData["stationID"] ,queueID = inputData["queueID"]\
-                                     ,status = "doing", workerOnline = workerID)
-        lastOne = {"id": "","stationID":stationID, "name": "", "status": "finish"}
-        for item in doingList:
-            lastOne["id"] = item["id"]
-            lastOne["name"] = item["name"]
-            lastOne["workEndTime"] = getCurrentTime()
-            VisitorLocalInterface(stationID).edit(lastOne)
-
-        # 修改呼叫人员状态改为Doing 呼叫医生改为当前医生
-        selectOne = VisitorLocalInterface(stationID).getInfo({"id": visitorID})
-        if selectOne["locked"] != 1:
-            nextOne = {"id": visitorID, "stationID" :stationID}
-            nextOne["status"] = "doing"
-            nextOne["workerOnline"] = workerID
-            nextOne["workStartTime"] = getCurrentTime()
-            VisitorLocalInterface(stationID).edit(nextOne)
-            nextOne["name"] = selectOne["name"]
-            lastOne = parpareOne = {}
-            self.publish(inputData,lastOne,nextOne,parpareOne,ret)
+        nextOne = {"id": visitorID, "stationID" :stationID}
+        nextOne["status"] = "doing"
+        nextOne["workerOnline"] = workerID
+        nextOne["workStartTime"] = getCurrentTime()
+        VisitorLocalInterface(stationID).edit(nextOne)
+        nextOne["name"] = selectOne["name"]
+        lastOne = parpareOne = {}
+        self.publish(inputData,lastOne,nextOne,parpareOne,ret)
         return ret
 
     def reCall(self,inputData):
@@ -263,11 +200,13 @@ class WorkerMainController:
         workerID = inputData["id"]
 
         #修改队列最后在线医生
-        queue = {}
-        queue["id"] = queueID
-        queue["stationID"] = stationID
-        queue["workerOnline"] = workerID
-        queueInfo.QueueInfoInterface().edit(queue)
+        queue = DB.DBLocal.where('queueInfo', id=queueID).first()
+        if queue is None:
+            raise "queue %d not exist" % queueID
+        workerOnline = str2List(queue["workerOnline"])
+        if workerID not in workerOnline:
+            queue["workerOnline"] = list2Str(workerOnline.append(workerID))
+            queueInfo.QueueInfoInterface().edit(queue)
         #修改队列进行中人员 且医生为当前医生的 为已完成
         doingList = DB.DBLocal.where('visitor_local_data', stationID=inputData["stationID"] ,queueID = inputData["queueID"]\
                                      ,status = "doing", workerOnline = workerID)
@@ -375,6 +314,37 @@ class WorkerMainController:
     def publish(self,inputData,lastOne,nextOne,parpareOne,ret):
         self.publishNew(inputData,lastOne,nextOne,parpareOne,ret)
 
+    def setVisitorStatus(self, inputData, action=None):
+        stationID = inputData.get("stationID", None)
+        if stationID is None:
+            raise Exception("[ERR]: stationID required")
+        queueID = inputData.get("queueID", None)
+        if queueID is None:
+            raise Exception("[ERR]: queueID required")
+        workerID = inputData.get("id", None)
+        if workerID is None:
+            raise Exception("[ERR]: workerID required")
+
+        # 修改队列最后登录医生
+        queueInfo.QueueInfoInterface().edit({"stationID": stationID, "id": queueID, "workerOnline": workerID})
+
+        where = {"stationID": stationID, "queueID": queueID, "workerOnline": workerID, "status": "doing"}
+        doingList = DB.DBLocal.select("visitor_local_data", where=where)
+
+        doing = doingList[0]
+        if action == "delay":
+            # 为当前需要设置延后的访客重新设置originScore、finalScore
+            doing["prior"] = 3
+            doing = mainStation.StationMainController().setVisitorStatus(doing, action=action)
+            # 修改需要设置延后的访客状态为"延后"
+            doing["status"] = "waiting"
+        elif action == "pass":
+            doing["prior"] = 2
+            doing = mainStation.StationMainController().setVisitorStatus(doing, action=action)
+            doing["status"] = "pass"
+        doing["workEndTime"] = getCurrentTime()
+        VisitorLocalInterface(stationID).edit(doing)
+
     def visitorFinishSet(self,inputData):
         id = inputData.get("visitorID", None)
         stationID = inputData.get("stationID", None)
@@ -384,10 +354,15 @@ class WorkerMainController:
         StationMainController().visitorFinishSet(para)
         return
 
+    def visitorPropertySet(self,inputData):
+        # TODO: 设置访客属性
+        result = {"result": "success"}
+        return result
+
     def setWorkerStatus(self,inputData):
         stationID = inputData["stationID"]
         id = inputData["id"]
         status = inputData["status"]
         worker = { "id":id, "status":status }
         WorkerInterface().editWorker(worker)
-        return
+        return {"result" : "success"}

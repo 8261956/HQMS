@@ -2,12 +2,13 @@
 
 测试时每个接口可以不带token 后续使用时需带token
 
+[TOC]
 
 ##获取工作站的队列列表
 
 接口地址
 
-http://192.168.17.187/hqueue/main/station
+http://192.168.17.187:8080/hqueue/main/station
 
 方法: POST
 
@@ -44,7 +45,7 @@ http://192.168.17.187/hqueue/main/station
 
 ##获取队列信息
 
-接口地址: http://192.168.17.187/hqueue/main/station
+接口地址: http://192.168.17.187:8080/hqueue/main/station
 
 方法: POST
 
@@ -111,7 +112,7 @@ http://192.168.17.187/hqueue/main/station
 
 ##获取访客信息
 
-接口地址: http://192.168.17.187/hqueue/main/station
+接口地址: http://192.168.17.187:8080/hqueue/main/station
 
 方法: POST
 
@@ -167,7 +168,7 @@ http://192.168.17.187/hqueue/main/station
 ```
 ##呼叫指定的患者候者
 
-接口地址: http://192.168.17.187/hqueue/main/station
+接口地址: http://192.168.17.187:8080/hqueue/main/station
 
 方法: POST
 
@@ -194,7 +195,7 @@ http://192.168.17.187/hqueue/main/station
 说明 : 护士站向服务器发送呼叫候诊请求成功后， 进入发音流程，此处的发声文本内容由护士站软件自行生成 ，例如 请张三到护士站候诊，语音发送到语音盒设备或自行转换在线mp3文件进行播放。
 
 ##设置访客过号\锁定\完成\急诊等级\激活\属性标签
-接口地址: http://192.168.17.187/hqueue/main/station
+接口地址: http://192.168.17.187:8080/hqueue/main/station
 
 方法: POST
 
@@ -231,7 +232,7 @@ http://192.168.17.187/hqueue/main/station
 
 ##移动访客到指定位置
 
-接口地址: http://192.168.17.187/hqueue/main/station
+接口地址: http://192.168.17.187:8080/hqueue/main/station
 
 方法: POST
 
@@ -267,7 +268,7 @@ property是转移后属性设定，value是属性的值
 ```
 
 ##访客顺序——前进或后退
-接口地址: http://192.168.17.187/hqueue/main/station
+接口地址: http://192.168.17.187:8080/hqueue/main/station
 
 方法: POST
 
@@ -293,7 +294,7 @@ property是转移后属性设定，value是属性的值
 ```
 
 ## 添加访客
-接口地址：http://192.168.17.187/hqueue/main/station
+接口地址: http://192.168.17.187:8080/hqueue/main/station
 
 方法：POST
 
@@ -335,7 +336,7 @@ property是转移后属性设定，value是属性的值
 
 
 ##前端查询语音播放地址
-接口地址: http://192.168.17.187/hqueue/main/station
+接口地址: http://192.168.17.187:8080/hqueue/main/station
 
 方法: POST
 
@@ -364,7 +365,7 @@ property是转移后属性设定，value是属性的值
 ```
 
 ##前端顺序播放指定文字
-接口地址: http://192.168.17.3:19000/
+接口地址: http://192.168.17.187:8080/hqueue/main/station
 
 方法: POST
 
