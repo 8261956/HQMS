@@ -22,7 +22,8 @@ class StationMainController:
         "visitorMoveto" : "visitorMoveto",
         "visitorMoveby" : "visitorMoveby",
         "visitorSearch" : "visitorSearch",
-        "addVisitor" : "addVisitor"
+        "addVisitor" : "addVisitor",
+        "getMediaBox" : "getMediaBox"
     }
 
     def POST(self,name):
@@ -113,8 +114,10 @@ class StationMainController:
         vManager = VisitorLocalInterface(stationID)
         for vid in vList:
             visitor["id"] = vid
+            visitor["stationID"] = stationID
             visitor["status"] = "prepare"
-            visitor["dest"] = data["dest"]
+            dest = str(data["dest"])
+            visitor["dest"] = dest.decode("utf-8").encode("utf-8")
             vManager.edit(visitor)
         return {"result" : "success"}
 
@@ -123,34 +126,36 @@ class StationMainController:
         vManager = VisitorLocalInterface(stationID)
         vList = data["vid"]
         property = data["property"]
-        value = data["value"]
+        value = str(data["value"]).decode("utf-8").encode("utf-8")
         for vid in vList:
             vInfo = vManager.getInfo({"id":vid})
             if property == "passed":
                 #TODO:  添加过号的排序设置
-                vInfo["status"] = "passed" if value else "waiting"
+                vInfo["status"] = "passed" if int(value) else "waiting"
             elif property == "finish":
                 #TODO:  添加复诊的排序设置
-                vInfo["status"] = "finish" if value else "waiting"
+                vInfo["status"] = "finish" if int(value) else "waiting"
             elif property == "active":
                 # TODO:  添加立即激活的排序设置
-                vInfo["status"] = "waiting" if value else "unactive"
-                if value:
+                vInfo["status"] = "waiting" if int(value) else "unactive"
+                if int(value):
                     vInfo["activeLocalTime"] = datetime.datetime.now()
             elif property == "urgentLev" :
-                vInfo["urgentLev"] = value
+                vInfo["urgentLev"] = int(value)
             else:
                 oldProperty = str2Json(vInfo["property"])
                 oldProperty.update({property: value})
                 vInfo["property"] = json2Str(oldProperty)
-            vManager.edit(value)
+            vManager.edit(vInfo)
+        return {"result" : "success"}
 
     def visitorMoveto(self, data):
         QueueDataController().visitorMoveto(data)
+        return {"result": "success"}
 
     def visitorMoveby(self, data):
         QueueDataController().visitorMoveby(data)
-        return
+        return {"result": "success"}
 
     def setVisitorStatus(self, inputData, action=None):
         stationID = inputData.get("stationID")
@@ -188,6 +193,23 @@ class StationMainController:
         inputData["finalScore"] = destScore
 
         return inputData
+
+    def getMediaBox(self,data):
+        from controller.publish import PublishDevInterface
+        from controller.mediabox import MediaBoxInterface
+
+        stationID = data["stationID"]
+        publishDev = PublishDevInterface()
+        mediaBoxInterface = MediaBoxInterface()
+        devList = publishDev.getInfo({"stationID":stationID})
+        ret = {"result" : "success","list" : []}
+        for dev in devList:
+            # 增加语音盒在线判断
+            mediabox = mediaBoxInterface.mediaBoxStatus(dev)
+            if mediabox["status"] == "offline":
+                continue
+            ret["list"].append({"url":dev["deviceIP"] , "id": dev["id"]})
+        return ret
 
     def visitorSearch(self,inputData):
         visitor = self.getVisitorInfo(inputData)
@@ -295,7 +317,7 @@ class StationMainController:
         where = "stationID=$stationID AND queueID=$queueID AND status IN $status"
         visitor_wait = DB.DBLocal.select("visitor_local_data", where=where,
                                          vars={"stationID": stationID, "queueID": queueID,
-                                               "status": ('waiting', 'unactive', 'unactivewaiting')})
+                                               "status": ('waiting', 'unactive', 'unactivewaiting','prepare')})
         waitNum = len(visitor_wait)
 
         # 获取队列关键字
@@ -328,7 +350,7 @@ class StationMainController:
             "orderTime": current_time,
             "registDate": current_date,
             "registTime": current_time,
-            "urgentLev": urgentLev,
+            #"urgentLev": urgentLev,
             "orderType": orderType,
             "workerID": workerID,
             "workerName": workerName,
@@ -352,7 +374,9 @@ class StationMainController:
             raise Exception("[ERR]: insert into visitor_source_data failed. %s " %str(e))
 
         para = {"stationID": stationID, "queueID": queueID}
-        QueueDataController().updateVisitor(para)
+        #TODO: localdata property 更改  urgentLev
+        #TODO : 同步到 local
+        #QueueDataController().updateVisitor(para)
 
         visitor.update({"waitNum": waitNum})
 

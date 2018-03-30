@@ -3,7 +3,7 @@ import datetime
 import web
 from uwsgidecorators import *
 
-from DBIO.DBBase import DBLocal
+from common.DBBase import DBLocal
 
 
 class TaskManager(object):

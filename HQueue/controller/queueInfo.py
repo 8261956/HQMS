@@ -6,7 +6,7 @@ os.environ['NLS_LANG'] = 'SIMPLIFIED CHINESE_CHINA.UTF8'
 from common.func import packOutput, str2List, list2Str, checkSession, \
     CachedGetValue, CahedSetValue
 from common.config import integrateType
-import common.DBIO.DBBase as DB
+import common.DBBase as DB
 from scene import SceneInterface
 
 class QueueInfoInterface:
@@ -130,7 +130,7 @@ class QueueInfoInterface:
 
         sql = "SELECT q.id, q.name, q.stationID, q.descText, q.filter, " \
               "q.workerOnline, q.workerLimit, q.department, q.isExpert, " \
-              "q.orderAllow, s.id as sceneID, s.name as scene, s.activeLocal " \
+              "s.id as sceneID, s.name as scene, s.activeLocal " \
               "FROM queueInfo AS q LEFT JOIN scene " \
               "AS s ON q.sceneID = s.id WHERE q.id=%s" % id
         # ret = DB.DBLocal.where('queueInfo', stationID=inputData["stationID"],id = inputData["id"])

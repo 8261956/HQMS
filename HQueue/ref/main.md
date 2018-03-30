@@ -1,5 +1,8 @@
 #工作站工作主页的接口
 
+测试时每个接口可以不带token 后续使用时需带token
+
+
 ##获取工作站的队列列表
 
 接口地址
@@ -12,7 +15,6 @@ http://192.168.17.187/hqueue/main/station
 ```
 
 {
-  "token": " safe action",
   "action" : "getQueueListInfo",
   "stationID": 2
 }
@@ -49,7 +51,6 @@ http://192.168.17.187/hqueue/main/station
 参数:
 ```
 {
-  "token": " safe action",
   "action" : "getQueueListAll",
   "stationID": 2,
   "queueID":2
@@ -117,7 +118,6 @@ http://192.168.17.187/hqueue/main/station
 参数:
 ```
 {
-  "token": " safe action",
   "action" : "getVisitorInfo",
   "stationID" : 2,
   "id" : "V001"
@@ -174,11 +174,10 @@ http://192.168.17.187/hqueue/main/station
 参数:
 ```
 {
-  "token": " safe action",
   "action" : "callPrepare",
   "stationID" : 2,
   "queueID" : 1,
-  "vid" : ["V0022","V0023"],
+  "vid" : ["221521689420224751","221521689552865538"],
   "dest" : "护士站"
 }
 ```
@@ -202,19 +201,18 @@ http://192.168.17.187/hqueue/main/station
 参数:
 ```
 {
-  "token": " safe action",
   "action" : "visitorPropertySet",
   "stationID" : 2,
   "queueID" : 2,
-  "vid" : ["V0022","V0023"],
-  "property" :  "passed"  	##"locked","finish","urgentLev","active",
-  "value" : "1"     		 #"排尿锁定","1","2","1"
+  "vid" : ["221521689420224751","221521689552865538"],
+  "property" :  "passed",  	##"locked","finish","urgentLev","active",
+  "value" : "1"     		 #"PAINIAO","1","2","1"
 }
 
 ```
 参数说明 : property 包括 :
 "passed"  value: 0,1
-"locked"  value: "排尿锁定", ("普通锁定","憋尿锁定")
+"locked"  value: "PAINIAO", ("NORMAL","BIENIAO")
 "finish":  value: 0,1
 "urgentLev" value:  0,1,2,3
 "active" : value: 0,1
@@ -240,19 +238,18 @@ http://192.168.17.187/hqueue/main/station
 参数:
 ```
 {
-  "token": " safe action",
   "action" : "visitorMoveto",
   "stationID" : 2,
-  "queueID" : 1,
-  "vid" : ["V0022"],
+  "queueID" : 2,
+  "vid" : ["221521689420224751"],
   "dest" : {
         "stationID" : 2,
-        "queueID" : 2,
+        "queueID" : 46,
         "status" : "waiting",
         "property" : "locked",
         "value" : "1",
         "tag" : "转移患者"
-  }
+  ｝
 }
 ```
 status是目标队列状态，有unactive,waiting,finsh,passed四种。
@@ -277,11 +274,10 @@ property是转移后属性设定，value是属性的值
 参数:
 ```
 {
-  "token": " safe action",
   "action" : "visitorMoveby",
   "stationID" : 2,
-  "queueID" : 2,
-  "vid" : ["V0022"],
+  "queueID" : 46,
+  "vid" : ["221521689420224751"],
   "value" : -1
 }
 ```
@@ -304,21 +300,20 @@ property是转移后属性设定，value是属性的值
 参数：
 ```
 {
-  "token": "safe token",
   "action": "addVisitor",
   "stationID": 2,
   
   "snumber": 1,
   "name": "fan",
-  "queueID": 1,
+  "queueID": 2,
   
   "age": 50,
   "cardID": "222222",
   "personID": "111111",
-  "phone": "12345678"
+  "phone": "12345678",
   "property" : {
   		"redo": "复诊",
-        "locked": 1,
+        "locked": 1
   }
 }
 ```
@@ -347,24 +342,23 @@ property是转移后属性设定，value是属性的值
 参数:
 ```
 {
-  "token": " safe action",
   "action" : "getMediaBox",
   "stationID" : 2,
 }
 ```
 返回内容:
 ```
-{ 
+{
   "errInfo": "none ",
   "rescode": "200",
   "detail": {
-    "result" : "success",
-    "list" : [
-        {
-            "id" : 32,
-            "url": "http://192.168.17.3:19000/"
-        }
-    ]
+    "list": [
+      {
+        "url": "http://192.168.17.36:19001/play",
+        "id": 61
+      }
+    ],
+    "result": "success"
   }
 }
 ```

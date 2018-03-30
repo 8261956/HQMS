@@ -72,9 +72,13 @@ def str2List(str):
         return str.split(',')
 
 def json2Str(json_obj):
-    return json.dump(json_obj,ensure_ascii=False)
+    str = json.dumps(json_obj, cls=JsonExtendEncoder)
+    return str
 def str2Json(str):
-    return json.loads(str)
+    try :
+        return json.loads(str)
+    except:
+        return {}
 
 def createRandomStr32(length=32):
     """产生随机字符串，不长于32位"""
@@ -247,7 +251,7 @@ def checkPostAction(object,data,suppostAction):
     try:
         result = getattr(object, suppostAction[action])(data)
         return packOutput(result)
-    except Exception as e:
+    except Exception , e:
         exc_traceback = sys.exc_info()[2]
         error_trace = traceback.format_exc(exc_traceback)
         error_args = e.args

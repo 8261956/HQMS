@@ -314,9 +314,9 @@ class QueueDataController:
         item = DB.DBLocal.query("SELECT MAX(finalScore) FROM visitor_local_data where queueID = $queueID and \
                 status in (\"waiting\",\"doing\",\"finish\")",vars = {"queueID" : queueID}).first()
         if item is not None:
-            return item["MAX(finalScore)"]
-        else:
-            return 0
+            if item["MAX(finalScore)"] is not None:
+                return item["MAX(finalScore)"]
+        return 0
 
     def getVisitorScore(self,stationID,queueID,visitorID):
         list = DB.DBLocal.where('visitor_local_data', id = visitorID)
@@ -355,13 +355,15 @@ class QueueDataController:
 
         for vid in vList:
             vInfo = vManager.getInfo({"id": vid})
+            if vInfo["queueID"] == dest["queueID"]:
+                continue
             vInfo["queueID"] = dest["queueID"]
             vInfo["status"] = dest["status"]
             property_json  =  str2Json(vInfo["property"])
             property_json.update({dest["property"] : dest["value"]})
             vInfo["property"] = json2Str(property_json)
             vInfo["tag"] = dest["tag"]
-            scoreMax = self.getQueueScoreMax(stationID,queueID)
+            scoreMax = self.getQueueScoreMax(stationID,dest["queueID"])
             if scoreMax == 0:
                 vInfo["finalScore"] = NORMAL_LEVEL * levelMask + POS_STEP
             else:

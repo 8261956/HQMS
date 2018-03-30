@@ -8,8 +8,8 @@ import re
 import datetime
 import time
 import web
-from DBIO.DBBase import DBLocal, MSSQLController
-from modules.queueData import QueueDataController
+from common.DBBase import DBLocal, MSSQLController
+from controller.queueData import QueueDataController
 from common.func import CahedSetValue, CachedGetValue, multiple_insert_sql
 
 import gevent

@@ -5,7 +5,7 @@ import common.func
 import queueInfo
 import mainStation
 from queueData import QueueDataController, VisitorLocalInterface
-from common.func import packOutput, LogOut, str2List
+from common.func import packOutput, LogOut, str2List,list2Str,getCurrentTime,checkPostAction
 from publish import callRecordInterface, PublishDevInterface
 from worker import WorkerInterface
 from mainStation import StationMainController
@@ -13,201 +13,30 @@ from scene import SceneInterface
 from mediabox import MediaBoxInterface
 import common.DBBase as DB
 
-def GetServiceIP(self):
-    myname = socket.getfqdn(socket.gethostname())
-    myaddr = socket.gethostbyname(myname)
-    return myaddr
-
-def SendMediaConvert(cid,text):
-    return []
-
-androidDate = ""
-
-def getAndriodDate():
-    if androidDate == "":
-        date = time.strftime("%Y%m%d", time.localtime())
-        return date
-    else:
-        return androidDate
-
-def praseAnnounceUrl(url):
-    s = url.find("media/")
-    date = url[s+6:s+6+8]
-    return date
-
-annoceCache = {}
-def RecodeAnnounce(stationID,cid,text,url):
-    if stationID in annoceCache:
-        annoceCache[stationID].append({"cid":cid,"text":text,"url":url})
-    else:
-        annoceCache[stationID] = []
-        annoceCache[stationID].append({"cid":cid,"text":text,"url":url})
-
-def AskAnnounce(stationID):
-    if stationID in annoceCache:
-        if len(annoceCache[stationID]) > 0:
-            ret = annoceCache[stationID][0]
-            annoceCache[stationID].pop(0)
-            return ret
-    return ""
-
-def ClearAnnounce(stationID):
-    annoceCache[stationID] = []
 
 class WorkerMainController:
-    def __init__(self):
-        pass
+    support_action = {
+        "getCallerInfo":"getCallerInfo",
+        "getQueueList" : "getQueueList",
+        "getQueueListAll":"getQueueListAll",
+        "getMovetoList":"getMovetoList",
+        "visitorMoveto": "visitorMoveto",
+        "callNext" : "callNext",
+        "reCall" : "reCall",
+        "setDelay" : "setDelay",
+        "callPass" : "callPass",
+        "callVisitor" : "callVisitor",
+        "callEmergency" : "callEmergency",
+        "visitorPropertySet" : "visitorPropertySet",
+        "setWorkerStatus" : "setWorkerStatus",
+
+    }
 
     def POST(self,name):
-        webData = json.loads(web.data())
-        action = webData["action"]
-
-        LogOut.info("worker Post Request action : "+action)
-
-        if action == "getCallerInfo":
-            ret = self.getCallerInfo(webData)
-            return packOutput(ret)
-        elif action == "getQueueList":
-            ret = self.getQueueList(webData)
-            return packOutput(ret)
-
-        elif action == "getQueueListAll":
-            try:
-                ret = self.getQueueListAll(webData)
-                return packOutput(ret)
-            except Exception as e:
-                return packOutput({}, code="400", errorInfo=str(e))
-
-        elif action == "getMovetoList":
-            ret = self.getMovetoList(webData)
-            return packOutput(ret)
-
-        elif action == "visitorAppendQueue":
-            try:
-                self.visitorAppendQueue(webData)
-                ret = {"result":"success"}
-            except Exception, e:
-                print Exception, ":", e
-                ret = {"result": "faild"}
-                return packOutput(ret,"500",str(e))
-            return packOutput(ret)
-
-        elif action == "visitorMoveby":
-            try:
-                self.visitorMoveby(webData)
-                ret = {"result": "success"}
-            except Exception, e:
-                print Exception, ":", e
-                ret = {"result": "faild"}
-                return packOutput(ret,"500",str(e))
-            return packOutput(ret)
-
-        elif action == "callNext":
-            try:
-                ret = self.callNext(webData)
-                ret["result"] = "success"
-            except Exception, e:
-                print Exception, ":", e
-                ret = {"result": "faild"}
-                return packOutput(ret,"500",str(e))
-            return packOutput(ret)
-
-        elif action == "reCall":
-            try:
-                ret = self.reCall(webData)
-                ret["result"] = "success"
-            except Exception, e:
-                print Exception, ":", e
-                ret = {"result": "faild"}
-                return packOutput(ret,"500",str(e))
-            return packOutput(ret)
-
-        elif action == "callPass":
-            result = {}
-            try:
-                self.setVisitorStatus(webData, action="pass")
-                result.update({"result": "success"})
-                return packOutput(result)
-            except Exception as e:
-                result.update({"result": "failed"})
-                return packOutput(result, "500", str(e))
-
-        elif action == "setDelay":
-            result = {}
-            try:
-                self.setVisitorStatus(webData, action="delay")
-                result.update({"result": "success"})
-                return packOutput(result)
-            except Exception as e:
-                result.update({"result": "failed"})
-                return packOutput(result, "500", str(e))
-
-        elif action =="callVisitor":
-            try:
-                ret = self.callVisitor(webData)
-                ret["result"] = "success"
-            except Exception, e:
-                print Exception, ":", e
-                ret = {"result": "faild"}
-                return packOutput(ret,"500",str(e))
-            return packOutput(ret)
-
-        elif action =="callEmergency":
-            try:
-                ret = self.callEmergency(webData)
-                ret["result"] = "success"
-            except Exception, e:
-                print Exception, ":", e
-                ret = {"result": "faild"}
-                return packOutput(ret,"500",str(e))
-            return packOutput(ret)
-
-        elif action =="visitorFinishSet":
-            try:
-                self.visitorFinishSet(webData)
-                ret = {"result": "success"}
-            except Exception, e:
-                print Exception, ":", e
-                ret = {"result": "faild"}
-                return packOutput(ret,"500",str(e))
-            return packOutput(ret)
-        elif action == "AnnounceAsk":
-            if webData["clear"] == 1:
-                ClearAnnounce(webData["stationID"])
-                return packOutput({"result":0})
-            ret = AskAnnounce(webData["stationID"])
-            if ret == "":
-                return packOutput({"result":0})
-            else:
-                return packOutput({"result": 1,"url":ret["url"],"text":ret["text"],"cid":ret["cid"]})
-
-        elif action == "setWorkerStatus":
-            try:
-                self.setWorkerStatus(webData)
-                ret = {"result": "success"}
-            except Exception, e:
-                print Exception, ":", e
-                ret = {"result": "faild"}
-                return packOutput(ret,"500",str(e))
-            return packOutput(ret)
-
-        else:
-            return packOutput({}, "500", "unsupport action")
+        data = json.loads(web.data())
+        return checkPostAction(self, data, self.support_action)
 
     def getCallerInfo(self,inputData):
-        # stationID = inputData["stationID"]
-        # id = inputData["id"]
-        # ipAddr = web.ctx.ip
-        # if "localIP" in inputData:
-        #     ipAddr = inputData["localIP"]
-        # print "Login ip: " + ipAddr
-        # ret = DB.DBLocal.where('caller', stationID=inputData["stationID"], ip=ipAddr)
-        # if len(ret) > 0:
-        #     callerLogin = ret[0]
-        #     callerLogin["workerLimit"] = str2List(callerLogin["workerLimit"] )
-        #     if id in callerLogin["workerLimit"]:
-        #         return callerLogin
-        # return {}
         stationID = inputData.get("stationID", None)
         ip = web.ctx.ip
         if "localIP" in inputData:
@@ -246,6 +75,7 @@ class WorkerMainController:
         for item in matchQueue:
             info = {}
             # 判断队列、医生的排班情况
+            #TODO : 判断队列医生的排班情况，统一放到排班方法中提供接口
             queue = item["filter"]
             scheduleList = DB.DBLocal.select("schedule", where={"queue": queue, "workDate": current_date,
                                                                 "workTime": current_time})
@@ -284,23 +114,13 @@ class WorkerMainController:
             ret["list"].append(queueInfo)
         return ret
 
-    def visitorAppendQueue(self,inputData):
-        inputData["dest"]["id"] = ""
-        ctrl = mainStation.StationMainController()
-        ctrl.visitorMoveto(inputData)
-        if inputData["queueID"] != inputData["dest"]["queueID"]:
-            #移到最后
-            inputData["queueID"] = inputData["dest"]["queueID"]
-            inputData["value"] = 99999
-            ctrl.visitorMoveby(inputData)
-        return
+    def visitorMoveto(self,inputData):
+        QueueDataController().visitorMoveto(inputData)
+        return {"result" : "success"}
 
     def visitorMoveby(self,inputData):
-        mainStation.StationMainController().visitorMoveby(inputData)
-        return
-
-    def getCurrentTime(self):
-        return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        QueueDataController().visitorMoveby(inputData)
+        return {"result" : "success"}
 
     def callNext(self,inputData):
         ret = {}
@@ -309,10 +129,11 @@ class WorkerMainController:
         workerID = inputData["id"]
 
         #修改队列最后在线医生
-        queue = {}
-        queue["id"] = queueID
-        queue["stationID"] = stationID
-        queue["workerOnline"] = workerID
+        queue = DB.DBLocal.where('queueInfo', queueID=queueID).first()
+        if queue is None:
+            raise "queue %d not exist" %queueID
+        workerOnline = str2List(queue["workerOnline"])
+        queue["workerOnline"] = list2Str(workerOnline.append(workerID))
         queueInfo.QueueInfoInterface().edit(queue)
         #修改队列进行中人员 且医生为当前医生的 为已完成
         doingList = DB.DBLocal.where('visitor_local_data', stationID=inputData["stationID"] ,queueID = inputData["queueID"]\
@@ -323,7 +144,7 @@ class WorkerMainController:
         for item in doingList:
             lastOne["id"] = item["id"]
             lastOne["name"] = item["name"]
-            lastOne["workEndTime"] = self.getCurrentTime()
+            lastOne["workEndTime"] = getCurrentTime()
             VisitorLocalInterface(stationID).edit(lastOne)
         #修改呼叫人员状态改为Doing 呼叫医生改为当前医生
         waitList = QueueDataController().getQueueVisitor(inputData)
@@ -333,7 +154,7 @@ class WorkerMainController:
                 nextOne = item
                 nextOne["status"] = "doing"
                 nextOne["workerOnline"] = workerID
-                nextOne["workStartTime"] = self.getCurrentTime()
+                nextOne["workStartTime"] = getCurrentTime()
                 VisitorLocalInterface(stationID).edit(nextOne)
                 try:
                     parpareOne = iter(waitList).next()
@@ -371,7 +192,7 @@ class WorkerMainController:
             doing["prior"] = 2
             doing = mainStation.StationMainController().setVisitorStatus(doing, action=action)
             doing["status"] = "pass"
-        doing["workEndTime"] = self.getCurrentTime()
+        doing["workEndTime"] = getCurrentTime()
         VisitorLocalInterface(stationID).edit(doing)
 
     def callVisitor(self,inputData):
@@ -392,7 +213,7 @@ class WorkerMainController:
             nextOne = {"id": visitorID, "stationID" :stationID}
             nextOne["status"] = "doing"
             nextOne["workerOnline"] = workerID
-            nextOne["workStartTime"] = self.getCurrentTime()
+            nextOne["workStartTime"] = getCurrentTime()
             VisitorLocalInterface(stationID).edit(nextOne)
             nextOne["name"] = selectOne["name"]
             lastOne = parpareOne = {}
@@ -419,7 +240,7 @@ class WorkerMainController:
         for item in doingList:
             lastOne["id"] = item["id"]
             lastOne["name"] = item["name"]
-            lastOne["workEndTime"] = self.getCurrentTime()
+            lastOne["workEndTime"] = getCurrentTime()
             VisitorLocalInterface(stationID).edit(lastOne)
 
         # 修改呼叫人员状态改为Doing 呼叫医生改为当前医生
@@ -428,7 +249,7 @@ class WorkerMainController:
             nextOne = {"id": visitorID, "stationID" :stationID}
             nextOne["status"] = "doing"
             nextOne["workerOnline"] = workerID
-            nextOne["workStartTime"] = self.getCurrentTime()
+            nextOne["workStartTime"] = getCurrentTime()
             VisitorLocalInterface(stationID).edit(nextOne)
             nextOne["name"] = selectOne["name"]
             lastOne = parpareOne = {}

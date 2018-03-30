@@ -9,7 +9,7 @@ import datetime
 import time
 import re
 
-from DBIO.DBBase import DBLocal
+from common.DBBase import DBLocal
 from common.func import CahedSetValue, CachedGetValue
 
 

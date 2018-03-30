@@ -7,11 +7,11 @@ from suds.xsd.doctor import Import, ImportDoctor
 import xml.etree.ElementTree as ET
 from collections import OrderedDict
 import common.xmlDict as XML
-from DBIO.DBBase import DBLocal
+from common.DBBase import DBLocal
 
 BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
-from modules.visitor import VisitorManager
+from controller.visitor import VisitorManager
 #import modules.visitor 
 
 YX_url = "http://192.168.11.77:8082/HISWebService.asmx?WSDL"
