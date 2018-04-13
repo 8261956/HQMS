@@ -100,8 +100,6 @@ class ExtManager(object):
                 localStatus = '已过号'
             elif localStatus == 'unactive':
                 localStatus = '未激活'
-            elif localStatus == 'unactivewaiting':
-                localStatus = '激活等待中'
 
             if status == 'locked':
                 status = '锁定'

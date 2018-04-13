@@ -8,12 +8,16 @@ from scene import SceneInterface
 import common.DBBase as DB
 
 
-finalScoreMax = 999999999
+finalScoreMax = 1999999999
 finalScoreMin = 0
 finalScoreDef = finalScoreMax
 levelMask = 100000000
 POS_STEP = 5
-NORMAL_LEVEL = 9
+SCORE_STEP = 160
+NORMAL_LEVEL = 15
+URGENT_LEV1_NUM =  2
+URGENT_LEV2_NUM =  3
+PRIOR_LEV_NUM = 5  #老幼 > 复诊 > 过号 > 预约 > 普通
 
 class LocalVisitor:
     def __init__(self):
@@ -23,8 +27,7 @@ class LocalVisitor:
     def collectScore(cls,scene,sourceData,localData):  #收集访客的优先信息
         stationID = localData["stationID"]
         queueID = localData["queueID"]
-        workDays, date = QueueInfoInterface().getWorkDays(stationID, queueID)
-        date = datetime.datetime.strptime(date, "%Y%m%d")
+        date = datetime.datetime.strptime("20180101", "%Y%m%d")
         level = LocalVisitor.collectLevel(scene,sourceData, localData)
         rankWay = scene["rankWay"]
 
@@ -32,78 +35,31 @@ class LocalVisitor:
         activeLocalTime = localData["activeLocalTime"]
         if rankWay == "snumber":
             num = sourceData["snumber"]
-            # TODO: V1.21  Test. scene property add morningPrior
-            sceneProperty = scene.get("property")
-            if sceneProperty["morningPrior"]:
-                #Todo: 判断时间大于12点
-                #if registDateTime.hours >= 12:
-                #    level = level + 1
-                pass
-            score = (level*levelMask) + (num) * 160
-        elif rankWay == "registTime" or rankWay == "registTimeAndSmart":
+            num = int(filter(str.isdigit, num))
+            score = (level*levelMask) + (num) * SCORE_STEP
+        elif rankWay == "registTime":
             second = (registDateTime - date).total_seconds()
-            score = (level * levelMask) + int(second) * 160
-        else:
+            score = (level * levelMask) + int(second) * SCORE_STEP
+        else:       # rankWay == "activeTime":
             if activeLocalTime < date:
                 second = (registDateTime - date).total_seconds()
             else:
                 second = (activeLocalTime - date).total_seconds()
-            score = (level * levelMask) + int(second) * 160
+            score = (level * levelMask) + int(second) * SCORE_STEP
         return score
 
     @classmethod
     def collectLevel(cls,scene,sourceData,localData):  #收集访客的优先信息
-        level = 7
-        if sourceData["VIP"] == 1 or localData["vip"] == 1:
-            level = 1
-        elif (sourceData["orderType"] != 0) and (sourceData["orderType"] is not None):  #访客为预约访客
-            # TODO: V1.21  scene property add orderNoPrior
-            sceneProperty = scene.get("property")
-            if sceneProperty["orderNoPrior"]:
-                level = 7
-            else:
-                level = 3
-        else:
-            level = 7
+        lev1 = sourceData["urgnet_lev1"]
+        lev2 = max(sourceData["urgnet_lev2"],localData["urgentLev"])
+        URGENT_LEV1_NUM = 2
+        URGENT_LEV2_NUM = 3
+
+        level = (URGENT_LEV1_NUM -1 - lev1) * (PRIOR_LEV_NUM ) + (URGENT_LEV2_NUM  - 1 - lev2)
         return level
 
-    def load(self,sourceData,localData):
-        pass
-
 class QueueDataController:
-
-    def POST(self,name):
-        webData = json.loads(web.data())
-        action = webData["action"]
-
-        if "token" in webData:
-            token = webData["token"]
-            if checkSession(token) == False:
-                return packOutput({}, "401", "Tocken authority failed")
-
-        if action == "getListWaiting":
-            ret = self.getQueueVisitor(webData)
-            jsonData = {"num":len(ret), "list": []}
-            for item in ret:
-                visitor = {}
-                visitor["id"] = item["id"]
-                visitor["name"] = item["name"]
-                visitor["status"] = item["status"]
-                visitor["originScore"] = item["originScore"]
-                visitor["finalScore"] = item["finalScore"]
-                visitor["originLevel"] = item["originLevel"]
-                jsonData["list"].append(visitor)
-            return packOutput(jsonData)
-
-        elif action == "getListUnactive":
-            pass
-
-        elif action == "getListOver":
-            pass
-
-        else:
-            return packOutput({}, "500", "unsupport action")
-
+    #TODO: 门口屏窗体显示只显示本窗口准备的患者
     def getQueueVisitor(self,inputData,status = ["waiting"]):
         queueID = inputData["queueID"]       #本队列ID
         stationID = inputData["stationID"]
@@ -113,7 +69,17 @@ class QueueDataController:
             "status" : status
         }
         filter = "stationID = $stationID and queueID = $queueID and status IN $status"
-        visitorRank = DB.DBLocal.select("visitor_local_data", where=filter,vars = vars, order="finalScore,originScore")  # 本队列所有访客
+        visitorRank = DB.DBLocal.select("visitor_local_data", where=filter,vars = vars, order="finalScore,originScore").list()  # 本队列所有访客
+        return visitorRank
+
+    def getVisitorList(self,stationID,queueID,status = ["waiting","prepare"]):
+        vars = {
+            "stationID" : stationID,
+            "queueID" : queueID,
+            "status" : status
+        }
+        filter = "stationID = $stationID and queueID = $queueID and status IN $status"
+        visitorRank = DB.DBLocal.select("visitor_view_data", where=filter,vars = vars, order="finalScore,originScore").list()  # 本队列所有访客
         return visitorRank
 
     def updateVisitor(self, inputData):
@@ -126,8 +92,7 @@ class QueueDataController:
         visitorLocalInterface = VisitorLocalInterface(stationID)
 
         filter = str(queueInfo["filter"])
-        sourceList = DB.DBLocal.where("visitor_source_data", queue = filter)
-        sourceList = list(sourceList)
+        sourceList = DB.DBLocal.where("visitor_source_data", queue = filter).list()
         localList = DB.DBLocal.where("visitor_local_data", stationID=stationID ,queueID = queueID)
         localDict = list2Dict(localList)
         # 遍历 sourceList
@@ -139,11 +104,7 @@ class QueueDataController:
                     "registDate": sourceItem["registDate"],
                     "stationID": stationID,
                     "queueID": queueID,
-                    "activeLocal": 0,
                     "activeLocalTime": datetime.datetime(2000,1,1),
-                    "prior": 0,
-                    "vip": 0,
-                    "locked": 0
                 }
                 status = "unactive" if scene["activeLocal"] else "waiting"
                 originLevel = LocalVisitor.collectLevel(scene, sourceItem, localData)
@@ -171,84 +132,73 @@ class QueueDataController:
                     localDict[str(sourceItem["id"])] = localData
                     visitorLocalInterface.edit(localData)
 
-                # 如果队列需要激活且访客处于等待激活的状态，根据激活时间更新访客的状态
-                if scene["activeLocal"] and localData["status"] == "unactivewaiting":
-                    now = datetime.datetime.now()
-                    activeTime = localData["activeLocalTime"]
-                    interval = (now - activeTime).total_seconds()
-                    if interval >= scene["delayTime"] * 60:
-                        localData.update({"status": "waiting"})
-                    visitorLocalInterface.edit(localData)
-
         self.sortVisitor(stationID, queueID, scene)
 
     def sortVisitor(self, stationID, queueID, scene):
-        filter = "stationID=%s and queueID=%s" % (str(stationID), str(queueID))
-        ret = DB.DBLocal.select("visitor_local_data", where=filter, order="finalScore, originScore")
-        localList = list(ret)
+        localList = self.getVisitorList(stationID,queueID,["waiting","prepare"])
         rankWay = scene["rankWay"]
+        waitNum = scene.get("defaultPrepareNum", 0)
+        InsertSeries = scene.get("InsertPriorSeries", 2)
+        InsertInterval = scene.get("InsertPriorInterval", 3)
 
         if rankWay in ("snumber", "registTime", "activeTime"):
             pos = 0
-            priorWaitNum = scene.get("priorNum", 0)
-            InsertSeries = scene.get("InsertPriorSeries", 2)
-            InsertInterval = scene.get("InsertPriorInterval", 3)
-
             for localItem in localList:
-                if scene["activeLocal"] and not localItem["activeLocal"]:
+                prior = self.getLevel(localItem)
+                if scene["activeLocal"] and localItem["status"] == "unactive":
                     continue
                 if localItem["finalScore"] != finalScoreDef:
                     pass
                 else:
                     #策略配置中不需要优先延后策略 或普通患者
-                    if (priorWaitNum == 0 and InsertInterval == 0) or localItem["originLevel"] != 3:
+                    if (waitNum == 0 and InsertInterval == 0) or prior == 0:
                         localItem["finalScore"] = localItem["originScore"] + pos * POS_STEP
                     # 策略配置中配置了优先延后策略 且预约患者
                     else:
-                        localItem["prior"] = 4
-                        destPos,destScore = self.getInsertPos(localItem, localList, InsertInterval, InsertSeries, priorWaitNum)
+                        destPos,destScore = self.getInsertPos(localItem, localList, InsertInterval, InsertSeries, waitNum)
                         localItem["finalScore"] = destScore
                     VisitorLocalInterface(stationID).edit(localItem)
                 pos += 1
 
-        elif rankWay == "registTimeAndSmart":
-            pos = 0
-            orderPos = 0
-            normalPos = 0
-            for localItem in localList:
-                if scene["activeLocal"] == 0 or localItem["activeLocal"] == 1:
-                    if localItem["finalScore"] != finalScoreDef:
-                        currentScore = localItem["finalScore"]
-                        if localItem["originLevel"] == 3:
-                            orderPos = (currentScore / 100) * 3 + (currentScore % 100) / 20
-                        if localItem["originLevel"] == 7:
-                            normalPos = currentScore / 100
-                    else:
-                        if localItem["originLevel"] == 1:
-                            localItem["finalScore"] = 0
-                        elif localItem["originLevel"] == 3:
-                            orderPos += 1
-                            if orderPos % 3 == 0:
-                                orderPos += 1
-                            localItem["finalScore"] = (orderPos / 3) * 100 + (orderPos % 3) * 20
-                        elif localItem["originLevel"] == 7:
-                            normalPos += 1
-                            localItem["finalScore"] = 100 * normalPos
-                        VisitorLocalInterface(stationID).edit(localItem)
-                    pos += 1
+    def setVisitorStatus(self, stationID, queueID, visitor, action=None):
+
+        # 根据访客所处队列选择的策略信息，获取缓冲人数
+        queueInfo = QueueInfoInterface().getInfo({"stationID": stationID, "id": queueID})
+        sceneID = queueInfo["sceneID"]
+        scene = SceneInterface().getSceneInfo({"sceneID": sceneID})
+        waitNum = scene.defaultPrepareNum
+        # 获取队列访客信息，如果等待队列中已经有过号或者复诊的访客，则调整缓冲人数
+        visitorList = self.getVisitorList(stationID, queueID)
+        visitorNum = len(visitorList)
+        if action == "pass" or action == "delay":
+            InsertSeries = scene["InsertPassedSeries"]
+            InsertInterval = scene["InsertPassedInterval"]
+        elif action == "review":
+            InsertSeries = scene["InsertReviewSeries"]
+            InsertInterval = scene["InsertReviewInterval"]
+        else:  # default val
+            InsertSeries = 2
+            InsertInterval = 3
+
+        destPos, destScore = self.getInsertPos(visitor=visitor, vList=visitorList,
+                                                                numNormal=InsertInterval,
+                                                                numHigher=InsertSeries, numWaitting=waitNum)
+        visitor["finalScore"] = destScore
+
+        return visitor
 
     # 按照患者状态得到细分的优先级 level大优先级高
     def getLevel(self,visitor):
-        level = 0
-        if visitor["prior"] == 1:   #"review"
-            level = 2
-        elif visitor["prior"] == 2: #"pass"
-            level = 1
-        elif visitor["prior"] == 3: #"delay"
-            level = 1
-        elif visitor["prior"] == 4: #order
-            level = 3
-        return  level
+        property = str2Json(visitor.get("property", ""))
+        if int(property.get("review")):
+            return 3
+        elif visitor.get("orderType",0):
+            return 2
+        elif int(property.get("delay")):
+            return 1
+        elif int(property.get("pass")):
+            return 1
+        return 0
 
     # 按照优先级 和策略计算插入在队列中的位置
     def getInsertPos(self,visitor,vList,numNormal,numHigher,numWaitting):
@@ -306,9 +256,9 @@ class QueueDataController:
         # 计算目标分值
         if posDest >= numTotalVisitor:
             posDest = numTotalVisitor
-            scoreDest = topScore + 5
+            scoreDest = topScore + POS_STEP
         elif posDest == 0:
-            scoreDest = levelMask * 7 + (15 -level) * 10
+            scoreDest = topScore - POS_STEP
         else:
             pre = vListTemp[posDest - 1]["finalScore"]
             next = vListTemp[posDest]["finalScore"]
@@ -323,34 +273,6 @@ class QueueDataController:
                 return item["MAX(finalScore)"]
         return 0
 
-    def getVisitorScore(self,stationID,queueID,visitorID):
-        list = DB.DBLocal.where('visitor_local_data', id = visitorID)
-        visitor = list[0]
-        ret = {}
-        if visitor["status"] == "unactive" or visitor["status"] == "finish" or visitor["status"] == "pass":
-            ret["finalScore"] = finalScoreDef
-            ret["finalScoreUp"] = finalScoreDef
-            ret["finalScoreDown"] = finalScoreDef
-        else:
-            ret["finalScore"] = visitor["finalScore"]
-            list = self.getQueueVisitor({"stationID":stationID,"queueID":queueID},"waiting")
-            ret["finalScore"] = ret["finalScoreUp"] = ret["finalScoreDown"] = finalScoreDef
-            if len(list) == 0:
-                return ret
-            iterp = iter(list)
-            ret["finalScoreUp"] = 0
-            for item in list:
-                if item["id"] == visitorID:
-                    ret["finalScore"] = item["finalScore"]
-                    try:                #判断是否还有下一个
-                        next = iterp.next()
-                        ret["finalScoreDown"] = next["finalScore"]
-                    except:
-                        ret["finalScoreDown"] = ret["finalScore"] + 100
-                    break
-                ret["finalScoreUp"] = item["finalScore"]
-            return ret
-
     def visitorMoveto(self, data):
         stationID = data["stationID"]
         queueID = data["queueID"]
@@ -360,19 +282,18 @@ class QueueDataController:
 
         for vid in vList:
             vInfo = vManager.getInfo({"id": vid})
-            if vInfo["queueID"] == dest["queueID"]:
-                continue
-            vInfo["queueID"] = dest["queueID"]
             vInfo["status"] = dest["status"]
             property_json  =  str2Json(vInfo["property"])
             property_json.update({dest["property"] : dest["value"]})
             vInfo["property"] = json2Str(property_json)
             vInfo["tag"] = dest["tag"]
-            scoreMax = self.getQueueScoreMax(stationID,dest["queueID"])
-            if scoreMax == 0:
-                vInfo["finalScore"] = NORMAL_LEVEL * levelMask + POS_STEP
-            else:
-                vInfo["finalScore"] = scoreMax + POS_STEP
+            if vInfo["queueID"] != dest["queueID"]:
+                vInfo["queueID"] = dest["queueID"]
+                scoreMax = self.getQueueScoreMax(stationID,dest["queueID"])
+                if scoreMax == 0:
+                    vInfo["finalScore"] = NORMAL_LEVEL * levelMask + POS_STEP
+                else:
+                    vInfo["finalScore"] = scoreMax +POS_STEP + SCORE_STEP/2
             vManager.edit(vInfo)
         return
 
@@ -380,31 +301,38 @@ class QueueDataController:
         stationID = data["stationID"]
         queueID = data["queueID"]
         vManager = VisitorLocalInterface(stationID)
-        vList = data["vid"]
+        vidList = data["vid"]
         value = data["value"]
 
-        for vid in vList:
+        for vid in vidList:
             vInfo = vManager.getInfo({"id": vid})
             vList = DB.DBLocal.select("visitor_view_data",where = "queueID = $queueID and \
-            status in (\'waiting\',\'prepare\',\'doing\')",vars = {"queueID" : queueID})
-            vList = list(vList)
-            # TODO: 前后移动算法添加
+            status in (\'waiting\',\'prepare\',\'doing\')",vars = {"queueID" : queueID}).list()
+            destScore = vInfo["finalScore"]
+            pos = 0
+            for item in vList:
+                if item["id"] == vid:
+                    dest = pos + value
+                    if dest == len(vList) - 1:
+                        dest = vList[-1].finalScore + POS_STEP + SCORE_STEP/2
+                    elif dest == 0:
+                        destScore= vList[0].finalScore - POS_STEP - SCORE_STEP/2
+                    elif dest > 0 and dest < len(vList) - 1:
+                        destScore = (vList[dest - 1].finalScore + vList[dest].finalScore ) /2
+                pos += 1
+            vInfo.finalScore = destScore
             vManager.edit(vInfo)
 
         return 1
 
     def getWaitingNum(self,inputData):
-        list = self.getQueueVisitor(inputData)
+        list = self.getQueueVisitor(inputData,status= ["waiting,prepare"])
         num = 0
         for item in list:
             if item["id"] == inputData["id"]:
                 return num
             num += 1
         return 0
-
-    def isRankLoad(self,pos,scene):
-
-        pass
 
 
 class VisitorLocalInterface:

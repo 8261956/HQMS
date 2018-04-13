@@ -77,23 +77,28 @@ class StationMainController:
         if useCache and value != False:
             return value
 
-        ret = {"name": "", "workerOnline": [], "waitingList": [], "finishList": [] , "unactiveList" : []}
-        queue = QueueInfoInterface().getInfo({"stationID": stationID, "id": queueID})
+        ret = {"name": "", "workerOnline": [], "waitingList": [], "finishList": [] , "unactiveList" : [],"passList" : []}
+        queue = DB.DBLocal.where("queueInfo",stationID = stationID,id = queueID).first()
         ret.update({"name": queue["name"], "workerOnline": str2List(queue["workerOnline"])})
 
         vList = DB.DBLocal.where("visitor_view_data",stationID = stationID,queueID = queueID)
+        doingList = []
+        prepareList = []
+        waitingList = []
         for item in vList:
-            if item.status == "unactive" :
+            if item.status in ["unactive"] :
                 ret["unactiveList"].append(item)
             elif item.status == "doing":
-                ret["waitingList"].append(item)
+                doingList.append(item)
             elif item.status == "prepare":
-                ret["waitingList"].append(item)
+                prepareList.append(item)
             elif item.status == "waiting" :
-                ret["waitingList"].append(item)
+                waitingList.append(item)
             elif item.status == "finish" :
                 ret["finishList"].append(item)
-
+            elif item.status == "pass" :
+                ret["passList"].append(item)
+        ret["waitingList"] = doingList + prepareList + waitingList
         #缓存 value
         common.func.CahedSetValue(json.dumps(key),ret,2)
         return ret
@@ -123,23 +128,40 @@ class StationMainController:
 
     def visitorPropertySet(self , data):
         stationID = data["stationID"]
+        queueID = data["queueID"]
         vManager = VisitorLocalInterface(stationID)
         vList = data["vid"]
         property = data["property"]
         value = str(data["value"]).decode("utf-8").encode("utf-8")
         for vid in vList:
             vInfo = vManager.getInfo({"id":vid})
-            if property == "passed":
-                #TODO:  添加过号的排序设置
-                vInfo["status"] = "passed" if int(value) else "waiting"
+            if property == "pass":
+                vInfo["status"] = "pass" if int(value) else "waiting"
+                oldProperty = str2Json(vInfo["property"])
+                if int(value) ==  0 :
+                    if oldProperty.get("pass",0) == 1:
+                        # TODO:  添加过号的排序设置
+                        vInfo = QueueDataController().setVisitorStatus(stationID,queueID,vInfo,"pass")
+                oldProperty.update({ property : value})
+                vInfo["property"] = json2Str(oldProperty)
+
             elif property == "finish":
                 #TODO:  添加复诊的排序设置
+                if vInfo["status"] == "finish" and value == 0:
+                    oldProperty = str2Json(vInfo["property"])
+                    vInfo = QueueDataController().setVisitorStatus(stationID, queueID, vInfo, "review")
+                    oldProperty.update({property : value})
+                    oldProperty.update({"review": 1})
+                    vInfo["property"] = json2Str(oldProperty)
+
                 vInfo["status"] = "finish" if int(value) else "waiting"
+
             elif property == "active":
                 # TODO:  添加立即激活的排序设置
                 vInfo["status"] = "waiting" if int(value) else "unactive"
                 if int(value):
                     vInfo["activeLocalTime"] = datetime.datetime.now()
+                    QueueDataController().updateVisitor({"stationID" : stationID,"queueID" : queueID})
             elif property == "urgentLev" :
                 vInfo["urgentLev"] = int(value)
             else:
@@ -156,43 +178,6 @@ class StationMainController:
     def visitorMoveby(self, data):
         QueueDataController().visitorMoveby(data)
         return {"result": "success"}
-
-    def setVisitorStatus(self, inputData, action=None):
-        stationID = inputData.get("stationID")
-        queueID = inputData.pop("queueID")
-        # 根据访客所处队列选择的策略信息，获取缓冲人数
-        queueInfo = QueueInfoInterface().getInfo({"stationID": stationID, "id": queueID})
-        sceneID = queueInfo["sceneID"]
-        scene = SceneInterface().getSceneInfo({"sceneID": sceneID})
-        if action == "pass" or action == "delay":
-            waitNum = scene["passedWaitNum"]
-        elif action == "review":
-            waitNum = scene["reviewWaitNum"]
-        else:
-            # raise Exception("[ERR]: visitor status action not support.")
-            waitNum = 0
-        # 获取队列访客信息，如果等待队列中已经有过号或者复诊的访客，则调整缓冲人数
-        fliter = "stationID=$stationID and queueID=$queueID and status=$status"
-        visitorList = DB.DBLocal.select("visitor_local_data",
-                                        where=fliter,
-                                        vars={"stationID": stationID, "queueID": queueID, "status": "waiting" },
-                                        order="finalScore, originScore")
-        visitorNum = len(visitorList)
-
-        if action == "pass" or action == "delay":
-            InsertSeries = scene["InsertPassedSeries"]
-            InsertInterval = scene["InsertPassedInterval"]
-        elif action == "review":
-            InsertSeries = scene["InsertReviewSeries"]
-            InsertInterval = scene["InsertReviewInterval"]
-        else:       #default val
-            InsertSeries = 2
-            InsertInterval = 3
-
-        destPos,destScore = QueueDataController().getInsertPos(visitor=inputData,vList=visitorList,numNormal=InsertInterval,numHigher=InsertSeries,numWaitting=waitNum)
-        inputData["finalScore"] = destScore
-
-        return inputData
 
     def getMediaBox(self,data):
         from controller.publish import PublishDevInterface

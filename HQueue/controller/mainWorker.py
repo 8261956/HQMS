@@ -21,9 +21,9 @@ class WorkerMainController:
         "getQueueListAll":"getQueueListAll",
         "getMovetoList":"getMovetoList",
         "visitorMoveto": "visitorMoveto",
-        "callNext" : "callNext",
-        "reCall" : "reCall",
-        "callVisitor" : "callVisitor",
+        "callNext" : "callNext",    #呼叫下一位
+        "reCall" : "reCall",         #重呼
+        "callSel" : "callSel",       #选叫
         "visitorPropertySet" : "visitorPropertySet",
         "setWorkerStatus" : "setWorkerStatus",
     }
@@ -151,7 +151,7 @@ class WorkerMainController:
             break
         return  ret
 
-    def callVisitor(self,inputData):
+    def callSel(self,inputData):
         ret = {}
         stationID = inputData["stationID"]
         queueID = inputData["queueID"]
@@ -162,6 +162,8 @@ class WorkerMainController:
         # TODO : 完善呼叫 跳过目标不是自身呼叫器的患者，排队列表中是准备状态的患者 患者锁定等属性的判断
         # 修改队列最后在线医生
         queueInfo.QueueInfoInterface().addWorkerOnline(queueID, workerID)
+        if inputData.get("mode") == "ONE":
+            lastOne = self.workerFinish(stationID, queueID, workerID)
         # 修改呼叫人员状态改为Doing 呼叫医生改为当前医生
         selectOne = VisitorLocalInterface(stationID).getInfo({"id": visitorID})
         nextOne = {"id": visitorID, "stationID" :stationID}
@@ -239,29 +241,14 @@ class WorkerMainController:
         # 转换呼叫音频
         cid = str(stationID) + "_" + nextOne["id"]
 
-        qInfo = queueInfo.QueueInfoInterface().getInfo({"stationID": stationID, "id": queueID})
+        qInfo = DB.DBLocal.select("queueInfo",where = {"stationID": stationID, "id": queueID}).first()
         sceneID = qInfo["sceneID"]
         scene = SceneInterface().getSceneInfo({"sceneID": sceneID})
-        # V1.2.1 增加按照名字、序号、卡号等语音播报方式
-        # V1.2.1 将"请***准备"设置为可配置项
-        property = scene["property"]
-        callMode = property["callMode"]
-        if callMode == 'callByName':
-            nextOneText = nextOne.get("name")
-            prepareOneText = prepareOne.get("name", "")
-        elif callMode == 'callBySnumber':
-            nextOneText = "%s号" % nextOne.get("snumber")
-            prepareOneText = "%s号" % prepareOne.get("snumber", "")
-        elif callMode == 'callByCardID':
-            nextOneText = nextOne.get("cardID")
-            prepareOneText = prepareOne.get("cardID", "")
-        else:
-            raise Exception("unsupport callMode")
-        text = "请%s到%s%s" % (nextOneText, pos, scene["outputText"])
-        # TODO: V1.21  scene property add noPrepare
-        if not property["noPrepare"]:
-            if prepareOne != {}:
-                text += ", 请%s准备" % prepareOneText
+
+        #TODO:解析sceneOutput
+        output = scene["output"]
+        #text = output, vars = {,  "pos": pos}
+        text = "请%s到%s%s" % (nextOne.get("name"), pos, "检查")
 
         publishDev = PublishDevInterface()
         mediaBoxInterface = MediaBoxInterface()
@@ -336,7 +323,7 @@ class WorkerMainController:
     def workerFinish(self,stationID,queueID,workerID):
         filter = {
             "stationID" : stationID,
-            "workerID" : workerID
+            "workerOnline" : workerID
         }
         if queueID is not None:
             filter.update({"queueID" : "queueID"})

@@ -17,7 +17,6 @@ urls = (
     '/(hqueue/manager/stationAccount)', 'controller.account.StationAccountInterface',
     '/(hqueue/manager/caller)', 'controller.caller.CallerInterface',
     '/(hqueue/manager/queueInfo)', 'controller.queueInfo.QueueInfoInterface',
-    '/(hqueue/manager/queueData)', 'controller.queueData.QueueDataController',
     '/(hqueue/manager/headpicUpload)', 'controller.worker.NginxUploadController',
     '/(hqueue/main/station)', 'controller.mainStation.StationMainController',
     '/(hqueue/main/worker)', 'controller.mainWorker.WorkerMainController',

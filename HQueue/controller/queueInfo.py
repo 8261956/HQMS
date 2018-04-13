@@ -413,5 +413,6 @@ class QueueInfoInterface:
             raise "queue %d not exist" %queueID
         workerOnline = str2List(queue["workerOnline"])
         if workerID not in workerOnline:
-            queue["workerOnline"] = list2Str(workerOnline.append(workerID))
+            workerOnline.append(workerID)
+            queue["workerOnline"] = list2Str(workerOnline)
             self.edit(queue)

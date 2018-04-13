@@ -79,7 +79,7 @@ class WXInterface(object):
         for visitor in visitors:
             if visitor.status == "doing":
                 currentVisitor = visitor.id[-5:]
-            elif visitor.status in ("waiting", "unactive", "unactivewaiting"):
+            elif visitor.status in ("waiting", "unactive"):
                 waitNum += 1
             elif visitor.status == "finish":
                 finishNum += 1

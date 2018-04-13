@@ -57,7 +57,6 @@ class SceneInterface(object):
             "soundPrepareTimes": kwargs.get("soundPrepareTimes", 1),
             "autoPrepare" : kwargs.get("autoPrepare", 0),
             "defaultPrepareNum" : kwargs.get("defaultPrepareNum", 1),
-            "delayTime": kwargs.get("delayTime" , 0),
             "InsertPassedSeries":  kwargs.get("InsertPassedSeries", 2),
             "InsertPassedInterval" : kwargs.get("InsertPassedInterval", 3),
             "InsertReviewSeries" : kwargs.get("InsertReviewSeries", 2),

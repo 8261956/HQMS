@@ -104,7 +104,7 @@ http://192.168.17.187:8080/hqueue/main/station
       }
     ],
     "finishList": [],
-    "passedList": [],
+    "passList": [],
     "unactiveList" : [],
   }
 }
@@ -206,13 +206,13 @@ http://192.168.17.187:8080/hqueue/main/station
   "stationID" : 2,
   "queueID" : 2,
   "vid" : ["221521689420224751","221521689552865538"],
-  "property" :  "passed",  	##"locked","finish","urgentLev","active",
+  "property" :  "pass",  	##"locked","finish","urgentLev","active",
   "value" : "1"     		 #"PAINIAO","1","2","1"
 }
 
 ```
 参数说明 : property 包括 :
-"passed"  value: 0,1
+"pass"  value: 0,1
 "locked"  value: "PAINIAO", ("NORMAL","BIENIAO")
 "finish":  value: 0,1
 "urgentLev" value:  0,1,2,3
