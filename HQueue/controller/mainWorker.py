@@ -5,7 +5,7 @@ import common.func
 import queueInfo
 import mainStation
 from queueData import QueueDataController, VisitorLocalInterface
-from common.func import packOutput, LogOut, str2List,list2Str,getCurrentTime,checkPostAction
+from common.func import packOutput, LogOut, str2List,list2Str,getCurrentTime,checkPostAction,str2Json
 from publish import callRecordInterface, PublishDevInterface
 from worker import WorkerInterface
 from mainStation import StationMainController
@@ -130,7 +130,7 @@ class WorkerMainController:
         lastOne = self.workerFinish(stationID,queueID,workerID)
         #修改呼叫人员状态改为Doing 呼叫医生改为当前医生
         #TODO : 完善呼叫 跳过目标不是自身呼叫器的患者，排队列表中是准备状态的患者 患者锁定等属性的判断
-        waitList = QueueDataController().getQueueVisitor(inputData,["waiting","prepare"]).list()
+        waitList = QueueDataController().getQueueVisitor(inputData,["waiting","prepare"])
         nextOne = parpareOne = {}
         callerInfo = self.getCallerInfo(inputData)
         for item in waitList:
@@ -138,8 +138,9 @@ class WorkerMainController:
                 if callerInfo["pos"] != item["dest"]:
                     continue
             #判断locked 等属性
-            locked = int(item.property.get("locked",0))
-            if not locked:
+            property = str2Json(item["property"])
+            locked = property.get("locked","0")
+            if locked == "0":
                 nextOne = item
                 nextOne["status"] = "doing"
                 nextOne["workerOnline"] = workerID
@@ -148,7 +149,7 @@ class WorkerMainController:
                 #TODO: 准备人员根据策略判定
                 parpareOne = {}
                 self.publishNew(inputData,callerInfo,lastOne,nextOne,parpareOne,ret)
-            break
+                break
         return  ret
 
     def callSel(self,inputData):
@@ -252,8 +253,9 @@ class WorkerMainController:
 
         publishDev = PublishDevInterface()
         mediaBoxInterface = MediaBoxInterface()
-        modiaBoxList = publishDev.getInfo({"stationID":stationID})
+        modiaBoxList = publishDev.getInfo({"stationID":stationID}).list()
         ret["list"] = []
+        ret["result"] = "success"
         for box in modiaBoxList:
             # 增加语音盒在线判断
             mediabox = mediaBoxInterface.mediaBoxStatus(box)

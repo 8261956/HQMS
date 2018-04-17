@@ -369,6 +369,14 @@ class PublishTVInterface:
         property = str2Json(kwargs.get("property", ""))
         if property.get("lock","0") != "0":
             return "locked"
+        elif property.get("prior","0") != "0":
+            return "prior"
+        elif kwargs.get("urgnet_lev1"):
+            return "VIP"
+        elif kwargs.get("urgnet_lev2"):
+            return "VIP"
+        elif kwargs.get("urgentLev"):
+            return "VIP"
         elif property.get("review","0") != "0":
             return "review"
         elif int(kwargs.get("orderType",0)):
@@ -377,12 +385,6 @@ class PublishTVInterface:
             return "pass"
         elif property.get("delay","0") != "0":
             return "delay"
-        elif kwargs.get("urgnet_lev1"):
-            return "VIP"
-        elif kwargs.get("urgnet_lev2"):
-            return "VIP"
-        elif kwargs.get("urgentLev"):
-            return "VIP"
         else:
             return "normal"
 
