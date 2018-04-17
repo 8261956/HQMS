@@ -366,28 +366,26 @@ class PublishTVInterface:
         return result
 
     def getVisitorStatus(self, **kwargs):
-        prior = kwargs.get("prior", None)
-        locked = kwargs.get("locked", None)
-        VIP = kwargs.get("VIP", None)
-        localVip = kwargs.get("localVip", None)
-        orderType = kwargs.get("orderType", None)
-
-        if locked:
-            result = "locked"
-        elif prior == 1:
-            result = "review"
-        elif prior == 2:
-            result = "pass"
-        elif prior == 3:
-            result = "delay"
-        elif VIP or localVip:
-            result = "VIP"
-        elif orderType:
-            result = "order"
+        property = str2Json(kwargs.get("property", ""))
+        if property.get("lock","0") != "0":
+            return "locked"
+        elif property.get("review","0") != "0":
+            return "review"
+        elif int(kwargs.get("orderType",0)):
+            return "order"
+        elif property.get("pass","0") != "0":
+            return "pass"
+        elif property.get("delay","0") != "0":
+            return "delay"
+        elif kwargs.get("urgnet_lev1"):
+            return "VIP"
+        elif kwargs.get("urgnet_lev2"):
+            return "VIP"
+        elif kwargs.get("urgentLev"):
+            return "VIP"
         else:
-            result = "normal"
+            return "normal"
 
-        return result
 
 
 class PublishDevInterface:
