@@ -3,7 +3,7 @@
 import web, re, json, datetime, time
 import common.func
 import common.config as cfg
-from common.func import packOutput, LogOut, checkPostAction,str2List,str2Json,json2Str
+from common.func import packOutput, LogOut, checkPostAction,str2List,str2Json,json2Str,dotdict
 from queueData import QueueDataController, VisitorLocalInterface
 from queueInfo import QueueInfoInterface
 from scene import SceneInterface
@@ -57,11 +57,12 @@ class StationMainController:
 
         vList = DB.DBLocal.where("visitor_view_data",stationID = stationID,queueID = queueID)
         for item in vList:
-            if item.localStatus == "doing":
+            item = dotdict(item)
+            if item.status == "doing":
                 ret["doingList"].append(item)
-            elif item.localStatus == "prepare":
+            elif item.status == "prepare":
                 ret["waitingList"].append(item)
-            elif item.localStatus == "waiting" :
+            elif item.status == "waiting" :
                 ret["waitingList"].append(item)
         return ret
 
@@ -86,6 +87,7 @@ class StationMainController:
         prepareList = []
         waitingList = []
         for item in vList:
+            item = dotdict(item)
             if item.status in ["unactive"] :
                 ret["unactiveList"].append(item)
             elif item.status == "doing":

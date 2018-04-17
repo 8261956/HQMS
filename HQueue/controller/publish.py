@@ -2,7 +2,7 @@
 
 import web, datetime, time, json, copy, requests
 import common.func
-from common.func import packOutput
+from common.func import packOutput,str2Json
 
 from caller import CallerInterface
 from worker import WorkerInterface
@@ -333,11 +333,12 @@ class PublishTVInterface:
         else:
             # 获取呼叫队列中当前看诊的信息
             currentVisitor = self.stationController.getVisitorInfo({"stationID": stationID, "id": record["currentVisitorID"]})
-            if currentVisitor["localStatus"] == 'doing':
+            if currentVisitor["status"] == 'doing':
                 seeing["id"] = currentVisitor["snumber"]
                 seeing["name"] = currentVisitor["name"]
                 seeing["status"] = self.getVisitorStatus(**currentVisitor)
-                seeing["outputText"] = scene["outputText"]
+                output = scene["output"].split("pos")
+                seeing["outputText"] = output[-1]
                 seeing["show"] = 0
             seeing["dateTime"] = record["dateTime"]
 
@@ -345,7 +346,8 @@ class PublishTVInterface:
             waitingList = queueList["waitingList"]
             queueInfo.update({"listNum": len(waitingList)})
             for item in waitingList:
-                if item["locked"]:
+                property = str2Json(item["property"])
+                if property.get("lock","0") != "0":
                     continue
                 waitingVisitor = {}
                 waitingVisitor["id"] = item["snumber"]
