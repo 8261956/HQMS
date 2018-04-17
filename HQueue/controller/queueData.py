@@ -314,11 +314,14 @@ class QueueDataController:
                 if item["id"] == vid:
                     dest = pos + value
                     if dest == len(vList) - 1:
-                        dest = vList[-1].finalScore + POS_STEP + SCORE_STEP/2
+                        destScore = vList[-1].finalScore + POS_STEP + SCORE_STEP/2
                     elif dest == 0:
                         destScore= vList[0].finalScore - POS_STEP - SCORE_STEP/2
                     elif dest > 0 and dest < len(vList) - 1:
-                        destScore = (vList[dest - 1].finalScore + vList[dest].finalScore ) /2
+                        if value > 0:
+                            destScore = (vList[dest].finalScore + vList[dest+1].finalScore ) /2
+                        else:
+                            destScore = (vList[dest-1].finalScore + vList[dest].finalScore) / 2
                 pos += 1
             vInfo.finalScore = destScore
             vManager.edit(vInfo)

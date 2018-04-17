@@ -16,7 +16,6 @@ from controller.visitor import VisitorManager
 
 YX_url = "http://192.168.11.77:8082/HISWebService.asmx?WSDL"
 
-
 def getClient():
     print "getWebService func In"
     tClient = Client(YX_url)
@@ -86,7 +85,7 @@ def InqOnDuty(starttime,endtime,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 =
 def InqDoctorList(type,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
     """
     查询医生列表
-    :param type:  01 查询医生信息字典
+    :param type:  01 查询医生信息字典  02为查询医技队列字典 03为查询出入院队列字典
     :param inPara: 预留字段
     :return:
     """
@@ -142,6 +141,75 @@ def InqQueueList(ksdm,ghrq,time_flag,ysdm = "",inPara1 = "",inPara2 = "",inPara3
     RspCode = ret["RspCode"]["_text"]
     if RspCode == "0":
         print "DATA INQUIRE OK"
+        data = ret["dataset"]
+        return data["row"]
+    else:
+        print "FAILED" + ret["RspMsg"]["_text"]
+        return  {}
+
+def PostRegist(blh,ywlx,dldm,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
+    """
+    报到机发送登记请求
+    :param blh:   病例号
+    :param ywlx:   业务类型
+    :param dldm:   队列代码
+    :return:
+    """
+    d = OrderedDict()
+    d["blh"] = str(blh)
+    d["ywlx"] = str(ywlx)
+    d["dldm"] = str(dldm)
+    d["inPara1"] = str(inPara1)
+    d["inPara2"] = str(inPara2)
+    d["inPara3"] = str(inPara3)
+    d["inPara4"] = str(inPara4)
+    d["inPara5"] = str(inPara5)
+    d["inPara6"] = str(inPara6)
+    data = XML.dict2xml("data", d)
+    ret = MainMethod("qh", "004", ET.tostring(data), "")
+    print "start dict"
+    _xml = ET.fromstring(ret.encode('utf-8'))
+    ret = XML.build_dict(_xml)
+
+    RspCode = ret["RspCode"]["_text"]
+    if RspCode == "0":
+        print "DATA POST OK"
+        data = ret["dataset"]
+        return data["row"]
+    else:
+        print "FAILED" + ret["RspMsg"]["_text"]
+        return  {}
+
+def InqVInfo(blh,trmtno,vid,sfzh,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
+    """
+    请求患者信息
+    :param blh:   病例号
+    :param trmtno:   就诊卡号
+    :param vid:   就诊号
+    :param sfzh:   身份证号码
+    :return:
+    """
+    d = OrderedDict()
+    d["blh"] = str(blh)
+    d["trmtno"] = str(trmtno)
+    d["vid"] = str(vid)
+    d["sfzh"] = str(sfzh)
+
+    d["inPara1"] = str(inPara1)
+    d["inPara2"] = str(inPara2)
+    d["inPara3"] = str(inPara3)
+    d["inPara4"] = str(inPara4)
+    d["inPara5"] = str(inPara5)
+    d["inPara6"] = str(inPara6)
+    data = XML.dict2xml("data", d)
+    ret = MainMethod("qh", "005", ET.tostring(data), "")
+    print "start dict"
+    _xml = ET.fromstring(ret.encode('utf-8'))
+    ret = XML.build_dict(_xml)
+
+    RspCode = ret["RspCode"]["_text"]
+    if RspCode == "0":
+        print "DATA POST OK"
         data = ret["dataset"]
         return data["row"]
     else:
@@ -236,7 +304,24 @@ def ExternSourceQueueList():
         dName = d["NAME"].get("_text","") 
         qList.append(qName+dName)
         print qName+dName
+
+    doctorList = InqDoctorList("02")
+    for d in doctorList:
+        qName = d["PYM"].get("_text","")
+        dName = d["MC"].get("_text","")
+        qList.append(qName+dName)
+        print qName+dName
+
+    doctorList = InqDoctorList("03")
+    for d in doctorList:
+        qName = d["PYM"].get("_text","")
+        dName = d["MC"].get("_text","")
+        qList.append(qName+dName)
+        print qName+dName
+
     return qList
+
+#def
 
 
 def getWeatherTest():
