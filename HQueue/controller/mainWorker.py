@@ -328,7 +328,7 @@ class WorkerMainController:
             "workerOnline" : workerID
         }
         if queueID is not None:
-            filter.update({"queueID" : "queueID"})
+            filter.update({"queueID" : queueID})
         doingList = DB.DBLocal.select('visitor_local_data', where = filter)
         lastOne = {"id": "", "stationID": stationID, "queueID": queueID, "name": "", "status": "finish"}
         for item in doingList:
