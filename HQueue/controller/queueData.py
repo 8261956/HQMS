@@ -35,7 +35,8 @@ class LocalVisitor:
         activeLocalTime = localData["activeLocalTime"]
         if rankWay == "snumber":
             num = sourceData["snumber"]
-            num = int(filter(str.isdigit, num))
+            numStr = num.encode('gbk')
+            num = int(filter(str.isdigit, numStr))
             score = (level*levelMask) + (num) * SCORE_STEP
         elif rankWay == "registTime":
             second = (registDateTime - date).total_seconds()
@@ -50,8 +51,12 @@ class LocalVisitor:
 
     @classmethod
     def collectLevel(cls,scene,sourceData,localData):  #收集访客的优先信息
-        lev1 = sourceData["urgnet_lev1"]
-        lev2 = max(sourceData["urgnet_lev2"],localData["urgentLev"])
+        lev1 = sourceData.get("urgent_lev1",0)
+        lev2 = max(sourceData.get("urgent_lev2",0),localData.get("urgentLev",0))
+        if lev1 is None:
+            lev1 = 0
+        if lev2 is None:
+            lev2 = 0
         URGENT_LEV1_NUM = 2
         URGENT_LEV2_NUM = 3
 
@@ -60,7 +65,7 @@ class LocalVisitor:
 
 class QueueDataController:
     #TODO: 门口屏窗体显示只显示本窗口准备的患者
-    def getQueueVisitor(self,inputData,status = ["waiting"]):
+    def getQueueVisitor(self,inputData,status = ["waiting","prepare"]):
         queueID = inputData["queueID"]       #本队列ID
         stationID = inputData["stationID"]
         vars = {
@@ -93,7 +98,7 @@ class QueueDataController:
 
         filter = str(queueInfo["filter"])
         sourceList = DB.DBLocal.where("visitor_source_data", queue = filter).list()
-        localList = DB.DBLocal.where("visitor_local_data", stationID=stationID ,queueID = queueID)
+        localList = DB.DBLocal.where("visitor_local_data", stationID=stationID)
         localDict = list2Dict(localList)
         # 遍历 sourceList
         for sourceItem in sourceList:
@@ -101,7 +106,7 @@ class QueueDataController:
                 localData = {
                     "id": sourceItem["id"],
                     "name": sourceItem["name"],
-                    "registDate": sourceItem["registDate"],
+                    "registDate": sourceItem["registDate"].strftime('%Y-%m-%d %H:%M:%S'),
                     "stationID": stationID,
                     "queueID": queueID,
                     "activeLocalTime": datetime.datetime(2000,1,1),
@@ -135,7 +140,7 @@ class QueueDataController:
         self.sortVisitor(stationID, queueID, scene)
 
     def sortVisitor(self, stationID, queueID, scene):
-        localList = self.getVisitorList(stationID,queueID,["waiting","prepare"])
+        localList = self.getQueueVisitor({"stationID" : stationID,"queueID" : queueID},["waiting","prepare"])
         rankWay = scene["rankWay"]
         waitNum = scene.get("defaultPrepareNum", 0)
         InsertSeries = scene.get("InsertPriorSeries", 2)
@@ -190,13 +195,13 @@ class QueueDataController:
     # 按照患者状态得到细分的优先级 level大优先级高
     def getLevel(self,visitor):
         property = str2Json(visitor.get("property", ""))
-        if int(property.get("review")):
+        if int(property.get("review","0")):
             return 3
-        elif visitor.get("orderType",0):
+        elif int(visitor.get("orderType","0")):
             return 2
-        elif int(property.get("delay")):
+        elif int(property.get("delay","0")):
             return 1
-        elif int(property.get("pass")):
+        elif int(property.get("pass","0")):
             return 1
         return 0
 

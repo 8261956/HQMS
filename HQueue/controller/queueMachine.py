@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import web, datetime, json, sys, traceback
-from common.func import packOutput, str2List, checkSession, list2Str
+from common.func import packOutput, str2List, checkSession, list2Str,checkPostAction
 from mainStation import StationMainController
 from queueInfo import QueueInfoInterface
 import common.DBBase as DB
@@ -38,24 +38,8 @@ class QueueMachineInterface(object):
 
     def POST(self, inputData):
         data = json.loads(web.data())
+        return checkPostAction(self, data, self.support_action)
 
-        token = data.pop("token", None)
-        if token:
-            if checkSession(token) == False:
-                return packOutput({}, "401", "Token authority failed")
-        action = data.pop("action", None)
-        if action is None:
-            return packOutput({}, code='400', errorInfo='action required')
-        if action not in self.support_action:
-            return packOutput({}, code='400', errorInfo='unsupported action')
-
-        try:
-            result = getattr(self, self.support_action[action])(data)
-            return packOutput(result)
-        except Exception as e:
-            exc_traceback = sys.exc_info()[2]
-            errorInfo = traceback.format_exc(exc_traceback)
-            return packOutput({"errorInfo": str(e), "rescode": "500"}, code='500', errorInfo=errorInfo)
 
     def getReceipt(self, data):
         """通过某一取号机打印小票"""
