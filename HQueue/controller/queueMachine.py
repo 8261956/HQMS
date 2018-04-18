@@ -116,7 +116,7 @@ class QueueMachineInterface(object):
         if len(station) == 0:
             raise Exception("[ERR]: station not exists for id %s" % stationID)
 
-        deviceIP = web.ctx.ip
+        deviceIP = data.get("localIP",web.ctx.ip)
         queue_machine = DB.DBLocal.select("queue_machine", where="deviceIP=$deviceIP", vars={"deviceIP": deviceIP})
         current_time = datetime.datetime.now()
         values = {
@@ -186,7 +186,8 @@ class QueueMachineInterface(object):
         where = {"stationID": stationID}
         id = data.get("id", None)
         if id is None:
-            where.update({"deviceIP": web.ctx.ip})
+            deviceIP = data.get("localIP",web.ctx.ip)
+            where.update({"deviceIP": deviceIP})
         else:
             where.update({"id": id})
 

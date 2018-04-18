@@ -363,7 +363,7 @@ class StationMainController:
         para = {"stationID": stationID, "queueID": queueID}
         #TODO: localdata property 更改  urgentLev
         #TODO : 同步到 local
-        #QueueDataController().updateVisitor(para)
+        QueueDataController().updateVisitor(para)
 
         visitor.update({"waitNum": waitNum})
 
