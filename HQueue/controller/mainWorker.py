@@ -325,7 +325,8 @@ class WorkerMainController:
     def workerFinish(self,stationID,queueID,workerID):
         filter = {
             "stationID" : stationID,
-            "workerOnline" : workerID
+            "workerOnline" : workerID,
+            "status" : "doing"
         }
         if queueID is not None:
             filter.update({"queueID" : queueID})
