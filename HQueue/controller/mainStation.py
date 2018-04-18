@@ -291,9 +291,9 @@ class StationMainController:
 
         # 如果snumber不存在，则根据分诊台下的患者数自动生成一个序号
         if not snumber:
-            where = "stationID=$stationID"
+            where = "stationID=$stationID,queueID=$queueID"
             visitor_all = DB.DBLocal.select("visitor_local_data", where=where,
-                                            vars={"stationID": stationID})
+                                            vars={"stationID": stationID,"queueID" : queueID})
             visitor_all_count = len(visitor_all)
             snumber =  visitor_all_count + 1
         # 如果name不存在，则根据snumber生成一个名字
@@ -304,7 +304,7 @@ class StationMainController:
         where = "stationID=$stationID AND queueID=$queueID AND status IN $status"
         visitor_wait = DB.DBLocal.select("visitor_local_data", where=where,
                                          vars={"stationID": stationID, "queueID": queueID,
-                                               "status": ('waiting', 'unactive', 'unactivewaiting','prepare')})
+                                               "status": ('waiting','prepare')})
         waitNum = len(visitor_wait)
 
         # 获取队列关键字
