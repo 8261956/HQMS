@@ -291,7 +291,7 @@ class StationMainController:
 
         # 如果snumber不存在，则根据分诊台下的患者数自动生成一个序号
         if not snumber:
-            where = "stationID=$stationID,queueID=$queueID"
+            where = "stationID=$stationID and queueID=$queueID"
             visitor_all = DB.DBLocal.select("visitor_local_data", where=where,
                                             vars={"stationID": stationID,"queueID" : queueID})
             visitor_all_count = len(visitor_all)
