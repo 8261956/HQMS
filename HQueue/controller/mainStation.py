@@ -226,7 +226,9 @@ class StationMainController:
             item["waitingNum"] = QueueDataController().getWaitingNum({"stationID":stationID,"queueID":item["queueID"],"id":item["id"]})
             item["waitingTime"] = item["waitingNum"] * 15
             visitorDictList.append(item)
-        return visitorDictList
+
+        ret = {"result":"success","resultList" : visitorDictList}
+        return ret
 
     def addVisitor(self, inputData):
         stationID = inputData.get("stationID", None)

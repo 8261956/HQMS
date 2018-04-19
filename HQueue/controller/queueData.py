@@ -334,7 +334,7 @@ class QueueDataController:
         return 1
 
     def getWaitingNum(self,inputData):
-        list = self.getQueueVisitor(inputData,status= ["waiting,prepare"])
+        list = self.getQueueVisitor(inputData,status= ["waiting","prepare"])
         num = 0
         for item in list:
             if item["id"] == inputData["id"]:
