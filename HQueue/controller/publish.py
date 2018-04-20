@@ -308,7 +308,7 @@ class PublishTVInterface:
         queueInfo = {
             "department": workerInfo["department"],
             "pos": caller["pos"],
-            "listNum": 0
+            "listNum": 0,
         }
 
         # 获取正在就诊、正在排队的信息
@@ -323,6 +323,7 @@ class PublishTVInterface:
             record = callerRecord[0]
             queueID = record["queueID"]
             queue = QueueInfoInterface().getInfo({"stationID": stationID, "id": queueID})
+            queueInfo.update({"queueName" : queue.get("name")})
             sceneID = queue["sceneID"]
             scene = SceneInterface().getSceneInfo({"sceneID": sceneID})
             queueList = self.stationController.getQueueList({"stationID": stationID, "queueID": queueID})
