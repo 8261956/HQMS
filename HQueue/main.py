@@ -32,6 +32,7 @@ urls = (
 
     '/hqueue/main/extInterface', "project.ruici.extInterface.ExtInterface",
     '/hqueue/main/stationPrinter', "project.ruici.printerInterface.PrinterInterface",
+    '/hqueue/yaxin/source', "project.yaxin.YX_Interface.YXSourceController",
 )
 
 def OracleTest():

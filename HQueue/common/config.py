@@ -24,5 +24,3 @@ integrateType = _config.get("global","integrateType")
 memcached_host = _config.get('memcached', 'host')
 memcached_timeout = int(_config.get('memcached', 'timeout'))
 
-displayFormateDefault = _config.get('voice','displayFormateDefault')
-voiceFormateDefault = _config.get('voice','voiceFormateDefault')

@@ -269,20 +269,15 @@ class MediaBoxHeartBeat:
             speechState = "busy"
 
         current_time = datetime.datetime.now()
-        # TODO：下次版本更新时删除这两个字段
-        voiceFormate = cfg.voiceFormateDefault
-        displayFormate = cfg.displayFormateDefault
         mediaBox = DB.where("publish", deviceIP=deviceIP)
         if len(mediaBox) == 0:
             DB.insert("publish", stationID=stationID, deviceIP=deviceIP,
                       speed=speed, pitch=pitch, volume=volume,
-                      speechState=speechState, lastDateTime=current_time,
-                      voiceFormate=voiceFormate, displayFormate=displayFormate)
+                      speechState=speechState, lastDateTime=current_time)
         else:
             DB.update("publish", where="deviceIP=$deviceIP", vars={"deviceIP": deviceIP},
                       stationID=stationID, speechState=speechState,
-                      lastDateTime=current_time,
-                      voiceFormate=voiceFormate, displayFormate=displayFormate)
+                      lastDateTime=current_time)
 
         Date = current_time.date().strftime("%Y%m%d")
         time = current_time.time().strftime("%H%M%S")

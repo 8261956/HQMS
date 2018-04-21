@@ -87,17 +87,26 @@ class QueueDataController:
         visitorRank = DB.DBLocal.select("visitor_view_data", where=filter,vars = vars, order="finalScore,originScore").list()  # 本队列所有访客
         return visitorRank
 
-    def updateVisitor(self, inputData):
-        stationID = inputData["stationID"]
-        queueID = inputData["queueID"]
+    def getAgePrior(self,visitor_source,scene):
+        age = visitor_source.get("age",30)
+        oldAge = scene.get("priorOlderAge",70)
+        youngAge = scene.get("priorCldAge",2)
+        if age>oldAge or age <youngAge:
+            return "{\"prior\" : \"1\"}"
+        else:
+            return ""
 
-        queueInfo = QueueInfoInterface().getInfo({"stationID": stationID, "id": queueID})
+    def updateVisitor(self, stationID,queueID,queueInfo = None,scene = None, sourceList = None):
+        if queueInfo is None:
+            queueInfo = QueueInfoInterface().getInfo({"stationID": stationID, "id": queueID})
         sceneID = queueInfo["sceneID"]
-        scene = SceneInterface().getSceneInfo({"sceneID": sceneID})
+        if scene is None:
+            scene = SceneInterface().getSceneInfo({"sceneID": sceneID})
         visitorLocalInterface = VisitorLocalInterface(stationID)
 
         filter = str(queueInfo["filter"])
-        sourceList = DB.DBLocal.where("visitor_source_data", queue = filter).list()
+        if sourceList is None:
+            sourceList = DB.DBLocal.where("visitor_source_data", queue = filter).list()
         localList = DB.DBLocal.where("visitor_local_data", stationID=stationID)
         localDict = list2Dict(localList)
         # 遍历 sourceList
@@ -110,6 +119,7 @@ class QueueDataController:
                     "stationID": stationID,
                     "queueID": queueID,
                     "activeLocalTime": datetime.datetime(2000,1,1),
+                    "property" : self.getAgePrior(sourceItem,scene)
                 }
                 status = "unactive" if scene["activeLocal"] else "waiting"
                 originLevel = LocalVisitor.collectLevel(scene, sourceItem, localData)
@@ -195,7 +205,9 @@ class QueueDataController:
     # 按照患者状态得到细分的优先级 level大优先级高
     def getLevel(self,visitor):
         property = str2Json(visitor.get("property", ""))
-        if int(property.get("review","0")):
+        if int(property.get("prior","0")):
+            return 4
+        elif int(property.get("review","0")):
             return 3
         elif int(visitor.get("orderType","0")):
             return 2

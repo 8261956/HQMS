@@ -1,13 +1,14 @@
 # -*- coding: UTF-8 -*-
 import sys,os
 
-import time,datetime
+import time,datetime,json,web
 from suds.client import Client
 from suds.xsd.doctor import Import, ImportDoctor
 import xml.etree.ElementTree as ET
 from collections import OrderedDict
 import common.xmlDict as XML
 from common.DBBase import DBLocal
+from  common.func import getCurrentTime,checkPostAction
 
 BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
@@ -15,6 +16,9 @@ from controller.visitor import VisitorManager
 #import modules.visitor 
 
 YX_url = "http://192.168.11.77:8082/HISWebService.asmx?WSDL"
+TYPE_FAYAO = 1
+TYPE_YIJI = 2
+TYPE_ZHUYUAN = 3
 
 def getClient():
     print "getWebService func In"
@@ -46,6 +50,23 @@ def MainMethod(SourceName , OpNum , OpControl ,OpData , Picture = None):
     print res
     return res
 
+def getResultList(xmlRet):
+    RspCode = xmlRet["RspCode"]["_text"]
+    retList = []
+    if RspCode == "0":
+        print "DATA INQUIRE OK"
+        data = xmlRet["dataset"]
+        xmlItem =  data["row"]
+        if isinstance(xmlItem, dict):
+            retList.append(xmlItem)
+        elif isinstance(xmlItem, list):
+            retList = xmlItem
+        return retList
+    else:
+        print "FAILED" + xmlRet["RspMsg"]["_text"]
+        return  []
+
+
 def InqOnDuty(starttime,endtime,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
     """
     获得排班接口
@@ -69,18 +90,9 @@ def InqOnDuty(starttime,endtime,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 =
     ret = MainMethod("qh","003",data_str,"")
     print "start dict"
     _xml = ET.fromstring(ret.encode('utf-8'))
-    duty = XML.build_dict(_xml)
-    print "duty Dict:"
-    print (duty)
-    RspCode = duty["RspCode"]["_text"]
-    if RspCode == "0":
-        print "DUTY DATA INQUIRE OK"
-        data = duty["dataset"]
-        return data["row"]
-    else:
-        print "FAILED" + duty["RspMsg"]["_text"]
-        return  {}
-
+    xmlRet = XML.build_dict(_xml)
+    retList = getResultList(xmlRet)
+    return retList
 
 def InqDoctorList(type,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
     """
@@ -101,15 +113,9 @@ def InqDoctorList(type,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPar
     ret = MainMethod("qh","002",ET.tostring(date),"")
     print "start dict"
     _xml = ET.fromstring(ret.encode('utf-8'))
-    retDict = XML.build_dict(_xml)
-    RspCode = retDict["RspCode"]["_text"]
-    if RspCode == "0":
-        print "DUTY DATA INQUIRE OK"
-        data = retDict["dataset"]
-        return data["row"]
-    else:
-        print "FAILED" + retDict["RspMsg"]["_text"]
-        return  {}
+    xmlRet = XML.build_dict(_xml)
+    retList = getResultList(xmlRet)
+    return retList
 
 def InqQueueList(ksdm,ghrq,time_flag,ysdm = "",inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
     """
@@ -136,16 +142,9 @@ def InqQueueList(ksdm,ghrq,time_flag,ysdm = "",inPara1 = "",inPara2 = "",inPara3
     ret = MainMethod("qh", "001", ET.tostring(data), "")
     print "start dict"
     _xml = ET.fromstring(ret.encode('utf-8'))
-    ret = XML.build_dict(_xml)
-
-    RspCode = ret["RspCode"]["_text"]
-    if RspCode == "0":
-        print "DATA INQUIRE OK"
-        data = ret["dataset"]
-        return data["row"]
-    else:
-        print "FAILED" + ret["RspMsg"]["_text"]
-        return  {}
+    xmlRet = XML.build_dict(_xml)
+    retList = getResultList(xmlRet)
+    return retList
 
 def PostRegist(blh,ywlx,dldm,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
     """
@@ -169,16 +168,9 @@ def PostRegist(blh,ywlx,dldm,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = ""
     ret = MainMethod("qh", "004", ET.tostring(data), "")
     print "start dict"
     _xml = ET.fromstring(ret.encode('utf-8'))
-    ret = XML.build_dict(_xml)
-
-    RspCode = ret["RspCode"]["_text"]
-    if RspCode == "0":
-        print "DATA POST OK"
-        data = ret["dataset"]
-        return data["row"]
-    else:
-        print "FAILED" + ret["RspMsg"]["_text"]
-        return  {}
+    xmlRet = XML.build_dict(_xml)
+    retList = getResultList(xmlRet)
+    return retList
 
 def InqVInfo(blh,trmtno,vid,sfzh,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
     """
@@ -205,16 +197,9 @@ def InqVInfo(blh,trmtno,vid,sfzh,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 
     ret = MainMethod("qh", "005", ET.tostring(data), "")
     print "start dict"
     _xml = ET.fromstring(ret.encode('utf-8'))
-    ret = XML.build_dict(_xml)
-
-    RspCode = ret["RspCode"]["_text"]
-    if RspCode == "0":
-        print "DATA POST OK"
-        data = ret["dataset"]
-        return data["row"]
-    else:
-        print "FAILED" + ret["RspMsg"]["_text"]
-        return  {}
+    xmlRet = XML.build_dict(_xml)
+    retList = getResultList(xmlRet)
+    return retList
 
 vManager = VisitorManager()
 
@@ -248,14 +233,7 @@ def visitorSync(ksdm,sync_time):
     :return:
     """
     currentDate = time.strftime("%Y.%m.%d", time.localtime())
-    vList = []
-    ret = InqQueueList(ksdm=ksdm,ghrq = currentDate,time_flag=sync_time)
-    if ret == {}:
-        return -1
-    if isinstance(ret, dict):
-        vList.append(ret)
-    elif isinstance(ret, list):
-        vList = ret
+    vList = InqQueueList(ksdm=ksdm,ghrq = currentDate,time_flag=sync_time)
     DBTIME = sync_time
     for item in vList:
         if "REGISTTIME" not in item:
@@ -307,37 +285,111 @@ def ExternSourceQueueList():
 
     doctorList = InqDoctorList("02")
     for d in doctorList:
+        qCode = d["DM"].get("_text","")
         qName = d["PYM"].get("_text","")
         dName = d["MC"].get("_text","")
-        qList.append(qName+dName)
+        qList.append(qCode+"|"+qName+"|"+dName)
         print qName+dName
 
     doctorList = InqDoctorList("03")
     for d in doctorList:
+        qCode = d["DM"].get("_text", "")
         qName = d["PYM"].get("_text","")
         dName = d["MC"].get("_text","")
-        qList.append(qName+dName)
+        qList.append(qCode + "|" + qName + "|" + dName)
         print qName+dName
-
     return qList
 
-#def
+def GetQueueName(type,queueCode):
+    if type in {"02","03"}:
+        retList = InqDoctorList(type)
+        for q in retList:
+            if queueCode == q["DM"].get("_text",""):
+                qCode = q["DM"].get("_text","")
+                qName = q["PYM"].get("_text","")
+                dName = q["MC"].get("_text","")
+                return qCode+"|"+qName+"|"+dName
+    return queueCode
+
+def httpReqInfo(blh = "",trmtno = "",vid = "",sfzh = "",inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = "") :
+    retList = InqVInfo(blh,trmtno,vid,sfzh,inPara1,inPara2,inPara3,inPara4,inPara5,inPara6)
+    vInfo = {}
+    for v in retList:
+        blh = v["blh"].get("_text","") #病例号
+        vInfo["name"] = v["xm"].get("_text","")  #姓名
+        vInfo["age"] = v["age"].get("_text", "") #年龄
+        vInfo["genders"] = v["xb"].get("_text", "") #性别
+        vInfo["rev1"] = v["xb"].get("_text", "") #病患联系地址
+        vInfo["phone"] = v["dhhm"].get("_text", "") #病人电话
+        vInfo["personID"] = v["sfzhm"].get("_text", "") #病人身份证号码
+        return blh,vInfo
+    return "",{}
+
+def httpPostRegist(blh,ywlx,dldm,sourceInfo,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
+    """
+    报到机发送登记请求
+    :param blh:   病例号
+    :param ywlx:   业务类型
+    :param dldm:   队列代码
+    :return:
+    """
+    retList = PostRegist(blh,ywlx,dldm,inPara1,inPara2,inPara3,inPara4,inPara5,inPara6)
+    sourceItem = {}
+    registTime = getCurrentTime
+    num = 0
+    for item in retList:
+        if ywlx == TYPE_FAYAO:
+            sourceItem["id"] = blh + registTime
+            sourceItem["name"] = item["NAME"].get("_text", "测试人员") #需要补充名字
+            sourceItem["queue"] = item["WIN"].get("_text", "取药窗口N") #需要补充窗口
+            sourceItem["cardID"] = blh
+        elif ywlx == TYPE_YIJI:
+            sourceItem["id"] = item["lsh"].get("_text", "")  #医技流水号
+            sourceItem["name"] = item["vid"].get("_text", "")  #就诊号
+            sourceItem["cardID"] = item["lsh"].get("_text", "")  #医技流水号
+            queueCode = item["dldm"].get("_text", "") #队列代码，实际签到的队列
+            sourceItem["queue"] = GetQueueName("02",queueCode)
+            sourceItem["examMethod"] = item["XMMC"].get("_text", "")  #医技项目名称
+        elif ywlx == TYPE_ZHUYUAN :
+            sourceItem["id"] = item["vid"].get("_text", "") + registTime # 住院号
+            sourceItem["name"] = item["xm"].get("_text", "")  #患者姓名
+            sourceItem["cardID"] = blh
+            queueCode = item["dldm"].get("_text", "")  #队列代码
+            sourceItem["queue"] = GetQueueName("03", queueCode)
+        sourceItem.update(sourceInfo)
+        VisitorManager().visitor_quick_add(sourceItem)
+        num += 1
+    return sourceItem
 
 
-def getWeatherTest():
-    # WebService的地址
-    url = 'http://ws.webxml.com.cn/WebServices/WeatherWS.asmx?wsdl'
-    # 解决找不到schema的问题
-    imp = Import('http://www.w3.org/2001/XMLSchema', location='http://www.w3.org/2001/XMLSchema.xsd')
-    imp.filter.add('http://WebXml.com.cn/')
-    # 生成客户端
-    client = Client(url, doctor=ImportDoctor(imp))
-    #print (client)
-    # 调用方法访问数据
-    weather_result = client.service.getWeather(u'上海')
-    print weather_result
+class YXSourceController:
+    support_action = {
+        "reqInfo": "reqInfo",
+        "regist" : "regist"
+    }
 
+    def POST(self, name):
+        data = json.loads(web.data())
+        return checkPostAction(self, data, self.support_action)
 
+    def reqInfo(self,data):
+        blh = data.get("blh","")
+        trmtno = data.get("trmtno","")
+        vid = data.get("vid","")
+        sfzh = data.get("sfzh","")
+        regist = data.get("regist",0)
+        ywlx = data.get("ywlx","")
+        dldm = data.get("dldm","")
+        blh,vInfo = httpReqInfo(blh,trmtno,vid,sfzh)
+        if regist:
+            vInfo = httpPostRegist(blh,ywlx,dldm,vInfo)
+        return vInfo
+    def regist(self,data):
+        blh = data.get("blh","")
+        ywlx = data.get("ywlx","")
+        dldm = data.get("dldm","")
+        httpPostRegist(blh, ywlx, dldm)
+        return {"result" : "success"}
 
 #print "-----InqOnDuty : ------"
 #InqOnDuty("2017.06.01","2017.06.19")

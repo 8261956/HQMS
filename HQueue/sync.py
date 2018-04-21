@@ -6,7 +6,7 @@ import common.DBBase as DB
 from controller.visitor import VisitorManager
 from common.config import integrateType
 from project.yaxin.YX_Interface import SyncSource
-
+from common.mqtt_client import mqtt_task
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -32,8 +32,8 @@ def sourceSync(threadName, delay, station):
     print stationList
 
     num = len(stationList)
-
     counter = 0
+
     while 1:
         start_time = time.time()
         time.sleep(delay)
@@ -47,6 +47,9 @@ def sourceSync(threadName, delay, station):
                 VisitorManager().syncLocal()
             elif integrateType == "WEBSERVICE":
                 SyncSource().run()
+            elif integrateType == "MQ" :
+                #MQ数据在客户端回调中得到
+                pass
         #except Exception as e:
         #    print "Exception:" + str(e)
         # 计数
@@ -67,4 +70,8 @@ if __name__ == '__main__':
     station = map(int, args)
     print station
     print "Source Sync process"
+    if integrateType == "MQ":
+        print "MQ Client Run.."
+        m = mqtt_task()
+        m.start()
     sourceSync("Sync Process", 5, station=station)

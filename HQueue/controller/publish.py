@@ -143,6 +143,7 @@ class PublishTVInterface:
                 retlistInfo["watingList"].append(waitItem)
         callRecordList = DB.DBLocal.where("callingRecord", stationID=stationID, callerID=callerID)
         retlistInfo["calling"] = []
+        retlistInfo["pos"] = callerList.first().get("pos")
         if len(callRecordList) > 0:
             record = callRecordList[0]
             # 病人ID显示为snumber

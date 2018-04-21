@@ -4,7 +4,7 @@
 import sys, copy, time, datetime
 import queueInfo
 import common.config as cfg
-from common.func import LogOut,getNecessaryPara,getCurrentDate,getCurrentTime
+from common.func import LogOut,getNecessaryPara,getCurrentDate,getCurrentTime,list2Dict
 from queueData import VisitorLocalInterface,QueueDataController
 from mainStation import StationMainController
 from queueInfo import QueueInfoInterface
@@ -87,8 +87,7 @@ class VisitorManager:
             print("station " + str(stationID) + "syncLocal" )
             #scan all queue in a station
             for queue in self.queueList:
-                para = {"stationID":stationID , "queueID":queue["id"]}
-                QueueDataController().updateVisitor(para)
+                QueueDataController().updateVisitor(stationID,queue["id"])
             print "stationID %d  local sync ok" % stationID
 
     def sigVisitorFinished(self,name,vID):
@@ -137,6 +136,38 @@ class VisitorManager:
                 print "unmatch ext: %s:%s in %s:%s" %(str(k),str(v),str(k),str(v_source[k]))
                 return -1
         return 0
+
+    def visitor_quick_add(self,data):
+        data = dict(data)
+        id = str(getNecessaryPara(data, "id"))
+        queueFilter = str(getNecessaryPara(data, "queue"))
+        queueInfo = DB.DBLocal.select("queueInfo",where = {"filter" : queueFilter}).first()
+        if queueInfo is None:
+            return
+        stationID = queueInfo["stationID"]
+        queueID = queueInfo["queueID"]
+        scene = SceneInterface().getSceneInfo({"sceneID": queueInfo["sceneID"]})
+        sourceList = DB.DBLocal.select("visitor_source_data",where = {"queue" : queueFilter}).list()
+        sourceDict = list2Dict(sourceList)
+        if id not in sourceDict:
+            # 患者信息不存在 插入患者信息
+            sourceItem = data
+            if sourceItem.get("snumber",None) in {None,0} :
+                sourceItem["snumber"] = str(len(sourceList) + 1)
+            ret = self.db.insert("visitor_source_data", **data)
+            sourceList.append(sourceItem)
+            QueueDataController.updateVisitor(stationID, queueID, queueInfo, scene, sourceList)
+        else:
+            # 患者信息存在 看是否需要更新患者信息
+            v_source = self.innerSourceDict[id]
+            if self.compSource(data, v_source) != 0:
+                print "find visitor %s need update" % str(data["id"])
+                interface = VisitorSourceInterface()
+                interface.edit(data)
+                QueueDataController.updateVisitor(stationID, queueID, queueInfo, scene)
+
+        result = {"result": "success"}
+        return result
 
 class VisitorSourceInterface:
     def __init__(self):

@@ -163,7 +163,7 @@ class StationMainController:
                 vInfo["status"] = "waiting" if int(value) else "unactive"
                 if int(value):
                     vInfo["activeLocalTime"] = datetime.datetime.now()
-                    QueueDataController().updateVisitor({"stationID" : stationID,"queueID" : queueID})
+                    QueueDataController().updateVisitor(stationID,queueID)
             elif property == "urgentLev" :
                 vInfo["urgentLev"] = int(value)
             else:
