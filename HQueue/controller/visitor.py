@@ -144,7 +144,10 @@ class VisitorManager:
                 for item in backupList:
                     print "find backup item name: " + item["name"] + " registDate: " + str(item["registDate"]) + " workEndTime: " + str(item["workEndTime"])
                     item.pop("lid")
-                    BackupTableInterface(stationID).add(item)
+                    try:
+                        BackupTableInterface(stationID).add(item)
+                    except Exception,e:
+                        print Exception,e
                     VisitorSourceInterface().delete(item)
                     VisitorLocalInterface(stationID).delete(item)
 

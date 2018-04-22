@@ -273,7 +273,7 @@ class QueueDataController:
         if lastHigherPos == 0:
             posDest = numWaitting
         elif cntHigherLevel < numHigher:
-            posDest = lastHigherPos + 1
+            posDest = lastHigherPos
         else:
             if cntHigherSeries < numHigher:
                 posDest = lastHigherPos
@@ -282,7 +282,7 @@ class QueueDataController:
         # 计算目标分值
         if posDest >= numTotalVisitor:
             posDest = numTotalVisitor
-            scoreDest = topScore + POS_STEP
+            scoreDest = topScore + SCORE_STEP + POS_STEP
         elif posDest == 0:
             scoreDest = minScore - POS_STEP
         else:

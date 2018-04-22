@@ -151,9 +151,9 @@ class StationMainController:
                 #TODO:  添加复诊的排序设置
                 if vInfo["status"] == "finish" and int(value) == 0:
                     oldProperty = str2Json(vInfo["property"])
-                    vInfo = QueueDataController().setVisitorStatus(stationID, queueID, vInfo, "review")
                     oldProperty.update({"review": "1"})
                     vInfo["property"] = json2Str(oldProperty)
+                    vInfo = QueueDataController().setVisitorStatus(stationID, queueID, vInfo, "review")
 
                 vInfo["status"] = "finish" if int(value) else "waiting"
 
