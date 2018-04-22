@@ -5,7 +5,7 @@ import common.func
 import queueInfo
 import mainStation
 from queueData import QueueDataController, VisitorLocalInterface
-from common.func import packOutput, LogOut, str2List,list2Str,getCurrentTime,checkPostAction,str2Json
+from common.func import packOutput, LogOut, str2List,list2Str,getCurrentTime,checkPostAction,str2Json,takeVal
 from publish import callRecordInterface, PublishDevInterface
 from worker import WorkerInterface
 from mainStation import StationMainController
@@ -247,9 +247,19 @@ class WorkerMainController:
         scene = SceneInterface().getSceneInfo({"sceneID": sceneID})
 
         #TODO:解析sceneOutput
-        output = scene["output"]
-        #text = output, vars = {,  "pos": pos}
-        text = "请%s到%s%s" % (nextOne.get("name"), pos, "检查")
+        doingOutput = scene.get["output"]
+        doingOutput.replace("$name",nextOne.get("name"))
+        doingOutput.replace("$snumber",nextOne.get("snumber"))
+        doingOutput.replace("$cardID",nextOne.get("$cardID"))
+        doingOutput.replace("$pos", pos)
+        prepareOutput = scene["prepareOutput"]
+        prepareOutput.replace("$name", nextOne.get("name"))
+        prepareOutput.replace("$snumber", nextOne.get("snumber"))
+        prepareOutput.replace("$cardID", nextOne.get("$cardID"))
+        prepareOutput.replace("$pos", pos)
+        soundDoingTimes = takeVal(scene,"soundDoingTimes",2)
+        soundPrepareTimes = takeVal(scene,"soundDoingTimes",1)
+        text = doingOutput * soundDoingTimes + prepareOutput * soundPrepareTimes
 
         publishDev = PublishDevInterface()
         mediaBoxInterface = MediaBoxInterface()
