@@ -247,15 +247,15 @@ class WorkerMainController:
         scene = SceneInterface().getSceneInfo({"sceneID": sceneID})
 
         #TODO:解析sceneOutput
-        doingOutput = scene.get["output"]
+        doingOutput = scene["output"]
         doingOutput.replace("$name",nextOne.get("name"))
         doingOutput.replace("$snumber",nextOne.get("snumber"))
-        doingOutput.replace("$cardID",nextOne.get("$cardID"))
+        doingOutput.replace("$cardID",nextOne.get("cardID"))
         doingOutput.replace("$pos", pos)
         prepareOutput = scene["prepareOutput"]
         prepareOutput.replace("$name", nextOne.get("name"))
         prepareOutput.replace("$snumber", nextOne.get("snumber"))
-        prepareOutput.replace("$cardID", nextOne.get("$cardID"))
+        prepareOutput.replace("$cardID", nextOne.get("cardID"))
         prepareOutput.replace("$pos", pos)
         soundDoingTimes = takeVal(scene,"soundDoingTimes",2)
         soundPrepareTimes = takeVal(scene,"soundDoingTimes",1)
