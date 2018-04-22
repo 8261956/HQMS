@@ -29,10 +29,12 @@ urls = (
     '/(hqueue/manager/queueMachine)', "controller.queueMachine.QueueMachineInterface",
     '/(hqueue/manager/database)', "common.DBBase.DBInterface",
     '/(hqueue/manager/weixin)', "controller.weixin.WXInterface",
+    '/hqueue/manager/source', "controller.visitor.VisitorController",
 
     '/hqueue/main/extInterface', "project.ruici.extInterface.ExtInterface",
     '/hqueue/main/stationPrinter', "project.ruici.printerInterface.PrinterInterface",
     '/hqueue/yaxin/source', "project.yaxin.YX_Interface.YXSourceController",
+
 )
 
 def OracleTest():

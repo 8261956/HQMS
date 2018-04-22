@@ -1,10 +1,10 @@
 ﻿
 # -*- coding: utf-8 -*-
 
-import sys, copy, time, datetime
+import sys, copy, time, datetime,json,web
 import queueInfo
 import common.config as cfg
-from common.func import LogOut,getNecessaryPara,getCurrentDate,getCurrentTime,list2Dict
+from common.func import LogOut,getNecessaryPara,getCurrentDate,getCurrentTime,list2Dict,checkPostAction
 from queueData import VisitorLocalInterface,QueueDataController
 from mainStation import StationMainController
 from queueInfo import QueueInfoInterface
@@ -16,6 +16,28 @@ from common.DBBase import ImportTableFromView
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
+
+class VisitorController:
+    support_action = {
+        "regist":"regist",
+        "cancel" : "cancel"
+    }
+
+    def POST(self,name):
+        data = json.loads(web.data())
+        return checkPostAction(self, data, self.support_action)
+
+    def regist(self,data):
+        vInfo = getNecessaryPara(data,"vInfo")
+        ret = VisitorManager().visitor_quick_add(vInfo)
+        return ret
+
+    def cancel(self,data):
+        name = getNecessaryPara(data, "name")
+        vID = getNecessaryPara(data, "vID")
+        ret = VisitorManager().sigVisitorFinished(name,vID)
+        return {"result" : "success"}
+
 
 class VisitorManager:
     sql_paras = visitor_para_name
