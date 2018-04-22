@@ -161,14 +161,17 @@ class VisitorManager:
 
     def visitor_quick_add(self,data):
         data = dict(data)
-        id = str(getNecessaryPara(data, "id"))
         queueFilter = str(getNecessaryPara(data, "queue"))
         queueInfo = DB.DBLocal.select("queueInfo",where = {"filter" : queueFilter}).first()
         if queueInfo is None:
             return
         stationID = queueInfo["stationID"]
-        queueID = queueInfo["queueID"]
+        queueID = queueInfo["id"]
         scene = SceneInterface().getSceneInfo({"sceneID": queueInfo["sceneID"]})
+        if "id" not in data:
+            timestamp = int(time.time() * 1000000)
+            data["id"] = str(stationID) + str(queueID) + str(timestamp)
+        id = data.get("id")
         sourceList = DB.DBLocal.select("visitor_source_data",where = {"queue" : queueFilter}).list()
         sourceDict = list2Dict(sourceList)
         if id not in sourceDict:
@@ -176,12 +179,14 @@ class VisitorManager:
             sourceItem = data
             if sourceItem.get("snumber",None) in {None,0} :
                 sourceItem["snumber"] = str(len(sourceList) + 1)
+            if sourceItem.get("registTime","") in {None,""} :
+                sourceItem["registTime"] = getCurrentTime()
             ret = self.db.insert("visitor_source_data", **data)
             sourceList.append(sourceItem)
-            QueueDataController.updateVisitor(stationID, queueID, queueInfo, scene, sourceList)
+            QueueDataController().updateVisitor(stationID, queueID, queueInfo, scene, sourceList)
         else:
             # 患者信息存在 看是否需要更新患者信息
-            v_source = self.innerSourceDict[id]
+            v_source = sourceDict[id]
             if self.compSource(data, v_source) != 0:
                 print "find visitor %s need update" % str(data["id"])
                 interface = VisitorSourceInterface()

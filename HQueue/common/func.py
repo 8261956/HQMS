@@ -222,6 +222,12 @@ def getNecessaryPara(data, para, required=True):
         raise Exception("%s is required" %para)
     return temp
 
+def takeVal(data, para,defVal):
+    temp = data.get(para, defVal)
+    if temp is None:
+        return defVal
+    return temp
+
 def getCurrentDate():
     return time.strftime("%Y-%m-%d", time.localtime())
 

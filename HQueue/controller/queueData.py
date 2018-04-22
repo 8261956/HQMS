@@ -2,7 +2,7 @@
 
 import web, json, datetime, copy
 import common.config as cfg
-from common.func import packOutput, checkSession ,str2List,list2Dict,str2Json,json2Str
+from common.func import packOutput, checkSession ,str2List,list2Dict,str2Json,json2Str,takeVal
 from queueInfo import QueueInfoInterface
 from scene import SceneInterface
 import common.DBBase as DB
@@ -89,8 +89,8 @@ class QueueDataController:
 
     def getAgePrior(self,visitor_source,scene):
         age = visitor_source.get("age",30)
-        oldAge = scene.get("priorOlderAge",70)
-        youngAge = scene.get("priorCldAge",2)
+        oldAge = takeVal(scene,"priorOlderAge",70)
+        youngAge = takeVal(scene,"priorCldAge",2)
         if age>oldAge or age <youngAge:
             return "{\"prior\" : \"1\"}"
         else:
@@ -112,10 +112,14 @@ class QueueDataController:
         # 遍历 sourceList
         for sourceItem in sourceList:
             if str(sourceItem["id"]) not in localDict:
+                if isinstance(sourceItem["registTime"],str):
+                    registTime = sourceItem["registTime"]
+                else:
+                    registTime = sourceItem["registTime"].strftime('%Y-%m-%d %H:%M:%S')
                 localData = {
                     "id": sourceItem["id"],
                     "name": sourceItem["name"],
-                    "registDate": sourceItem["registDate"].strftime('%Y-%m-%d %H:%M:%S'),
+                    "registDate": registTime,
                     "stationID": stationID,
                     "queueID": queueID,
                     "activeLocalTime": datetime.datetime(2000,1,1),
