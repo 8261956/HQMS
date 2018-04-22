@@ -26,4 +26,4 @@ memcached_timeout = int(_config.get('memcached', 'timeout'))
 
 mqServer = _config.get('MQ', 'mqServer')
 mqPort = _config.get('MQ', 'mqPort')
-mqPort = _config.get('MQ', 'mqKey')
+mqKey = _config.get('MQ', 'mqKey')

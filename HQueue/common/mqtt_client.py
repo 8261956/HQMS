@@ -50,7 +50,7 @@ def handle_message(topic, data):
 
     print "handle_message"
     try:
-        sourceItem = data
+        sourceItem = json.loads(data)
         VisitorManager().visitor_quick_add(sourceItem)
 
     except Exception as e:
