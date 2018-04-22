@@ -14,7 +14,7 @@ finalScoreDef = finalScoreMax
 levelMask = 100000000
 POS_STEP = 5
 SCORE_STEP = 160
-NORMAL_LEVEL = 15
+NORMAL_LEVEL = 7
 URGENT_LEV1_NUM =  2
 URGENT_LEV2_NUM =  3
 PRIOR_LEV_NUM = 5  #老幼 > 复诊 > 过号 > 预约 > 普通
@@ -239,6 +239,10 @@ class QueueDataController:
         posDest = 0             #目标位置
         scoreDest = 0           #目标分值
         topScore = 0            #队列最高分值
+        if len(vList) == 0:
+            minScore = levelMask * NORMAL_LEVEL
+        else:
+            minScore = vList[0]["finalScore"]
         cntHigherSeries = 0     # 得到最后一个连续特殊患者个数
         numTotalVisitor = 0     # 当前队列的总个数
         vListTemp = list(vList)
@@ -280,7 +284,7 @@ class QueueDataController:
             posDest = numTotalVisitor
             scoreDest = topScore + POS_STEP
         elif posDest == 0:
-            scoreDest = topScore - POS_STEP
+            scoreDest = minScore - POS_STEP
         else:
             pre = vListTemp[posDest - 1]["finalScore"]
             next = vListTemp[posDest]["finalScore"]
