@@ -24,5 +24,29 @@
 返回内容:
 ```json
 {
+  "errInfo": "none ",
+  "rescode": "200",
+  "detail": {
+    "result": "success"
+  }
+}
+
+##亚心查询患者信息 （同时登记）
+接口地址: http://192.168.17.187/hqueue/yaxin/source
+
+方法: POST
+
+参数:
+```json
+{
+  "action":"reqInfo",
+  "trmtno" : "",
+  "regist" : 1,
+  "ywlx" : ""
+}
+```
+返回内容:
+```json
+{
 
 }

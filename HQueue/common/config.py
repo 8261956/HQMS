@@ -15,10 +15,6 @@ db_pass = _config.get('database', 'pass')
 
 headPicPath = _config.get('global','HeadPicPath')
 upload_http_base = _config.get('global','upload_http_base')
-backupTime = _config.get("global","backupTime")
-deadTime = _config.get("global","deadTime")
-currentDayOnly = _config.get("global","currentDayOnly")
-AutoSyncFinish = _config.get("global","AutoSyncFinish")
 integrateType = _config.get("global","integrateType")
 
 memcached_host = _config.get('memcached', 'host')

@@ -368,7 +368,7 @@ class YXSourceController:
         "regist" : "regist"
     }
 
-    def POST(self, name):
+    def POST(self):
         data = json.loads(web.data())
         return checkPostAction(self, data, self.support_action)
 
