@@ -252,7 +252,7 @@ class QueueDataController:
                 continue
             if self.getLevel(item) >= level:
                 cntHigherLevel += 1
-                lastHigherPos = currentPos
+                lastHigherPos = currentPos + 1
                 if tempNormalLast:
                     cntHigherSeries = 1
                 else:
@@ -276,9 +276,9 @@ class QueueDataController:
             posDest = lastHigherPos + 1
         else:
             if cntHigherSeries < numHigher:
-                posDest = lastHigherPos + 1
+                posDest = lastHigherPos
             else:
-                posDest = lastHigherPos + numNormal + 1
+                posDest = lastHigherPos + numNormal
         # 计算目标分值
         if posDest >= numTotalVisitor:
             posDest = numTotalVisitor
