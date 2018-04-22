@@ -311,18 +311,12 @@ class WorkerMainController:
         VisitorLocalInterface(stationID).edit(doing)
 
     def visitorFinishSet(self,inputData):
-        id = inputData.get("visitorID", None)
-        stationID = inputData.get("stationID", None)
-        queueID = inputData.get("queueID", None)
-        finish = inputData.get("finish", None)
-        para = {"id": id, "stationID": stationID, "queueID": queueID, "finish": finish}
-        StationMainController().visitorFinishSet(para)
-        return
+        result = {"result": "unused action"}
+        return result
 
     def visitorPropertySet(self,inputData):
-        # TODO: 设置访客属性
-        result = {"result": "success"}
-        return result
+        ret = StationMainController().visitorPropertySet(inputData)
+        return ret
 
     def setWorkerStatus(self,inputData):
         stationID = inputData["stationID"]

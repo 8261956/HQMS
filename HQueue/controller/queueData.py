@@ -2,7 +2,7 @@
 
 import web, json, datetime, copy
 import common.config as cfg
-from common.func import packOutput, checkSession ,str2List,list2Dict,str2Json,json2Str,takeVal
+from common.func import packOutput, checkSession ,str2List,list2Dict,str2Json,json2Str,takeVal,dotdict
 from queueInfo import QueueInfoInterface
 from scene import SceneInterface
 import common.DBBase as DB
@@ -156,9 +156,9 @@ class QueueDataController:
     def sortVisitor(self, stationID, queueID, scene):
         localList = self.getQueueVisitor({"stationID" : stationID,"queueID" : queueID},["waiting","prepare"])
         rankWay = scene["rankWay"]
-        waitNum = scene.get("defaultPrepareNum", 0)
-        InsertSeries = scene.get("InsertPriorSeries", 2)
-        InsertInterval = scene.get("InsertPriorInterval", 3)
+        waitNum = takeVal(scene,"defaultPrepareNum", 0)
+        InsertSeries = takeVal(scene,"InsertPriorSeries", 2)
+        InsertInterval = takeVal(scene,"InsertPriorInterval", 3)
 
         if rankWay in ("snumber", "registTime", "activeTime"):
             pos = 0
@@ -185,6 +185,7 @@ class QueueDataController:
         queueInfo = QueueInfoInterface().getInfo({"stationID": stationID, "id": queueID})
         sceneID = queueInfo["sceneID"]
         scene = SceneInterface().getSceneInfo({"sceneID": sceneID})
+        scene = dotdict(scene)
         waitNum = scene.defaultPrepareNum
         # 获取队列访客信息，如果等待队列中已经有过号或者复诊的访客，则调整缓冲人数
         visitorList = self.getVisitorList(stationID, queueID)
@@ -209,15 +210,15 @@ class QueueDataController:
     # 按照患者状态得到细分的优先级 level大优先级高
     def getLevel(self,visitor):
         property = str2Json(visitor.get("property", ""))
-        if int(property.get("prior","0")):
+        if int(takeVal(property,"prior","0")):
             return 4
-        elif int(property.get("review","0")):
+        elif int(takeVal(property,"review","0")):
             return 3
-        elif int(visitor.get("orderType","0")):
+        elif int(takeVal(property,"orderType","0")):
             return 2
-        elif int(property.get("delay","0")):
+        elif int(takeVal(property,"delay","0")):
             return 1
-        elif int(property.get("pass","0")):
+        elif int(takeVal(property,"pass","0")):
             return 1
         return 0
 
