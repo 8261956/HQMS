@@ -248,15 +248,15 @@ class WorkerMainController:
 
         #TODO:解析sceneOutput
         doingOutput = scene["output"]
-        doingOutput.replace("$name",nextOne.get("name"))
-        doingOutput.replace("$snumber",nextOne.get("snumber"))
-        doingOutput.replace("$cardID",nextOne.get("cardID"))
-        doingOutput.replace("$pos", pos)
+        doingOutput = doingOutput.replace("$name",nextOne.get("name"))
+        doingOutput = doingOutput.replace("$snumber",nextOne.get("snumber"))
+        doingOutput = doingOutput.replace("$cardID",nextOne.get("cardID"))
+        doingOutput = doingOutput.replace("$pos", pos)
         prepareOutput = scene["prepareOutput"]
-        prepareOutput.replace("$name", nextOne.get("name"))
-        prepareOutput.replace("$snumber", nextOne.get("snumber"))
-        prepareOutput.replace("$cardID", nextOne.get("cardID"))
-        prepareOutput.replace("$pos", pos)
+        prepareOutput = prepareOutput.replace("$name", nextOne.get("name"))
+        prepareOutput = prepareOutput.replace("$snumber", nextOne.get("snumber"))
+        prepareOutput = prepareOutput.replace("$cardID", nextOne.get("cardID"))
+        prepareOutput = prepareOutput.replace("$pos", pos)
         soundDoingTimes = takeVal(scene,"soundDoingTimes",2)
         soundPrepareTimes = takeVal(scene,"soundDoingTimes",1)
         text = doingOutput * soundDoingTimes + prepareOutput * soundPrepareTimes
