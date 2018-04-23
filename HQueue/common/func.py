@@ -228,6 +228,9 @@ def takeVal(data, para,defVal):
         return defVal
     return temp
 
+def getCurrentYear():
+    return time.strftime("%Y", time.localtime())
+
 def getCurrentDate():
     return time.strftime("%Y-%m-%d", time.localtime())
 

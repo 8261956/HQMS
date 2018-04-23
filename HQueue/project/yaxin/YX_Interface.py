@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 from collections import OrderedDict
 import common.xmlDict as XML
 from common.DBBase import DBLocal
-from  common.func import getCurrentTime,checkPostAction
+from  common.func import getCurrentTime,checkPostAction,getCurrentYear
 
 BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
@@ -243,7 +243,7 @@ def visitorSync(ksdm,sync_time):
         visitor = {
             "id" : item["ID"]["_text"] + ":" + registTime,
             "name": item["NAME"]["_text"],
-            "age" : item["BRITHDAY"].get("_text",""),
+            "age" : int(getCurrentYear()) + 1 - int(item["BRITHDAY"].get("_text","2018")),
             "queue" : item["DEPARTMENT"]["_text"] + item["DOCTORNAME"]["_text"],
             "registDate" : registTime,
             "registTime" : registTime,
