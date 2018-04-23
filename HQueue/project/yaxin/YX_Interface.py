@@ -240,10 +240,15 @@ def visitorSync(ksdm,sync_time):
             continue
         registTime = item["REGISTTIME"].get("_text","")
 
+        print  "current year : " ,int(getCurrentYear())
+        print  "birth : ", int(item["BRITHDAY"].get("_text","2018"))
+        age = int(getCurrentYear()) + 1 - int(item["BRITHDAY"].get("_text","2018"))
+        print  "age :",  age
+
         visitor = {
             "id" : item["ID"]["_text"] + ":" + registTime,
             "name": item["NAME"]["_text"],
-            "age" : int(getCurrentYear()) + 1 - int(item["BRITHDAY"].get("_text","2018")),
+            "age" :  age,
             "queue" : item["DEPARTMENT"]["_text"] + item["DOCTORNAME"]["_text"],
             "registDate" : registTime,
             "registTime" : registTime,
