@@ -191,11 +191,14 @@ class QueueDataController:
         visitorList = self.getVisitorList(stationID, queueID)
         visitorNum = len(visitorList)
         if action == "pass" or action == "delay":
-            InsertSeries = scene["InsertPassedSeries"]
-            InsertInterval = scene["InsertPassedInterval"]
+            InsertSeries = takeVal(scene,"InsertPassedSeries",2)
+            InsertInterval = takeVal(scene,"InsertPassedInterval",3)
         elif action == "review":
-            InsertSeries = scene["InsertReviewSeries"]
-            InsertInterval = scene["InsertReviewInterval"]
+            InsertSeries = takeVal(scene,"InsertReviewSeries",2)
+            InsertInterval = takeVal(scene,"InsertReviewInterval",3)
+        elif action == "prior":
+            InsertSeries = takeVal(scene,"InsertPriorSeries",2)
+            InsertInterval = takeVal(scene,"InsertPriorInterval",3)
         else:  # default val
             InsertSeries = 2
             InsertInterval = 3

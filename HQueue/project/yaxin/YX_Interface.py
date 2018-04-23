@@ -255,7 +255,7 @@ def visitorSync(ksdm,sync_time):
             "cardID" : item["CARDID"].get("_text",""),
             "personID": item["PERSONID"].get("_text",""),
             "phone" : item["PHONE"].get("_text",""),
-            "VIP" : int(item["EMERGENCY"].get("_text","0"))
+            "urgent_lev1" : int(item["EMERGENCY"].get("_text","0"))
         }
         THF = item["THF"].get("_text","N")
         DBTIME = item["DBTIME"]["_text"]
