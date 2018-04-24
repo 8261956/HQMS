@@ -144,11 +144,9 @@ class StationMainController:
                 vInfo["property"] = json2Str(oldProperty)
                 if int(value) ==  0 :
                     if oldProperty.get("pass","0") == "1":
-                        # TODO:  添加过号的排序设置
                         vInfo = QueueDataController().setVisitorStatus(stationID,queueID,vInfo,"pass")
 
             elif property == "finish":
-                #TODO:  添加复诊的排序设置
                 if vInfo["status"] == "finish" and int(value) == 0:
                     oldProperty = str2Json(vInfo["property"])
                     oldProperty.update({"review": "1"})
@@ -156,6 +154,13 @@ class StationMainController:
                     vInfo = QueueDataController().setVisitorStatus(stationID, queueID, vInfo, "review")
 
                 vInfo["status"] = "finish" if int(value) else "waiting"
+            elif property == "prior":
+                #TODO:  添加优先的排序设置
+                oldProperty = str2Json(vInfo["property"])
+                if oldProperty.get("prior","0") == "0" and int(value) == 1:
+                    oldProperty.update({"prior": "1"})
+                    vInfo["property"] = json2Str(oldProperty)
+                    vInfo = QueueDataController().setVisitorStatus(stationID, queueID, vInfo, "prior")
 
             elif property == "active":
                 # TODO:  添加立即激活的排序设置
