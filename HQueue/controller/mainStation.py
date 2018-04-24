@@ -156,11 +156,16 @@ class StationMainController:
                 vInfo["status"] = "finish" if int(value) else "waiting"
             elif property == "prior":
                 #TODO:  添加优先的排序设置
-                oldProperty = str2Json(vInfo["property"])
+                """oldProperty = str2Json(vInfo["property"])
                 if oldProperty.get("prior","0") == "0" and int(value) == 1:
                     oldProperty.update({"prior": "1"})
                     vInfo["property"] = json2Str(oldProperty)
                     vInfo = QueueDataController().setVisitorStatus(stationID, queueID, vInfo, "prior")
+                """
+                oldProperty = str2Json(vInfo["property"])
+                oldProperty.update({property: value})
+                vInfo["property"] = json2Str(oldProperty)
+                vInfo = QueueDataController().setVisitorStatus(stationID, queueID, vInfo, "prior")
 
             elif property == "active":
                 # TODO:  添加立即激活的排序设置
