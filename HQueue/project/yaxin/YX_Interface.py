@@ -146,7 +146,7 @@ def InqQueueList(ksdm,ghrq,time_flag,ysdm = "",inPara1 = "",inPara2 = "",inPara3
     retList = getResultList(xmlRet)
     return retList
 
-def PostRegist(blh,ywlx,dldm,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
+def PostRegist(blh,ywlx,dldm,fydl,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
     """
     报到机发送登记请求
     :param blh:   病例号
@@ -158,6 +158,7 @@ def PostRegist(blh,ywlx,dldm,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = ""
     d["blh"] = str(blh)
     d["ywlx"] = str(ywlx)
     d["dldm"] = str(dldm)
+    d["fydl"] = str(fydl)
     d["inPara1"] = str(inPara1)
     d["inPara2"] = str(inPara2)
     d["inPara3"] = str(inPara3)
@@ -330,7 +331,7 @@ def httpReqInfo(blh = "",trmtno = "",vid = "",sfzh = "",inPara1 = "",inPara2 = "
         return blh,vInfo
     return "",{}
 
-def httpPostRegist(blh,ywlx,dldm,sourceInfo,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
+def httpPostRegist(blh,ywlx,dldm,fydl,sourceInfo,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
     """
     报到机发送登记请求
     :param blh:   病例号
@@ -338,15 +339,13 @@ def httpPostRegist(blh,ywlx,dldm,sourceInfo,inPara1 = "",inPara2 = "",inPara3 = 
     :param dldm:   队列代码
     :return:
     """
-    retList = PostRegist(blh,ywlx,dldm,inPara1,inPara2,inPara3,inPara4,inPara5,inPara6)
+    retList = PostRegist(blh,ywlx,dldm,fydl,inPara1,inPara2,inPara3,inPara4,inPara5,inPara6)
     sourceItem = {}
     registTime = getCurrentTime
     num = 0
     for item in retList:
         if ywlx == TYPE_FAYAO:
             sourceItem["id"] = blh + registTime
-            sourceItem["name"] = item["NAME"].get("_text", "测试人员") #需要补充名字
-            sourceItem["queue"] = item["WIN"].get("_text", "取药窗口N") #需要补充窗口
             sourceItem["cardID"] = blh
         elif ywlx == TYPE_YIJI:
             sourceItem["id"] = item["lsh"].get("_text", "")  #医技流水号
@@ -385,15 +384,21 @@ class YXSourceController:
         regist = data.get("regist",0)
         ywlx = data.get("ywlx","")
         dldm = data.get("dldm","")
+        fydl = data.get("fydl","")
+        snumber = data.get("snumber", "")
+        queue = data.get("queue", "")
         blh,vInfo = httpReqInfo(blh,trmtno,vid,sfzh)
+        vInfo["snumber"] = snumber
+        vInfo["queue"] = queue
         if regist:
-            vInfo = httpPostRegist(blh,ywlx,dldm,vInfo)
+            vInfo = httpPostRegist(blh,ywlx,dldm,fydl,vInfo)
         return vInfo
     def regist(self,data):
         blh = data.get("blh","")
         ywlx = data.get("ywlx","")
         dldm = data.get("dldm","")
-        httpPostRegist(blh, ywlx, dldm)
+        fydl = data.get("fydl","")
+        httpPostRegist(blh, ywlx, dldm,fydl)
         return {"result" : "success"}
 
 #print "-----InqOnDuty : ------"
