@@ -361,8 +361,8 @@ def httpPostRegist(blh,ywlx,dldm,fydl,sourceInfo,inPara1 = "",inPara2 = "",inPar
             sourceItem["cardID"] = blh
             queueCode = item["DLDM"].get("_text", "")  #队列代码
             sourceItem["queue"] = GetQueueName("03", queueCode)
-        sourceItem.update(sourceInfo)
-        VisitorManager().visitor_quick_add(sourceItem)
+        sourceInfo.update(sourceItem)
+        VisitorManager().visitor_quick_add(sourceInfo)
         retInfo = DBLocal.where("visitor_view_data",id = sourceItem["id"]).first()
         num += 1
     return retInfo
@@ -390,8 +390,10 @@ class YXSourceController:
         snumber = data.get("snumber", "")
         queue = data.get("queue", "")
         blh,vInfo = httpReqInfo(blh,trmtno,vid,sfzh)
-        vInfo["snumber"] = snumber
-        vInfo["queue"] = queue
+        if snumber != "":
+            vInfo["snumber"] = snumber
+        if queue != "" :
+            vInfo["queue"] = queue
         if regist:
             vInfo = httpPostRegist(blh,ywlx,dldm,fydl,vInfo)
         return vInfo
