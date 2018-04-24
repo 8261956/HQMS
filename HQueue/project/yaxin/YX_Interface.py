@@ -16,9 +16,9 @@ from controller.visitor import VisitorManager
 #import modules.visitor 
 
 YX_url = "http://192.168.11.77:8082/HISWebService.asmx?WSDL"
-TYPE_FAYAO = 1
-TYPE_YIJI = 2
-TYPE_ZHUYUAN = 3
+TYPE_FAYAO = "01"
+TYPE_YIJI = "02"
+TYPE_ZHUYUAN = "03"
 
 def getClient():
     print "getWebService func In"
