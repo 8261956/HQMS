@@ -362,8 +362,9 @@ def httpPostRegist(blh,ywlx,dldm,fydl,sourceInfo,inPara1 = "",inPara2 = "",inPar
             sourceItem["queue"] = GetQueueName("03", queueCode)
         sourceItem.update(sourceInfo)
         VisitorManager().visitor_quick_add(sourceItem)
+        retInfo = DBLocal.where("visitor_view_data",id = sourceItem["id"]).first()
         num += 1
-    return sourceItem
+    return retInfo
 
 
 class YXSourceController:
