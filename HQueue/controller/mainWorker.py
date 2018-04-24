@@ -247,16 +247,20 @@ class WorkerMainController:
         scene = SceneInterface().getSceneInfo({"sceneID": sceneID})
 
         #TODO:解析sceneOutput
-        doingOutput = scene["output"]
-        doingOutput = doingOutput.replace("$name",nextOne.get("name"))
-        doingOutput = doingOutput.replace("$snumber",nextOne.get("snumber"))
-        doingOutput = doingOutput.replace("$cardID",nextOne.get("cardID"))
-        doingOutput = doingOutput.replace("$pos", pos)
-        prepareOutput = scene["prepareOutput"]
-        prepareOutput = prepareOutput.replace("$name", nextOne.get("name"))
-        prepareOutput = prepareOutput.replace("$snumber", nextOne.get("snumber"))
-        prepareOutput = prepareOutput.replace("$cardID", nextOne.get("cardID"))
-        prepareOutput = prepareOutput.replace("$pos", pos)
+        doingOutput = ""
+        prepareOutput = ""
+        if nextOne:
+            doingOutput = scene["output"]
+            doingOutput = doingOutput.replace("$name",nextOne.get("name"))
+            doingOutput = doingOutput.replace("$snumber",nextOne.get("snumber"))
+            doingOutput = doingOutput.replace("$cardID",nextOne.get("cardID"))
+            doingOutput = doingOutput.replace("$pos", pos)
+        if prepareOne :
+            prepareOutput = scene["prepareOutput"]
+            prepareOutput = prepareOutput.replace("$name", prepareOne.get("name"))
+            prepareOutput = prepareOutput.replace("$snumber", prepareOne.get("snumber"))
+            prepareOutput = prepareOutput.replace("$cardID", prepareOne.get("cardID"))
+            prepareOutput = prepareOutput.replace("$pos", pos)
         soundDoingTimes = takeVal(scene,"soundDoingTimes",2)
         soundPrepareTimes = takeVal(scene,"soundDoingTimes",1)
         text = doingOutput * soundDoingTimes + prepareOutput * soundPrepareTimes
