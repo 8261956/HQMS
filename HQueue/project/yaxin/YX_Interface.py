@@ -321,13 +321,13 @@ def httpReqInfo(blh = "",trmtno = "",vid = "",sfzh = "",inPara1 = "",inPara2 = "
     retList = InqVInfo(blh,trmtno,vid,sfzh,inPara1,inPara2,inPara3,inPara4,inPara5,inPara6)
     vInfo = {}
     for v in retList:
-        blh = v["blh"].get("_text","") #病例号
-        vInfo["name"] = v["xm"].get("_text","")  #姓名
-        vInfo["age"] = v["age"].get("_text", "") #年龄
-        vInfo["genders"] = v["xb"].get("_text", "") #性别
-        vInfo["rev1"] = v["xb"].get("_text", "") #病患联系地址
-        vInfo["phone"] = v["dhhm"].get("_text", "") #病人电话
-        vInfo["personID"] = v["sfzhm"].get("_text", "") #病人身份证号码
+        blh = v["BLH"].get("_text","") #病例号
+        vInfo["name"] = v["XM"].get("_text","")  #姓名
+        vInfo["age"] = v["AGE"].get("_text", "") #年龄
+        vInfo["genders"] = v["XB"].get("_text", "") #性别
+        vInfo["rev1"] = v["XB"].get("_text", "") #病患联系地址
+        vInfo["phone"] = v["DHHM"].get("_text", "") #病人电话
+        vInfo["personID"] = v["SFZHM"].get("_text", "") #病人身份证号码
         return blh,vInfo
     return "",{}
 
@@ -348,17 +348,17 @@ def httpPostRegist(blh,ywlx,dldm,fydl,sourceInfo,inPara1 = "",inPara2 = "",inPar
             sourceItem["id"] = blh + registTime
             sourceItem["cardID"] = blh
         elif ywlx == TYPE_YIJI:
-            sourceItem["id"] = item["lsh"].get("_text", "")  #医技流水号
-            sourceItem["name"] = item["vid"].get("_text", "")  #就诊号
-            sourceItem["cardID"] = item["lsh"].get("_text", "")  #医技流水号
-            queueCode = item["dldm"].get("_text", "") #队列代码，实际签到的队列
+            sourceItem["id"] = item["LSH"].get("_text", "")  #医技流水号
+            sourceItem["name"] = item["VID"].get("_text", "")  #就诊号
+            sourceItem["cardID"] = item["LSH"].get("_text", "")  #医技流水号
+            queueCode = item["DLDM"].get("_text", "") #队列代码，实际签到的队列
             sourceItem["queue"] = GetQueueName("02",queueCode)
             sourceItem["examMethod"] = item["XMMC"].get("_text", "")  #医技项目名称
         elif ywlx == TYPE_ZHUYUAN :
-            sourceItem["id"] = item["vid"].get("_text", "") + registTime # 住院号
-            sourceItem["name"] = item["xm"].get("_text", "")  #患者姓名
+            sourceItem["id"] = item["VID"].get("_text", "") + registTime # 住院号
+            sourceItem["name"] = item["XM"].get("_text", "")  #患者姓名
             sourceItem["cardID"] = blh
-            queueCode = item["dldm"].get("_text", "")  #队列代码
+            queueCode = item["DLDM"].get("_text", "")  #队列代码
             sourceItem["queue"] = GetQueueName("03", queueCode)
         sourceItem.update(sourceInfo)
         VisitorManager().visitor_quick_add(sourceItem)
