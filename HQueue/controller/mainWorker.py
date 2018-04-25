@@ -147,7 +147,10 @@ class WorkerMainController:
                 nextOne["workStartTime"] = getCurrentTime()
                 VisitorLocalInterface(stationID).edit(nextOne)
                 #TODO: 准备人员根据策略判定
-                parpareOne = {}
+                try:
+                    parpareOne = iter(waitList).next()
+                except:
+                    parpareOne = {}
                 self.publishNew(inputData,callerInfo,lastOne,nextOne,parpareOne,ret)
                 break
         return  ret
