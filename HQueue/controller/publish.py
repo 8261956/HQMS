@@ -2,7 +2,7 @@
 
 import web, datetime, time, json, copy, requests
 import common.func
-from common.func import packOutput,str2Json
+from common.func import packOutput,str2Json,takeVal
 
 from caller import CallerInterface
 from worker import WorkerInterface
@@ -381,7 +381,7 @@ class PublishTVInterface:
             return "VIP"
         elif property.get("review","0") != "0":
             return "review"
-        elif int(kwargs.get("orderType",0)):
+        elif takeVal(kwargs,"orderType",0):
             return "order"
         elif property.get("pass","0") != "0":
             return "pass"
