@@ -133,6 +133,7 @@ class WorkerMainController:
         waitList = QueueDataController().getQueueVisitor(inputData,["waiting","prepare"])
         nextOne = parpareOne = {}
         callerInfo = self.getCallerInfo(inputData)
+        cnt = 0
         for item in waitList:
             if item["dest"] not in {None,""}:
                 if callerInfo["pos"] != item["dest"]:
@@ -148,11 +149,12 @@ class WorkerMainController:
                 VisitorLocalInterface(stationID).edit(nextOne)
                 #TODO: 准备人员根据策略判定
                 try:
-                    parpareOne = iter(waitList).next()
+                    parpareOne = waitList[cnt + 1]
                 except:
                     parpareOne = {}
                 self.publishNew(inputData,callerInfo,lastOne,nextOne,parpareOne,ret)
                 break
+            cnt += 1
         return  ret
 
     def callSel(self,inputData):
@@ -254,15 +256,15 @@ class WorkerMainController:
         prepareOutput = ""
         if nextOne:
             doingOutput = scene["output"]
-            doingOutput = doingOutput.replace("$name",nextOne.get("name"))
-            doingOutput = doingOutput.replace("$snumber",nextOne.get("snumber"))
-            doingOutput = doingOutput.replace("$cardID",nextOne.get("cardID"))
+            doingOutput = doingOutput.replace("$name",takeVal(nextOne,"name",""))
+            doingOutput = doingOutput.replace("$snumber",takeVal(nextOne,"snumber",""))
+            doingOutput = doingOutput.replace("$cardID",takeVal(nextOne,"cardID",""))
             doingOutput = doingOutput.replace("$pos", pos)
         if prepareOne :
             prepareOutput = scene["prepareOutput"]
-            prepareOutput = prepareOutput.replace("$name", prepareOne.get("name"))
-            prepareOutput = prepareOutput.replace("$snumber", prepareOne.get("snumber"))
-            prepareOutput = prepareOutput.replace("$cardID", prepareOne.get("cardID"))
+            prepareOutput = prepareOutput.replace("$name", takeVal(nextOne,"name",""))
+            prepareOutput = prepareOutput.replace("$snumber", takeVal(nextOne,"snumber",""))
+            prepareOutput = prepareOutput.replace("$cardID", takeVal(nextOne,"cardID",""))
             prepareOutput = prepareOutput.replace("$pos", pos)
         soundDoingTimes = takeVal(scene,"soundDoingTimes",2)
         soundPrepareTimes = takeVal(scene,"soundDoingTimes",1)
