@@ -262,9 +262,9 @@ class WorkerMainController:
             doingOutput = doingOutput.replace("$pos", pos)
         if prepareOne :
             prepareOutput = scene["prepareOutput"]
-            prepareOutput = prepareOutput.replace("$name", takeVal(nextOne,"name",""))
-            prepareOutput = prepareOutput.replace("$snumber", takeVal(nextOne,"snumber",""))
-            prepareOutput = prepareOutput.replace("$cardID", takeVal(nextOne,"cardID",""))
+            prepareOutput = prepareOutput.replace("$name", takeVal(prepareOne,"name",""))
+            prepareOutput = prepareOutput.replace("$snumber", takeVal(prepareOne,"snumber",""))
+            prepareOutput = prepareOutput.replace("$cardID", takeVal(prepareOne,"cardID",""))
             prepareOutput = prepareOutput.replace("$pos", pos)
         soundDoingTimes = takeVal(scene,"soundDoingTimes",2)
         soundPrepareTimes = takeVal(scene,"soundDoingTimes",1)
