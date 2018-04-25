@@ -242,7 +242,7 @@ def visitorSync(ksdm,sync_time):
         registTime = item["REGISTTIME"].get("_text","")
 
         print  "current year : " ,int(getCurrentYear())
-        print  "birth : ", int(item["BRITHDAY"].get("_text","2018"))
+        print  "birth : ", int(item["BRITHDAY"].get("_text","2018")[0:3])
         age = int(getCurrentYear()) + 1 - int(item["BRITHDAY"].get("_text","2018"))
         print  "age :",  age
 
