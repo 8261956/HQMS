@@ -58,9 +58,11 @@ def sourceSync(threadName, delay, station):
 
         if (counter / num) >= 10:
             # counter = 0
+            print "backOld ."
             VisitorManager().backupOld()
-            print "auto exit to clean up."
-            break
+            if integrateType == "VIEW":
+                print "auto exit to clean up."
+                break
 
         print "TIME COST: %s" % (time.time() - start_time)
 
