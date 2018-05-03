@@ -267,7 +267,7 @@ class WorkerMainController:
             prepareOutput = prepareOutput.replace("$cardID", takeVal(prepareOne,"cardID",""))
             prepareOutput = prepareOutput.replace("$pos", pos)
         soundDoingTimes = takeVal(scene,"soundDoingTimes",2)
-        soundPrepareTimes = takeVal(scene,"soundDoingTimes",1)
+        soundPrepareTimes = takeVal(scene,"soundPrepareTimes",1)
         text = doingOutput * soundDoingTimes + prepareOutput * soundPrepareTimes
 
         publishDev = PublishDevInterface()
