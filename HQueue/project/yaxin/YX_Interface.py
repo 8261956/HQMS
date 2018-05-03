@@ -323,7 +323,7 @@ def httpReqInfo(blh = "",trmtno = "",vid = "",sfzh = "",inPara1 = "",inPara2 = "
     for v in retList:
         blh = v["BLH"].get("_text","") #病例号
         vInfo["name"] = v["XM"].get("_text","")  #姓名
-        vInfo["age"] = v["AGE"].get("_text", "") #年龄
+        vInfo["age"] = int(v["AGE"].get("_text", "")) #年龄
         vInfo["genders"] = v["XB"].get("_text", "") #性别
         vInfo["rev1"] = v["XB"].get("_text", "") #病患联系地址
         vInfo["phone"] = v["DHHM"].get("_text", "") #病人电话
