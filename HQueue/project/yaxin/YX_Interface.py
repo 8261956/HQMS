@@ -349,11 +349,11 @@ def httpPostRegist(blh,ywlx,dldm,fydl,sourceInfo,inPara1 = "",inPara2 = "",inPar
             sourceItem["id"] = blh + registTime
             sourceItem["cardID"] = blh
         elif ywlx == TYPE_YIJI:
-            sourceItem["id"] = item["LSH"].get("_text", "")  #医技流水号
-            sourceItem["cardID"] = blh
             queueCode = item["DLDM"].get("_text", "") #队列代码，实际签到的队列
             sourceItem["queue"] = GetQueueName("02",queueCode)
             sourceItem["examMethod"] = item["XMMC"].get("_text", "")  #医技项目名称
+            sourceItem["id"] = queueCode + item["LSH"].get("_text", "")  # 医技流水号
+            sourceItem["cardID"] = blh
         elif ywlx == TYPE_ZHUYUAN :
             sourceItem["id"] = item["VID"].get("_text", "") + registTime # 住院号
             sourceItem["name"] = item["XM"].get("_text", "")  #患者姓名

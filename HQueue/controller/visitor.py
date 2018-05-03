@@ -178,8 +178,7 @@ class VisitorManager:
         id = data.get("id")
         sourceList = DB.DBLocal.select("visitor_source_data",where = {"queue" : queueFilter}).list()
         sourceDict = list2Dict(sourceList)
-        print "sourceList: ", sourceList
-        print "sourceDict: ", sourceDict
+        print "sourceList size: ", len(sourceList)
         if id not in sourceDict:
             # 患者信息不存在 插入患者信息
             sourceItem = data
