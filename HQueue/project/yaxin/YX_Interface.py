@@ -328,6 +328,7 @@ def httpReqInfo(blh = "",trmtno = "",vid = "",sfzh = "",inPara1 = "",inPara2 = "
         vInfo["rev1"] = v["XB"].get("_text", "") #病患联系地址
         vInfo["phone"] = v["DHHM"].get("_text", "") #病人电话
         vInfo["personID"] = v["SFZHM"].get("_text", "") #病人身份证号码
+        vInfo["cardID"] = trmtno  # 卡面号码
         return blh,vInfo
     return "",{}
 
@@ -347,17 +348,14 @@ def httpPostRegist(blh,ywlx,dldm,fydl,sourceInfo,inPara1 = "",inPara2 = "",inPar
     for item in retList:
         if ywlx == TYPE_FAYAO:
             sourceItem["id"] = blh + registTime
-            sourceItem["cardID"] = blh
         elif ywlx == TYPE_YIJI:
             queueCode = item["DLDM"].get("_text", "") #队列代码，实际签到的队列
             sourceItem["queue"] = GetQueueName("02",queueCode)
             sourceItem["examMethod"] = item["XMMC"].get("_text", "")  #医技项目名称
             sourceItem["id"] = queueCode + item["LSH"].get("_text", "")  # 医技流水号
-            sourceItem["cardID"] = blh
         elif ywlx == TYPE_ZHUYUAN :
             sourceItem["id"] = item["VID"].get("_text", "") + registTime # 住院号
             sourceItem["name"] = item["XM"].get("_text", "")  #患者姓名
-            sourceItem["cardID"] = blh
             queueCode = item["DLDM"].get("_text", "")  #队列代码
             sourceItem["queue"] = GetQueueName("03", queueCode)
         sourceInfo.update(sourceItem)
