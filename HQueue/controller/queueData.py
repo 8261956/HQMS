@@ -410,7 +410,7 @@ class VisitorLocalInterface:
             if value is not None:
                 values.update({key: value})
         id = values.get("id")
-        stationID = values.get("stationID")
+        stationID = self.stationID
         print "UPDATE visitor_local_data: [Station]%s, [ID]%s" % (stationID, id)
         result = DB.DBLocal.update("visitor_local_data",
                                    where="id=$id and stationID=$stationID",
