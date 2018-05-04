@@ -143,7 +143,6 @@ class VisitorManager:
                 backupList = self.db.query(joinSql)
                 for item in backupList:
                     print "find backup item name: " + item["name"] + " registDate: " + str(item["registDate"]) + " workEndTime: " + str(item["workEndTime"])
-                    item.pop("lid")
                     try:
                         BackupTableInterface(stationID).add(item)
                     except Exception,e:
