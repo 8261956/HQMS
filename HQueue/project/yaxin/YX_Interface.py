@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 import sys,os
 
-import time,datetime,json,web
+import time,datetime,json,web,re
 from suds.client import Client
 from suds.xsd.doctor import Import, ImportDoctor
 import xml.etree.ElementTree as ET
@@ -317,13 +317,26 @@ def GetQueueName(type,queueCode):
                 return qCode+"|"+qName+"|"+dName
     return queueCode
 
+def getAgeValue(ageStr):
+    if ageStr == "/30天": #未给年龄信息
+        return 30
+    elif "天" in ageStr:
+        return 0
+    elif "岁" in ageStr:
+        ageStr = re.sub("\D", "", ageStr)
+        print "Get　Age : ",ageStr
+        return int(ageStr)
+    else:
+        return 30
+
 def httpReqInfo(blh = "",trmtno = "",vid = "",sfzh = "",inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = "") :
     retList = InqVInfo(blh,trmtno,vid,sfzh,inPara1,inPara2,inPara3,inPara4,inPara5,inPara6)
     vInfo = {}
     for v in retList:
         blh = v["BLH"].get("_text","") #病例号
         vInfo["name"] = v["XM"].get("_text","")  #姓名
-        vInfo["age"] = int(v["AGE"].get("_text", "")) #年龄
+        ageStr = v["AGE"].get("_text", "") #年龄
+        vInfo["age"] = getAgeValue(ageStr)
         vInfo["genders"] = v["XB"].get("_text", "") #性别
         vInfo["rev1"] = v["XB"].get("_text", "") #病患联系地址
         vInfo["phone"] = v["DHHM"].get("_text", "") #病人电话
