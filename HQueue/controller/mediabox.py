@@ -94,7 +94,7 @@ class MediaBoxInterface:
             interval = (now - lastDateTime).seconds
         except:
             raise Exception("[ERR]: Invalid lastDateTime for mediabox %s." % id)
-        if interval >= 60*5: # TODO: 核对语音盒离线的原因 10s
+        if interval >= 20: # TODO: 核对语音盒离线的原因 10s
             dict["status"] = "offline"
         else:
             dict["status"] = "online"

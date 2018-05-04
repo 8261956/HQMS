@@ -274,6 +274,7 @@ class StationMainController:
         personID = inputData.get("personID", None)
         urgentLev  = inputData.get("urgentLev",0)
         property = json2Str(inputData.get("property",{}))
+        tag = inputData.get("tag","")
 
         if stationID is None:
             raise Exception("[ERR]: stationID required to add visitor")
@@ -374,10 +375,16 @@ class StationMainController:
             print "Exception : %s " %str(e)
             raise Exception("[ERR]: insert into visitor_source_data failed. %s " %str(e))
 
-        para = {"stationID": stationID, "queueID": queueID}
         #TODO: localdata property 更改  urgentLev
         #TODO : 同步到 local
-        QueueDataController().updateVisitor(para)
+        QueueDataController().updateVisitor(stationID,queueID,queueInfo)
+        if property != "" or tag != "":
+            vInfo = {
+                "id":id,
+                "property" :property,
+                "tag" : tag
+            }
+            VisitorLocalInterface(stationID).edit(vInfo)
 
         visitor.update({"waitNum": waitNum})
 
