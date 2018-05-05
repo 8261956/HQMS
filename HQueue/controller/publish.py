@@ -2,7 +2,7 @@
 
 import web, datetime, time, json, copy, requests
 import common.func
-from common.func import packOutput,str2Json,takeVal
+from common.func import packOutput,str2Json,takeVal,json2Str
 
 from caller import CallerInterface
 from worker import WorkerInterface

@@ -76,7 +76,7 @@ class StationMainController:
         key = "_getQueueListAll_stationID" + str(stationID)+"_queueID"+str(queueID)
         value = common.func.CachedGetValue(json.dumps(key))
         if useCache and value != False:
-            return str2Json(value)
+            return value
 
         ret = {"name": "", "workerOnline": [], "waitingList": [], "finishList": [] , "unactiveList" : [],"passList" : []}
         queue = DB.DBLocal.where("queueInfo",stationID = stationID,id = queueID).first()
@@ -102,7 +102,7 @@ class StationMainController:
                 ret["passList"].append(item)
         ret["waitingList"] = doingList + prepareList + waitingList
         #缓存 value
-        common.func.CahedSetValue(json.dumps(key),json2Str(ret),2)
+        common.func.CahedSetValue(json.dumps(key),ret,2)
         return ret
 
     def getVisitorInfo(self,inputData):

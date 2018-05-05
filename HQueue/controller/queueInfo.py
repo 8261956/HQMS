@@ -4,7 +4,7 @@ import sys
 import os, datetime, time, math, web, json, copy, re
 os.environ['NLS_LANG'] = 'SIMPLIFIED CHINESE_CHINA.UTF8'
 from common.func import packOutput, str2List, list2Str, checkSession, \
-    CachedGetValue, CahedSetValue
+    CachedGetValue, CahedSetValue,json2Str,str2Json
 from common.config import integrateType
 import common.DBBase as DB
 from scene import SceneInterface

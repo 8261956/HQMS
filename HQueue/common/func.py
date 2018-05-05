@@ -187,7 +187,7 @@ def CachedGetValue(key):
         if value == None:
             return False
         else:
-            return value
+            return str2Json(value)
     except Exception, e:
         print "Memcached get val error "
         print Exception, ":", e
@@ -198,9 +198,7 @@ def CahedSetValue(key,value, timeout):
     try:
         mc = memcached_wrapper.getMemcached()
         key_str = str(key).replace(' ', '')
-        print "mc: ",mc
-        print "key_str : ",key_str
-        print "timeOut : ",timeout
+        value = json2Str(value)
         ret  = mc.set(key_str, value, timeout)
         mc.disconnect_all()
         return ret
@@ -209,8 +207,8 @@ def CahedSetValue(key,value, timeout):
         print Exception, ":", e
         print key
         print value
-        from pprint import pprint
-        pprint(locals())  # 打出当前函数变量
+        #from pprint import pprint
+        #pprint(locals())  # 打出当前函数变量
         import traceback
         traceback.print_exc()
 
