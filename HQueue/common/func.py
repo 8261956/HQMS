@@ -197,7 +197,10 @@ def CachedGetValue(key):
 def CahedSetValue(key,value, timeout):
     try:
         mc = memcached_wrapper.getMemcached()
-        ret  = mc.set(str(key).replace(' ',''), value, timeout)
+        key_str = str(key).replace(' ', '')
+        print "mc: ",mc
+        print "key_str : ",key_str
+        ret  = mc.set(key_str, value, timeout)
         mc.disconnect_all()
         return ret
     except Exception, e:
