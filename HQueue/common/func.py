@@ -200,6 +200,7 @@ def CahedSetValue(key,value, timeout):
         key_str = str(key).replace(' ', '')
         print "mc: ",mc
         print "key_str : ",key_str
+        print "timeOut : ",timeout
         ret  = mc.set(key_str, value, timeout)
         mc.disconnect_all()
         return ret
