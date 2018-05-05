@@ -209,6 +209,10 @@ def CahedSetValue(key,value, timeout):
         print Exception, ":", e
         print key
         print value
+        from pprint import pprint
+        pprint(locals())  # 打出当前函数变量
+        import traceback
+        traceback.print_exc()
 
 def CachedClearValue(key):
     try:
