@@ -136,7 +136,7 @@ class VisitorManager:
             for queue in queueList:
                 #得到策略的工作时间
                 workDays, dateStr = QueueInfoInterface().getWorkDays(stationID, queue["id"])
-                joinSql = "select id,stationID,queueID,name,age,queue,snumber,registTime,workStartTime,workEndTime,workerOnline from visitor_view_data where queueID = %d and registDate < %s" % (queue["id"] , dateStr)
+                joinSql = "select id,stationID,queueID,name,age,queue,snumber,registTime,workStartTime,workEndTime,workerOnline from visitor_view_data where queueID = %d and registTime < %s" % (queue["id"] , dateStr)
                 print ("backupView sql: " + joinSql)
 
                 # find the visitors outof date
@@ -185,6 +185,7 @@ class VisitorManager:
                 sourceItem["snumber"] = str(len(sourceList) + 1)
             if sourceItem.get("registTime","") in {None,""} :
                 sourceItem["registTime"] = getCurrentTime()
+                sourceItem["registDate"] = getCurrentDate()
             ret = self.db.insert("visitor_source_data", **data)
             sourceList.append(sourceItem)
             QueueDataController().updateVisitor(stationID, queueID, queueInfo, scene, sourceList)
