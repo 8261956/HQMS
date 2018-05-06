@@ -52,6 +52,9 @@ def handle_message(topic, data):
     try:
         sourceItem = json.loads(data)
         VisitorManager().visitor_quick_add(sourceItem)
+        if config.projectMark == "PINGAN" :
+            from project.pingan.publish import publish_printer
+            publish_printer(sourceItem)
 
     except Exception as e:
         print e.message

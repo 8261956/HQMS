@@ -16,6 +16,7 @@ db_pass = _config.get('database', 'pass')
 headPicPath = _config.get('global','HeadPicPath')
 upload_http_base = _config.get('global','upload_http_base')
 integrateType = _config.get("global","integrateType")
+projectMark = _config.get("global","projectMark")
 
 memcached_host = _config.get('memcached', 'host')
 memcached_timeout = int(_config.get('memcached', 'timeout'))
