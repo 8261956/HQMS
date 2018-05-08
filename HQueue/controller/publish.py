@@ -25,23 +25,14 @@ class PublishTVInterface:
         action = webData["action"]
 
         if action == "getCallerList":
-            try:
                 ret = self.getCallerList(webData)
                 return packOutput(ret)
-            except Exception as e:
-                return packOutput({}, code="400", errorInfo=str(e))
         elif action == "getStationList":
-            #try:
-            ret = self.getStationList(webData)
-            return packOutput(ret)
-            #except Exception as e:
-            #    return packOutput({}, code="400", errorInfo=str(e))
+                ret = self.getStationList(webData)
+                return packOutput(ret)
         elif action == "getWinList":
-            try:
                 ret = self.getWinList(webData)
                 return packOutput(ret)
-            except Exception as e:
-                return packOutput({},code="400", errorInfo=str(e))
 
     def getValidDateTime(self):
         now = int(time.time())
@@ -221,6 +212,7 @@ class PublishTVInterface:
             dateTime = seeing.pop("dateTime", None)
             if not dateTime:
                 continue
+            dateTime = datetime.datetime.strptime(str(dateTime), "%Y-%m-%d %H:%M:%S")
             interval = (current_time - dateTime).seconds
             if interval < 10:
                 tmp.append((interval, seeing))
