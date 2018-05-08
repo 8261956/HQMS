@@ -64,6 +64,11 @@ class StationMainController:
                 ret["waitingList"].append(item)
             elif item.status == "waiting" :
                 ret["waitingList"].append(item)
+            elif item.status == "unactive" :
+                ret["unactiveList"].append(item)
+            elif item.status == "pass" :
+                ret["passList"].append(item)
+
         return ret
 
     def getQueueListAll(self,inputData):

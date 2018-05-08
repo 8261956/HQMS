@@ -128,19 +128,35 @@ class PublishTVInterface:
             waitingList = queueList["waitingList"]
             retlistInfo["seeingList"] = []
             for item in doingList:
-                seeingItem = {}
-                seeingItem["name"] = item["name"]
-                seeingItem["id"] = item["snumber"]
-                retlistInfo["seeingList"].append(seeingItem)
-
+                vInfo = {"name": item["name"],
+                         "id" : item["snumber"],
+                         "status" : self.getVisitorStatus(**item)}
+                retlistInfo["seeingList"].append(vInfo)
+            #进行中列表
             retlistInfo["watingList"] = []
             for item in waitingList:
-                waitItem = {}
-                if item["locked"]:
+                property = str2Json(item["property"])
+                if property.get("lock", "0") != "0":
                     continue
-                waitItem["name"] = item["name"]
-                waitItem["id"] = item["snumber"]
-                retlistInfo["watingList"].append(waitItem)
+                vInfo = {"name": item["name"],
+                         "id" : item["snumber"],
+                         "status" : self.getVisitorStatus(**item)}
+                retlistInfo["watingList"].append(vInfo)
+            #未激活列表
+            retlistInfo["unactvieList"] = []
+            for item in queueList["unactvieList"]:
+                vInfo = {"name": item["name"],
+                         "id" : item["snumber"],
+                         "status" : self.getVisitorStatus(**item)}
+                retlistInfo["unactvieList"].append(vInfo)
+            #过号列表
+            retlistInfo["passList"] = []
+            for item in queueList["passList"]:
+                vInfo = {"name": item["name"],
+                         "id": item["snumber"],
+                         "status": self.getVisitorStatus(**item)}
+            retlistInfo["passList"].append(vInfo)
+
         callRecordList = DB.DBLocal.where("callingRecord", stationID=stationID, callerID=callerID)
         retlistInfo["calling"] = []
         retlistInfo["pos"] = callerList.first().get("pos")
@@ -315,6 +331,8 @@ class PublishTVInterface:
         # 获取正在就诊、正在排队的信息
         seeing = {"id": "", "name": "", "show": 0, "status": ""}
         waiting = []
+        unactive = []
+        passList = []
         validDateTime = datetime.datetime.strptime(self.getValidDateTime(), "%Y-%m-%d %H:%M:%S")
         callerRecord = DB.DBLocal.select("callingRecord",
                                          where="stationID=$stationID AND callerID=$callerID AND dateTime>$dateTime",
@@ -345,22 +363,39 @@ class PublishTVInterface:
             seeing["dateTime"] = record["dateTime"]
 
             # 获取呼叫队列中当前排队的信息
-            waitingList = queueList["waitingList"]
-            queueInfo.update({"listNum": len(waitingList)})
-            for item in waitingList:
+            queueInfo.update({"listNum": len(queueList["waitingList"])})
+            for item in queueList["waitingList"]:
                 property = str2Json(item["property"])
                 if property.get("lock","0") != "0":
                     continue
-                waitingVisitor = {}
-                waitingVisitor["id"] = item["snumber"]
-                waitingVisitor["name"] = item["name"]
-                waitingVisitor["status"] = self.getVisitorStatus(**item)
+                waitingVisitor = {
+                    "id" : item["snumber"],
+                    "name" : item["name"],
+                    "status" : self.getVisitorStatus(**item)
+                }
                 waiting.append(waitingVisitor)
+
+            # 获取呼叫队列中当前未激活的信息
+            for item in queueList["unactiveList"]:
+                vInfo = {
+                    "id": item["snumber"],
+                    "name" : item["name"],
+                    "status" : self.getVisitorStatus(**item)
+                }
+                unactive.append(vInfo)
+            # 获取呼叫队列中当前过号的信息
+            for item in queueList["passList"]:
+                vInfo = {
+                    "id": item["snumber"],
+                    "name" : item["name"],
+                    "status" : self.getVisitorStatus(**item)
+                }
+                passList.append(vInfo)
 
         result = {}
         result["workerInfo"] = workerInfo
         result["queueInfo"] = queueInfo
-        result["listInfo"] = {"seeing": seeing, "waiting": waiting}
+        result["listInfo"] = {"seeing": seeing, "waiting": waiting , "unactive" : unactive , "pass" : passList}
 
         # 缓存 value
         common.func.CahedSetValue(json.dumps(key), result, 3)
@@ -368,17 +403,18 @@ class PublishTVInterface:
         return result
 
     def getVisitorStatus(self, **kwargs):
+        #前端状态定义  locked: 锁定 VIP: 优先 order: 预约 normal: 普通 emergency: 急诊 review: 复诊 pass: 过号
         property = str2Json(kwargs.get("property", ""))
         if property.get("lock","0") != "0":
             return "locked"
         elif property.get("prior","0") != "0":
             return "prior"
         elif kwargs.get("urgnet_lev1"):
-            return "VIP"
+            return "emergency"
         elif kwargs.get("urgnet_lev2"):
-            return "VIP"
+            return "emergency"
         elif kwargs.get("urgentLev"):
-            return "VIP"
+            return "emergency"
         elif property.get("review","0") != "0":
             return "review"
         elif takeVal(kwargs,"orderType",0):
@@ -435,28 +471,6 @@ class callRecordInterface:
         return ret[0]
 
     def add(self,inputData):
-        # data = copy.deepcopy(inputData)
-        # first = 1
-        # sql = "insert into callingRecord ( "
-        # for key, v in data.iteritems():
-        #     if first != 1:
-        #         sql += ','
-        #     sql += key
-        #     first = 0
-        # sql += " ) values ( "
-        # first = 1
-        # for k, value in data.iteritems():
-        #     if first != 1:
-        #         sql += ','
-        #     sql += '\''
-        #     restr = str(value).replace("'", "\\'")
-        #     sql += restr
-        #     sql += '\''
-        #     first = 0
-        # sql += ")"
-        # print  "auto sql insert callingRecord : sql " + sql
-        # ret = DB.DBLocal.query(sql)
-        # return ret
         data = dict(copy.deepcopy(inputData))
         values = {}
         for key, value in data.iteritems():
@@ -467,14 +481,6 @@ class callRecordInterface:
         return result
 
     def delete(self, inputData):
-        # id = inputData["id"]
-        # try:
-        #     filter = "id=" + '\''+ str(id) + '\''
-        #     ret = DB.DBLocal.delete('callingRecord',filter)
-        #     return ret
-        # except Exception, e:
-        #     print Exception, ":", e
-        #     return -1
         id = inputData.get("id")
         try:
             result = DB.DBLocal.delete("callingRecord", where="id=$id", vars={"id": id})
@@ -484,22 +490,6 @@ class callRecordInterface:
             return -1
 
     def edit(self,inputData):
-        # data = copy.deepcopy(inputData)
-        # first = 1
-        # sql = "update callingRecord set "
-        # for key, v in data.iteritems():
-        #     if key != "id":
-        #         if first != 1:
-        #             sql += ','
-        #         sql += key
-        #         restr = str(v).replace("'", "\\'")
-        #         sql += ' = ' + '\'' + restr + '\' '
-        #         first = 0
-        # sql += " where id = " + '\'' + str(data["id"]) + '\' '
-        # print  "auto sql update callingRecord : sql " + sql
-        #
-        # ret = DB.DBLocal.query(sql)
-        # return ret
         data = dict(copy.deepcopy(inputData))
         values = {}
         for key, value in data.iteritems():
