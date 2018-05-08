@@ -134,12 +134,12 @@ class PublishTVInterface:
                          "status" : self.getVisitorStatus(**item)}
                 retlistInfo["watingList"].append(vInfo)
             #未激活列表
-            retlistInfo["unactvieList"] = []
-            for item in queueList["unactvieList"]:
+            retlistInfo["unactiveList"] = []
+            for item in queueList["unactiveList"]:
                 vInfo = {"name": item["name"],
                          "id" : item["snumber"],
                          "status" : self.getVisitorStatus(**item)}
-                retlistInfo["unactvieList"].append(vInfo)
+                retlistInfo["unactiveList"].append(vInfo)
             #过号列表
             retlistInfo["passList"] = []
             for item in queueList["passList"]:
