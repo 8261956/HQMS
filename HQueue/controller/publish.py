@@ -102,7 +102,7 @@ class PublishTVInterface:
         ret = {}
         stationID = inputData["stationID"]
         callerID = inputData["callerID"]
-        callerList = DB.DBLocal.select("caller", where="id=$id", vars={"id": callerID})
+        callerList = DB.DBLocal.select("caller", where="id=$id", vars={"id": callerID}).list()
         if len(callerList) == 0:
             raise Exception("[ERR]: caller not exists.")
         validDateTime = datetime.datetime.strptime(self.getValidDateTime(), "%Y-%m-%d %H:%M:%S")
@@ -150,7 +150,7 @@ class PublishTVInterface:
 
         callRecordList = DB.DBLocal.where("callingRecord", stationID=stationID, callerID=callerID)
         retlistInfo["calling"] = []
-        retlistInfo["pos"] = callerList.first().get("pos")
+        retlistInfo["pos"] = callerList[0].get("pos")
         if len(callRecordList) > 0:
             record = callRecordList[0]
             # 病人ID显示为snumber
@@ -159,7 +159,7 @@ class PublishTVInterface:
             calling = {}
             calling["name"] = record["currentVisitorName"]
             calling["id"] = currentVisitor["snumber"]
-            calling["pos"] = callerList[0]["pos"]
+            calling["pos"] = callerList[0].get("pos")
             retlistInfo["calling"] = calling
         ret = retlistInfo
         return ret
