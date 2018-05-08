@@ -49,6 +49,7 @@ def sourceSync(threadName, delay, station):
                 SyncSource().run()
             elif integrateType == "MQ" :
                 #MQ数据在客户端回调中得到
+                VisitorManager().syncLocal()
                 pass
         #except Exception as e:
         #    print "Exception:" + str(e)

@@ -188,7 +188,7 @@ class VisitorManager:
                 sourceItem["registDate"] = getCurrentDate()
             ret = self.db.insert("visitor_source_data", **data)
             sourceList.append(sourceItem)
-            QueueDataController().updateVisitor(stationID, queueID, queueInfo, scene, sourceList)
+            QueueDataController().updateVisitor(stationID, queueID, queueInfo, scene)
         else:
             # 患者信息存在 看是否需要更新患者信息
             v_source = sourceDict[id]
