@@ -336,10 +336,10 @@ class PublishTVInterface:
         validDateTime = datetime.datetime.strptime(self.getValidDateTime(), "%Y-%m-%d %H:%M:%S")
         callerRecord = DB.DBLocal.select("callingRecord",
                                          where="stationID=$stationID AND callerID=$callerID AND dateTime>$dateTime",
-                                         vars={"stationID": stationID, "callerID": callerID, "dateTime": validDateTime})
+                                         vars={"stationID": stationID, "callerID": callerID, "dateTime": validDateTime}).first()
 
         try:
-            record = callerRecord[0]
+            record = callerRecord
             queueID = record["queueID"]
             queue = QueueInfoInterface().getInfo({"stationID": stationID, "id": queueID})
             queueInfo.update({"queueName" : queue.get("name")})

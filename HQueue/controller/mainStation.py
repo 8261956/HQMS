@@ -53,7 +53,8 @@ class StationMainController:
         if len(qlist) == 0:
             raise Exception("[ERR]: queue not exists")
         queue = qlist[0]
-        ret = {"name": queue["name"], "workerOnline": queue["workerOnline"], "doingList":[], "waitingList":[],"finishList":[]}
+        ret = {"name": queue["name"], "workerOnline": queue["workerOnline"], "doingList":[], "waitingList":[],"finishList":[],\
+                    "unactiveList":[], "passList" : []}
 
         vList = DB.DBLocal.where("visitor_view_data",stationID = stationID,queueID = queueID)
         for item in vList:
