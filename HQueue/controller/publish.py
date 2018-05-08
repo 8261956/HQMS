@@ -31,11 +31,11 @@ class PublishTVInterface:
             except Exception as e:
                 return packOutput({}, code="400", errorInfo=str(e))
         elif action == "getStationList":
-            try:
-                ret = self.getStationList(webData)
-                return packOutput(ret)
-            except Exception as e:
-                return packOutput({}, code="400", errorInfo=str(e))
+            #try:
+            ret = self.getStationList(webData)
+            return packOutput(ret)
+            #except Exception as e:
+            #    return packOutput({}, code="400", errorInfo=str(e))
         elif action == "getWinList":
             try:
                 ret = self.getWinList(webData)
