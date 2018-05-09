@@ -343,7 +343,7 @@ class PublishTVInterface:
                 result = {}
                 result["workerInfo"] = workerInfo
                 result["queueInfo"] = queueInfo
-                result["listInfo"] = {}
+                result["listInfo"] = {"seeing": [], "waiting": [] , "unactive" : [] , "pass" : []}
                 return result
         else:
             # 获取呼叫队列中当前看诊的信息
