@@ -146,7 +146,7 @@ class PublishTVInterface:
                 vInfo = {"name": item["name"],
                          "id": item["snumber"],
                          "status": self.getVisitorStatus(**item)}
-            retlistInfo["passList"].append(vInfo)
+                retlistInfo["passList"].append(vInfo)
 
         callRecordList = DB.DBLocal.where("callingRecord", stationID=stationID, callerID=callerID)
         retlistInfo["calling"] = []
@@ -341,6 +341,9 @@ class PublishTVInterface:
         except:
             if action == 'getStationList':
                 result = {}
+                result["workerInfo"] = workerInfo
+                result["queueInfo"] = queueInfo
+                result["listInfo"] = {}
                 return result
         else:
             # 获取呼叫队列中当前看诊的信息
