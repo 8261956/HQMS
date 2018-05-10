@@ -6,7 +6,7 @@ import common.DBBase as DB
 from controller.visitor import VisitorManager
 from common.config import integrateType
 from project.yaxin.YX_Interface import SyncSource
-from common.mqtt_client import mqtt_task
+from common.mqtt_client import mqtt_task,stop_client
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -65,7 +65,6 @@ def sourceSync(threadName, delay, station):
                 break
 
         print "TIME COST: %s" % (time.time() - start_time)
-
 
 if __name__ == '__main__':
     args = sys.argv[1:]

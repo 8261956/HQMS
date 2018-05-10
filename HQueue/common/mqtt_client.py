@@ -40,6 +40,9 @@ def publish_message(topic, payload):
     print "topic:",topic,"msg:",payload
     mqttclient.publish(topic, payload)
 
+def stop_client():
+    mqttclient.loop_stop(True)
+
 def handle_message(topic, data):
     """
     MQTT 患者消息处理

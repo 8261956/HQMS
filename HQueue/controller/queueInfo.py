@@ -143,6 +143,12 @@ class QueueInfoInterface:
 
         return ret
 
+    def checkQueueID(self,queue):
+        qList = DB.DBLocal.select("queueInfo").list()
+        for item in qList:
+            fstr = item.get("filter")
+
+
     def loadScenePara(self,inputData):
         sceneList = DB.DBLocal.where("scene", name = inputData["scene"])
         scene = sceneList[0]
