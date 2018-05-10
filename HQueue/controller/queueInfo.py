@@ -143,10 +143,14 @@ class QueueInfoInterface:
 
         return ret
 
-    def checkQueueID(self,queue):
+    def checkQueueInfo(self,queue):
         qList = DB.DBLocal.select("queueInfo").list()
         for item in qList:
-            fstr = item.get("filter")
+            fstr = item.get("filter","")
+            fList = fstr.split(",")
+            if queue in fList:
+                return item
+        return None
 
 
     def loadScenePara(self,inputData):
@@ -183,7 +187,8 @@ class QueueInfoInterface:
         queueList = self.getList({"stationID": stationID})
         choseQueueList = []
         for item in queueList:
-            filter = item["filter"]
+            # TODO: 验证改动的影响
+            filter = item["filter"].split(",")
             choseQueueList.append(filter)
         return choseQueueList
 
@@ -281,11 +286,10 @@ class QueueInfoInterface:
 
     def getInfoByFilter(self, inputData):
         queue = inputData.get("queue")
-        filter = "queue='{0}'".format(queue)
-        queueInfo = DB.DBLocal.select("queueInfo", where={"filter": filter})
-        if len(queueInfo) == 0:
-            raise Exception("[ERR] queue not exists for filter: {0}".format(filter))
-        result = queueInfo[0]
+        queueInfo = self.checkQueueInfo(queue)
+        if queueInfo is None:
+            raise Exception("[ERR] queue not exists for filter: {0}".format(queue))
+        result = queueInfo
         return result
 
     def getWorkerLimit(self, inputData):
@@ -391,7 +395,8 @@ class QueueInfoInterface:
         regex = re.compile(pattern)
         for item in collection:
             filter = item["filter"]
-            filter = re.findall(r'queue=\'(.*)\'', filter)
+            #TODO: 验证改动的影响
+            filter = filter.spilt(",") #re.findall(r'queue=\'(.*)\'', filter)
             queue = filter[0]
             tmp = queue + item["name"]
             match = regex.search(tmp)

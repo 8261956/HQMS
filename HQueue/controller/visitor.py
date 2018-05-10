@@ -164,7 +164,7 @@ class VisitorManager:
     def visitor_quick_add(self,data):
         data = dict(data)
         queueFilter = str(getNecessaryPara(data, "queue"))
-        queueInfo = DB.DBLocal.select("queueInfo",where = {"filter" : queueFilter}).first()
+        queueInfo = QueueInfoInterface().checkQueueInfo(queueFilter)
         print  "queueInfo: " , queueInfo
         if queueInfo is None:
             return

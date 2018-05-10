@@ -104,9 +104,10 @@ class QueueDataController:
             scene = SceneInterface().getSceneInfo({"sceneID": sceneID})
         visitorLocalInterface = VisitorLocalInterface(stationID)
 
-        filter = str(queueInfo["filter"])
+        filter = str(queueInfo["filter"]).split(",")
         if sourceList is None:
-            sourceList = DB.DBLocal.where("visitor_source_data", queue = filter).list()
+            where  = "queue IN $filter"
+            sourceList = DB.DBLocal.select("visitor_source_data", where = where,vars = {"filter" : filter}).list()
         localList = DB.DBLocal.where("visitor_local_data", stationID=stationID)
         localDict = list2Dict(localList)
         # 遍历 sourceList
