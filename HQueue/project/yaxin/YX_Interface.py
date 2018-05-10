@@ -284,18 +284,19 @@ def ExternSourceQueueList():
     doctorList = InqDoctorList("01")
     qList = []
     for d in doctorList:
-        qName = d["DEPARTMENT"].get("_text","") 
+        qName = d["KSMC"].get("_text","")
         dName = d["NAME"].get("_text","") 
         qList.append(qName+dName)
         print qName+dName
 
-    doctorList = InqDoctorList("02")
-    for d in doctorList:
-        qCode = d["DM"].get("_text","")
-        qName = d["PYM"].get("_text","")
-        dName = d["MC"].get("_text","")
-        qList.append(qCode+"|"+qName+"|"+dName)
-        print qName+dName
+    classList = InqDoctorList("02")
+    cDict = {}
+    for item in classList:
+        cCode = item["DM"].get("_text","")
+        cName = item["MC"].get("_text","")
+        cDict[cCode] = cName
+        print cCode,cName
+
 
     doctorList = InqDoctorList("03")
     for d in doctorList:
@@ -304,10 +305,21 @@ def ExternSourceQueueList():
         dName = d["MC"].get("_text","")
         qList.append(qCode + "|" + qName + "|" + dName)
         print qName+dName
+
+    doctorList = InqDoctorList("04")
+    for d in doctorList:
+        qCode = d["DM"].get("_text", "")
+        qName = d["PYM"].get("_text","")
+        dName = d["MC"].get("_text","")
+        classCode = d["DLDM"].get("_text", "")
+        className = cDict.get(classCode,"")
+        qList.append(className + "|" + qCode + "|" + dName)
+        print className+qCode + classCode
+
     return qList
 
 def GetQueueName(type,queueCode):
-    if type in {"02","03"}:
+    if type == 03:
         retList = InqDoctorList(type)
         for q in retList:
             if queueCode == q["DM"].get("_text",""):
@@ -315,6 +327,25 @@ def GetQueueName(type,queueCode):
                 qName = q["PYM"].get("_text","")
                 dName = q["MC"].get("_text","")
                 return qCode+"|"+qName+"|"+dName
+    elif type == 02:
+        classList = InqDoctorList("02")
+        cDict = {}
+        for item in classList:
+            cCode = item["DM"].get("_text", "")
+            cName = item["MC"].get("_text", "")
+            cDict[cCode] = cName
+            print cCode, cName
+
+        itemList = InqDoctorList("04")
+        for d in itemList:
+            if queueCode == d["DM"].get("_text", ""):
+                qCode = d["DM"].get("_text", "")
+                qName = d["PYM"].get("_text", "")
+                dName = d["MC"].get("_text", "")
+                classCode = d["DLDM"].get("_text", "")
+                className = cDict.get(classCode, "")
+                return className + "|" + qCode + "|" + dName
+
     return queueCode
 
 def getAgeValue(ageStr):
