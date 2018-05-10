@@ -387,7 +387,7 @@ def httpPostRegist(blh,ywlx,dldm,fydl,sourceInfo,inPara1 = "",inPara2 = "",inPar
     retList = PostRegist(blh,ywlx,dldm,fydl,inPara1,inPara2,inPara3,inPara4,inPara5,inPara6)
     sourceItem = {}
     retInfo = {}
-    registTime = getCurrentTime
+    registTime = getCurrentTime()
     num = 0
     for item in retList:
         if ywlx == TYPE_FAYAO:
