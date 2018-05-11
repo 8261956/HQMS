@@ -180,7 +180,7 @@ class QueueInfoInterface:
             print "import YX_Interface ok "
             sourceQueueList = ExternSourceQueueList()
             choseQueueList = self.getChoseQueueList(stationID)
-            queueList = list(set(sourceQueueList) - set(choseQueueList))
+            queueList = sourceQueueList#list(set(sourceQueueList) - set(choseQueueList))
             return queueList
 
     def getChoseQueueList(self, stationID):
