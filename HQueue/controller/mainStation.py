@@ -3,7 +3,7 @@
 import web, re, json, datetime, time
 import common.func
 import common.config as cfg
-from common.func import packOutput, LogOut, checkPostAction,str2List,str2Json,json2Str,dotdict
+from common.func import packOutput, LogOut, checkPostAction,str2List,str2Json,json2Str,dotdict,takeVal
 from queueData import QueueDataController, VisitorLocalInterface
 from queueInfo import QueueInfoInterface
 from scene import SceneInterface
@@ -411,11 +411,11 @@ class StationMainController:
                 "qName" : qInfo.name,
                 "qID" : qInfo.id,
                 "filter" : qInfo.filter,
-                "level": qInfo.level,
+                "level": takeVal(qInfo,"level",0),
                 "vID": vInfo.id,
                 "vName" : vInfo.name
             }
-            if vInfo.status in {"unactive,waiting", "prepare"}:
+            if vInfo.status in {"unactive","waiting", "prepare"}:
                 ret["undoList"].append(item)
             elif vInfo.status == "doing":
                 ret["doingList"].append(item)
