@@ -144,6 +144,11 @@ class QueueInfoInterface:
         return ret
 
     def checkQueueInfo(self,queue):
+        """
+        根据患者队列关键字获取队列信息   患者队列关键字是队列队列关键字中的一项
+        :param queue: 患者队列关键字
+        :return: 所属队列信息
+        """
         qList = DB.DBLocal.select("queueInfo").list()
         for item in qList:
             fstr = item.get("filter","")

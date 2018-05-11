@@ -400,6 +400,11 @@ class StationMainController:
         return visitor
 
     def visitorQueueGet(self,data):
+        """
+        患者就诊队列状态接口
+        :param data:  "cardID" 卡号ID患者唯一表示
+        :return:  患者所有队列的状态信息
+        """
         cardID = data.get("cardID")
         vList = DB.DBLocal.select("visitor_view_data",where = "cardID = $cardID",vars = {"cardID" : cardID})
         ret = {"status":"空闲" ,"undoList": [], "doingList":[], "finishList":[]}
