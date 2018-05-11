@@ -23,7 +23,8 @@ class StationMainController:
         "visitorMoveby" : "visitorMoveby",
         "visitorSearch" : "visitorSearch",
         "addVisitor" : "addVisitor",
-        "getMediaBox" : "getMediaBox"
+        "getMediaBox" : "getMediaBox",
+        "visitorQueueGet" : "visitorQueueGet"
     }
 
     def POST(self,name):
@@ -397,3 +398,32 @@ class StationMainController:
         visitor.update({"waitNum": waitNum})
 
         return visitor
+
+    def visitorQueueGet(self,data):
+        cardID = data.get("cardID")
+        vList = DB.DBLocal.select("visitor_view_data",where = "cardID = $cardID",vars = {"cardID" : cardID})
+        ret = {"status":"空闲" ,"undoList": [], "doingList":[], "finishList":[]}
+        for vInfo in vList:
+            vInfo = dotdict(vInfo)
+            qInfo = DB.DBLocal.select("queueInfo",where = "id = $queueID",vars = {"queueID":vInfo.queueID}).first()
+            qInfo = dotdict(qInfo)
+            item = {
+                "qName" : qInfo.name,
+                "qID" : qInfo.id,
+                "filter" : qInfo.filter,
+                "level": qInfo.level,
+                "vID": vInfo.id,
+                "vName" : vInfo.name
+            }
+            if vInfo.status in {"unactive,waiting", "prepare"}:
+                ret["undoList"].append(item)
+            elif vInfo.status == "doing":
+                ret["doingList"].append(item)
+                ret["status"] = "忙"
+            elif vInfo.status == "finish":
+                ret["finishList"].append(item)
+        return ret
+
+
+
+
