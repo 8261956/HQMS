@@ -319,7 +319,7 @@ def ExternSourceQueueList():
     return qList
 
 def GetQueueName(type,queueCode):
-    if type == 03:
+    if type == "03":
         retList = InqDoctorList(type)
         for q in retList:
             if queueCode == q["DM"].get("_text",""):
@@ -327,7 +327,7 @@ def GetQueueName(type,queueCode):
                 qName = q["PYM"].get("_text","")
                 dName = q["MC"].get("_text","")
                 return qCode+"|"+qName+"|"+dName
-    elif type == 02:
+    elif type == "02":
         classList = InqDoctorList("02")
         cDict = {}
         for item in classList:
