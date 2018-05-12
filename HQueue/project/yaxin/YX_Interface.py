@@ -393,7 +393,7 @@ def httpPostRegist(blh,ywlx,dldm,fydl,sourceInfo,inPara1 = "",inPara2 = "",inPar
         if ywlx == TYPE_FAYAO:
             sourceItem["id"] = blh + registTime
         elif ywlx == TYPE_YIJI:
-            queueCode = item["DLDM"].get("_text", "") #队列代码，实际签到的队列
+            queueCode = item["XMDM"].get("_text", "") #队列代码，实际签到的队列
             sourceItem["queue"] = GetQueueName("02",queueCode)
             sourceItem["examMethod"] = item["XMMC"].get("_text", "")  #医技项目名称
             sourceItem["id"] = queueCode + item["LSH"].get("_text", "")  # 医技流水号
