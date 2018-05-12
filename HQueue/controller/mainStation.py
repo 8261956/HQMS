@@ -413,12 +413,17 @@ class StationMainController:
             qInfo = DB.DBLocal.select("queueInfo",where = "id = $queueID",vars = {"queueID":vInfo.queueID}).first()
             qInfo = dotdict(qInfo)
             item = {
+                "sID" : qInfo.stationID,
                 "qName" : qInfo.name,
                 "qID" : qInfo.id,
                 "filter" : qInfo.filter,
-                "level": takeVal(qInfo,"level",0),
-                "vID": vInfo.id,
-                "vName" : vInfo.name
+                "level": takeVal(qInfo,"level",""),
+                "id": vInfo.id,
+                "name" : vInfo.name,
+                "examPart" : vInfo.examPart,
+                "examMethod" : vInfo.examMethod,
+                "tag" : vInfo.tag,
+                "descText" : vInfo.descText
             }
             if vInfo.status in {"unactive","waiting", "prepare"}:
                 ret["undoList"].append(item)
