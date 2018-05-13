@@ -263,11 +263,11 @@ class StationMainController:
         action = "nurser_add"
 
         try:
-            self._addVisitor(inputData, action=action)
+            vInfo = self._addVisitor(inputData, action=action)
         except:
             raise
         else:
-            result = {"result": "success"}
+            result = {"result": "success","vInfo" : vInfo}
             return result
 
     def _addVisitor(self, inputData, action=None):
