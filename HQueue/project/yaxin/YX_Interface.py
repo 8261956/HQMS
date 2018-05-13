@@ -245,7 +245,9 @@ def visitorSync(ksdm,sync_time):
         print  "birth : ", int(item["BRITHDAY"].get("_text","2018")[0:4])
         age = int(getCurrentYear()) + 1 - int(item["BRITHDAY"].get("_text","2018")[0:4])
         print  "age :",  age
-
+        urgentLev = int(item["EMERGENCY"].get("_text", "4"))
+        if urgentLev <= 4:
+            urgentLev = 4 - urgentLev
         visitor = {
             "id" : item["ID"]["_text"] + ":" + registTime,
             "name": item["NAME"]["_text"],
@@ -261,7 +263,7 @@ def visitorSync(ksdm,sync_time):
             "cardID" : item["CARDID"].get("_text",""),
             "personID": item["PERSONID"].get("_text",""),
             "phone" : item["PHONE"].get("_text",""),
-            "urgent_lev1" : int(item["EMERGENCY"].get("_text","0"))
+            "urgent_lev2" : urgentLev
         }
         THF = item["THF"].get("_text","N")
         DBTIME = item["DBTIME"]["_text"]
