@@ -361,7 +361,7 @@ class StationMainController:
             "orderTime": current_time,
             "registDate": current_date,
             "registTime": current_time,
-            #"urgentLev": urgentLev,
+            "urgent_lev2": urgentLev,
             "orderType": orderType,
             "workerID": workerID,
             "workerName": workerName,
@@ -387,7 +387,7 @@ class StationMainController:
         #TODO: localdata property 更改  urgentLev
         #TODO : 同步到 local
         QueueDataController().updateVisitor(stationID,queueID,queueInfo)
-        if property != "" or tag != "":
+        if property != "{}" or tag != "":
             vInfo = {
                 "id":id,
                 "property" :property,
