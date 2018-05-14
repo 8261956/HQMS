@@ -186,6 +186,8 @@ class VisitorManager:
             if sourceItem.get("registTime","") in {None,""} :
                 sourceItem["registTime"] = getCurrentTime()
                 sourceItem["registDate"] = getCurrentDate()
+            if "age" not in sourceItem:
+                sourceItem["age"] = 30
             ret = self.db.insert("visitor_source_data", **data)
             sourceList.append(sourceItem)
             QueueDataController().updateVisitor(stationID, queueID, queueInfo, scene)
