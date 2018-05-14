@@ -108,7 +108,7 @@ class QueueDataController:
         filterList = filterStr.split(",")
         if sourceList is None:
             where  = "queue IN $filterList or queue = $filterStr"
-            sourceList = DB.DBLocal.select("visitor_source_data", where = where,vars = {"$filterList" : filterList,"filterStr": filterStr}).list()
+            sourceList = DB.DBLocal.select("visitor_source_data", where = where,vars = {"filterList" : filterList,"filterStr": filterStr}).list()
         localList = DB.DBLocal.where("visitor_local_data", stationID=stationID)
         localDict = list2Dict(localList)
         # 遍历 sourceList
