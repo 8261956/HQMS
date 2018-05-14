@@ -152,6 +152,8 @@ class QueueInfoInterface:
         qList = DB.DBLocal.select("queueInfo").list()
         for item in qList:
             fstr = item.get("filter","")
+            if queue == fstr:
+                return item
             fList = fstr.split(",")
             if queue in fList:
                 return item
