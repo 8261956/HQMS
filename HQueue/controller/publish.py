@@ -401,9 +401,9 @@ class PublishTVInterface:
             return "locked"
         elif property.get("prior","0") != "0":
             return "prior"
-        elif kwargs.get("urgnet_lev1"):
+        elif kwargs.get("urgent_lev1"):
             return "emergency"
-        elif kwargs.get("urgnet_lev2"):
+        elif kwargs.get("urgent_lev2"):
             return "emergency"
         elif kwargs.get("urgentLev"):
             return "emergency"
