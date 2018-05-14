@@ -409,7 +409,7 @@ class PublishTVInterface:
             return "emergency"
         elif property.get("review","0") != "0":
             return "review"
-        elif takeVal(kwargs,"orderType",0):
+        elif takeVal(kwargs,"orderType","0") != "0":
             return "order"
         elif property.get("pass","0") != "0":
             return "pass"
