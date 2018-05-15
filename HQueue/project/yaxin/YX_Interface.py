@@ -260,7 +260,8 @@ def visitorSync(ksdm,sync_time):
             "workerID" : item["DOCTORID"].get("_text",""),
             "workerName" : item["DOCTORNAME"].get("_text",""),
             "department" : item["DEPARTMENT"].get("_text",""),
-            "cardID" : item["CARDID"].get("_text",""),
+            #统一使用 pid 对应患者唯一标识
+            "cardID" : item["ID"].get("_text",""),
             "personID": item["PERSONID"].get("_text",""),
             "phone" : item["PHONE"].get("_text",""),
             "urgent_lev2" : urgentLev
@@ -374,7 +375,7 @@ def httpReqInfo(blh = "",trmtno = "",vid = "",sfzh = "",inPara1 = "",inPara2 = "
         vInfo["rev1"] = v["XB"].get("_text", "") #病患联系地址
         vInfo["phone"] = v["DHHM"].get("_text", "") #病人电话
         vInfo["personID"] = v["SFZHM"].get("_text", "") #病人身份证号码
-        vInfo["cardID"] = trmtno  # 卡面号码
+        vInfo["cardID"] = blh  # 统一使用PID 表示患者唯一标识
         return blh,vInfo
     return "",{}
 
