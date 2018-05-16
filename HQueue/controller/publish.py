@@ -108,7 +108,7 @@ class PublishTVInterface:
         validDateTime = datetime.datetime.strptime(self.getValidDateTime(), "%Y-%m-%d %H:%M:%S")
         callRecordList = DB.DBLocal.select("callingRecord",
                                          where="stationID=$stationID AND callerID=$callerID AND dateTime>$dateTime",
-                                         vars={"stationID": stationID, "callerID": callerID, "dateTime": validDateTime})
+                                         vars={"stationID": stationID, "callerID": callerID, "dateTime": validDateTime}).list()
         if len(callRecordList) > 0:
             record = callRecordList[0]
             # 从窗口的最后一次呼叫 得到队列信息
@@ -152,7 +152,6 @@ class PublishTVInterface:
                          "status": self.getVisitorStatus(**item)}
                 retlistInfo["passList"].append(vInfo)
 
-        callRecordList = DB.DBLocal.where("callingRecord", stationID=stationID, callerID=callerID)
         retlistInfo["calling"] = []
         retlistInfo["pos"] = callerList[0].get("pos")
         if len(callRecordList) > 0:
