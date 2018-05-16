@@ -35,8 +35,11 @@ class LocalVisitor:
         activeLocalTime = localData["activeLocalTime"]
         if rankWay == "snumber":
             num = sourceData["snumber"]
-            numStr = str(num) #num.encode('gbk')
-            num = int(filter(str.isdigit, numStr))
+            try:
+                numStr = num.encode('gbk')
+                num = int(filter(str.isdigit, numStr))
+            except:
+                num = int(str(num))
             score = (level*levelMask) + (num) * SCORE_STEP
         elif rankWay == "registTime":
             second = (registDateTime - date).total_seconds()
