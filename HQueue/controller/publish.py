@@ -121,6 +121,7 @@ class PublishTVInterface:
             for item in doingList:
                 vInfo = {"name": item["name"],
                          "id" : item["snumber"],
+                         "cardID":item["cardID"],
                          "status" : self.getVisitorStatus(**item)}
                 retlistInfo["seeingList"].append(vInfo)
             #进行中列表
@@ -131,6 +132,7 @@ class PublishTVInterface:
                     continue
                 vInfo = {"name": item["name"],
                          "id" : item["snumber"],
+                         "cardID":item["cardID"],
                          "status" : self.getVisitorStatus(**item)}
                 retlistInfo["watingList"].append(vInfo)
             #未激活列表
@@ -138,6 +140,7 @@ class PublishTVInterface:
             for item in queueList["unactiveList"]:
                 vInfo = {"name": item["name"],
                          "id" : item["snumber"],
+                         "cardID": item["cardID"],
                          "status" : self.getVisitorStatus(**item)}
                 retlistInfo["unactiveList"].append(vInfo)
             #过号列表
@@ -145,6 +148,7 @@ class PublishTVInterface:
             for item in queueList["passList"]:
                 vInfo = {"name": item["name"],
                          "id": item["snumber"],
+                         "cardID": item["cardID"],
                          "status": self.getVisitorStatus(**item)}
                 retlistInfo["passList"].append(vInfo)
 
@@ -348,6 +352,7 @@ class PublishTVInterface:
             if currentVisitor["status"] == 'doing':
                 seeing["id"] = currentVisitor["snumber"]
                 seeing["name"] = currentVisitor["name"]
+                seeing["cardID"] = currentVisitor["cardID"]
                 seeing["status"] = self.getVisitorStatus(**currentVisitor)
                 output = scene["output"].split("pos")
                 seeing["outputText"] = output[-1]
@@ -363,6 +368,7 @@ class PublishTVInterface:
                 waitingVisitor = {
                     "id" : item["snumber"],
                     "name" : item["name"],
+                    "cardID" : item["cardID"],
                     "status" : self.getVisitorStatus(**item)
                 }
                 waiting.append(waitingVisitor)
@@ -372,6 +378,7 @@ class PublishTVInterface:
                 vInfo = {
                     "id": item["snumber"],
                     "name" : item["name"],
+                    "cardID" : item["cardID"],
                     "status" : self.getVisitorStatus(**item)
                 }
                 unactive.append(vInfo)
@@ -380,6 +387,7 @@ class PublishTVInterface:
                 vInfo = {
                     "id": item["snumber"],
                     "name" : item["name"],
+                    "cardID" : item["cardID"],
                     "status" : self.getVisitorStatus(**item)
                 }
                 passList.append(vInfo)
