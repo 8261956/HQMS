@@ -39,7 +39,7 @@ class LocalVisitor:
                 numStr = num.encode('gbk')
                 num = int(filter(str.isdigit, numStr))
             except:
-                num = int(str(num))
+                num = int(str(num).encode("utf-8"))
             score = (level*levelMask) + (num) * SCORE_STEP
         elif rankWay == "registTime":
             second = (registDateTime - date).total_seconds()
