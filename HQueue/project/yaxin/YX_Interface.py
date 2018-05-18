@@ -15,16 +15,35 @@ sys.path.append(BASE_DIR)
 from controller.visitor import VisitorManager
 #import modules.visitor 
 
-YX_url = "http://192.168.11.77:8082/HISWebService.asmx?WSDL"
+#YX_url = "http://192.168.11.77:8082/HISWebService.asmx?WSDL"
+YX_url = "http://133.0.14.140:8280/main/queue"
+
 TYPE_FAYAO = "01"
 TYPE_YIJI = "02"
 TYPE_ZHUYUAN = "03"
 
+global tClient
+tClient = None
+
+def AddSoapHeader_ESB(client):
+    from suds.sax.element import Element
+    baseElement = Element('head')
+    baseElement.append(Element("context").setText("HISWebService"))
+    baseElement.append(Element("server").setText("his"))
+    baseElement.append(Element("timeout").setText("5"))
+    baseElement.append(Element("priority").setText("1"))
+    baseElement.append(Element("client").setText("queuing_system"))
+
+    ssnp = Element("soap12:Header").append(Element('Headers').append(baseElement))
+    client.set_options(soapheaders=ssnp)
+
 def getClient():
     print "getWebService func In"
-    tClient = Client(YX_url)
-    print "Client Init ok"
-    #print (tClient)
+    global tClient
+    if tClient == None:
+        tClient = Client(YX_url)
+        AddSoapHeader_ESB(tClient)
+        print "Client Init ok"
     return tClient
 
 def MainMethod(SourceName , OpNum , OpControl ,OpData , Picture = None):
@@ -46,6 +65,7 @@ def MainMethod(SourceName , OpNum , OpControl ,OpData , Picture = None):
     print "OpControl :  " + OpControl
     # 调用方法访问数据
     res = c.service.MainMethod(d)
+    print c.last_sent()
     print "MainMethod res:"
     print res
     return res
