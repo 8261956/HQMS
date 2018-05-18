@@ -147,7 +147,10 @@ class StationMainController:
             if property == "pass":
                 vInfo["status"] = "pass" if int(value) else "waiting"
                 oldProperty = str2Json(vInfo["property"])
-                oldProperty.update({property: value})
+                if int(value):
+                    oldProperty.update({property: "0"})
+                else:
+                    oldProperty.update({property: "1"})
                 vInfo["property"] = json2Str(oldProperty)
                 if int(value) ==  0 :
                     if oldProperty.get("pass","0") == "1":
