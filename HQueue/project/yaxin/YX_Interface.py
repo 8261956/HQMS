@@ -21,6 +21,7 @@ esb_url = "http://133.0.14.140:8280/main/queue"
 TYPE_FAYAO = "01"
 TYPE_YIJI = "02"
 TYPE_ZHUYUAN = "03"
+TYPE_SHUYE = "04"
 
 def AddSoapHeader_ESB(client):
     """
@@ -412,6 +413,7 @@ def httpPostRegist(blh,ywlx,dldm,fydl,sourceInfo,inPara1 = "",inPara2 = "",inPar
     retInfo = {}
     registTime = getCurrentTime()
     num = 0
+    registList = []
     for item in retList:
         if ywlx == TYPE_FAYAO:
             sourceItem["id"] = blh + registTime
@@ -425,10 +427,18 @@ def httpPostRegist(blh,ywlx,dldm,fydl,sourceInfo,inPara1 = "",inPara2 = "",inPar
             sourceItem["name"] = item["XM"].get("_text", "")  #患者姓名
             queueCode = item["DLDM"].get("_text", "")  #队列代码
             sourceItem["queue"] = GetQueueName("03", queueCode)
+        elif ywlx == TYPE_SHUYE :
+            sourceItem["id"] = blh + registTime
+            sourceItem["name"] = item["XM"].get("_text", "")  # 患者姓名
+            queueCode = item["CFXMDM"].get("_text", "")  #处方项目代码
+            sourceItem["queue"] = item["CFXMMC"].get("_text", "")  #处方项目名称
+            sourceItem["rev1"] = item["ZXSJ"].get("_text", "")
         sourceInfo.update(sourceItem)
         VisitorManager().visitor_quick_add(sourceInfo)
         retInfo = DBLocal.where("visitor_view_data",id = sourceItem["id"]).first()
         num += 1
+        registList.append(sourceInfo)
+    retInfo.update({"registList" : registList})
     return retInfo
 
 
