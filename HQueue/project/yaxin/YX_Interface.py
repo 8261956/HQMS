@@ -15,16 +15,35 @@ sys.path.append(BASE_DIR)
 from controller.visitor import VisitorManager
 #import modules.visitor 
 
-YX_url = "http://192.168.11.77:8082/HISWebService.asmx?WSDL"
+wsdl_url = "file:///home/clear/HQMS/HQueue/project/yaxin/HISWebService.asmx?WSDL"
+esb_url = "http://133.0.14.140:8280/main/queue"
+
 TYPE_FAYAO = "01"
 TYPE_YIJI = "02"
 TYPE_ZHUYUAN = "03"
 
+def AddSoapHeader_ESB(client):
+    """
+    为客户端发送请求时添加ESB报头
+    :param client: 客户端
+    :return: None
+    """
+    from suds.sax.element import Element
+    baseElement = Element('head')
+    baseElement.append(Element("context").setText("HISWebService"))
+    baseElement.append(Element("server").setText("his"))
+    baseElement.append(Element("timeout").setText("5"))
+    baseElement.append(Element("priority").setText("1"))
+    baseElement.append(Element("client").setText("queuing_system"))
+
+    ssnp = Element('Headers').append(baseElement)
+    client.set_options(soapheaders=ssnp)
+
 def getClient():
     print "getWebService func In"
-    tClient = Client(YX_url)
+    tClient = Client(wsdl_url,location=esb_url)
+    AddSoapHeader_ESB(tClient)
     print "Client Init ok"
-    #print (tClient)
     return tClient
 
 def MainMethod(SourceName , OpNum , OpControl ,OpData , Picture = None):
@@ -46,6 +65,7 @@ def MainMethod(SourceName , OpNum , OpControl ,OpData , Picture = None):
     print "OpControl :  " + OpControl
     # 调用方法访问数据
     res = c.service.MainMethod(d)
+    print c.last_sent()
     print "MainMethod res:"
     print res
     return res
@@ -449,6 +469,7 @@ class YXSourceController:
         httpPostRegist(blh, ywlx, dldm,fydl)
         return {"result" : "success"}
 
+
 #print "-----InqOnDuty : ------"
 #InqOnDuty("2017.06.01","2017.06.19")
 
@@ -461,4 +482,4 @@ class YXSourceController:
 
 #print "------SyncSource : run() ------"
 #SyncSource().run()
-
+#mdsmssend("1","1","1","1")

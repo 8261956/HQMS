@@ -1,0 +1,2168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="TestDBStatus">
+        <s:complexType />
+      </s:element>
+      <s:element name="TestDBStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TestDBStatusResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="NetTest">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="NetStatus" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="NetTestResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="NetTestResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IDCardCheck">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="IDCardNo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IDCardCheckResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="IDCardCheckResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateCardPatInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Request">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CardNo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PatientName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Sex" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Birthday" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Age" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="IDCardNo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SecrityNo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CardSerNo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Blh" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Amt" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="CardMoney" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Tel" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="UserId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ActDate" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ActTime" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Notes" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Vid" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Delb" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BGKSMC" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="zjhm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="zjlx" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Dm" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PatSum" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="OperTime" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StartDay" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="EndDay" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BankNo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Bankaccount" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Tranlist" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Transocode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="dylb" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="zxdhm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="xmlx" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="dyf" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="dysj" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Mu_ddh" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Mu_zhh" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Mu_ddly" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DYPT" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="operator_lx" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="sfqm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ks" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="brlxdm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="bed" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CreateCardPatInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateCardPatInfoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddDeposit">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddDepositResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddDepositResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Getsfzy">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetsfzyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetsfzyResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="BankAddDeposit">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="BankAddDepositResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="BankAddDepositResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AccSearch">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AccSearchResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AccSearchResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBaseCardPrice">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetBaseCardPriceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBaseCardPriceResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetPeopleFeeStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="cardNo" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetPeopleFeeStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetPeopleFeeStatusResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetGhlb">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetGhlbResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetGhlbResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDoctorList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:QueryDoctor" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="QueryDoctor">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="DELB" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DERQ" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DM" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetDoctorListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDoctorListResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OPRegist">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:GhRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GhRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CardID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BLH" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OperTime" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GHF" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZLF" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GBF" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GHFMC" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZLFMC" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GHFDM" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZLFDM" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Units" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Ouantity" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="KSDM" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ksdm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="yylsh" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="operator_lx" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GHLBDM" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SW" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SFF" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="SWDES" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ZGID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="bzdm" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="regaddress" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Day" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="xh" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="SFZH" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="YYLSH" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BankNo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Gzdw" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Mu_ddh" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Mu_zhh" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Mu_ddly" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DYPT" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OPRegistResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OPRegistResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DOCKSList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="list" type="tns:DOCKSList" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DOCKSList">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Day" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="UserId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Item" type="tns:ArrayOfItem" />
+          <s:element minOccurs="0" maxOccurs="1" name="ResultCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrorMsg" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Item" nillable="true" type="tns:Item" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Item">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="DepID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ParDepId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DepName" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DOCKSListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DOCKSListResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DOCHBList">
+        <s:complexType />
+      </s:element>
+      <s:element name="DOCHBListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DOCHBListResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBillInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBillInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBillInfoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AutoOPBillCharge">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AutoOPBillChargeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AutoOPBillChargeResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetItemData">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetItemDataResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetItemDataResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AppNoList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AppNoListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AppNoListResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAppNo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAppNoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAppNoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PatChargeList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PatChargeListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PatChargeListResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDoctorDe">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:GhRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDoctorDeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDoctorDeResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetYYT_YDBG">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetYYT_YDBGResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetYYT_YDBGResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetYYT_CTBG">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetYYT_CTBGResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetYYT_CTBGResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetYYT_DTXDTBG">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetYYT_DTXDTBGResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetYYT_DTXDTBGResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetYYT_DTXYJCBG">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetYYT_DTXYJCBGResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetYYT_DTXYJCBGResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetYYT_XDTBG">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetYYT_XDTBGResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetYYT_XDTBGResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetYYT_XXBG">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetYYT_XXBGResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetYYT_XXBGResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetYYT_ZQGSZSYBG">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetYYT_ZQGSZSYBGResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetYYT_ZQGSZSYBGResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateZYYJJ">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateZYYJJResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpdateZYYJJResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="EditInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="EditInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="EditInfoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAdmByCardNo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAdmByCardNoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAdmByCardNoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBillDetailByAd">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBillDetailByAdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBillDetailByAdResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="YPrint">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="YPrintResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="YPrintResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetItemDataPrint">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetItemDataPrintResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetItemDataPrintResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetXFList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetXFListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetXFListResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetChargetariff">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:Request" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetChargetariffResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetChargetariffResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MainMethod">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="input" type="tns:Input" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Input">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="SourceName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OpNum" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OpControl" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="OpData" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Picture" type="s:base64Binary" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="MainMethodResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MainMethodResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MsgInterface">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="InputXml" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MsgInterfaceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MsgInterfaceResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SapInterface">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="InputXml" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SapInterfaceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SapInterfaceResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MainMethod_HK">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="input" type="tns:Input" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MainMethod_HKResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MainMethod_HKResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="TestDBStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:TestDBStatus" />
+  </wsdl:message>
+  <wsdl:message name="TestDBStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:TestDBStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="NetTestSoapIn">
+    <wsdl:part name="parameters" element="tns:NetTest" />
+  </wsdl:message>
+  <wsdl:message name="NetTestSoapOut">
+    <wsdl:part name="parameters" element="tns:NetTestResponse" />
+  </wsdl:message>
+  <wsdl:message name="IDCardCheckSoapIn">
+    <wsdl:part name="parameters" element="tns:IDCardCheck" />
+  </wsdl:message>
+  <wsdl:message name="IDCardCheckSoapOut">
+    <wsdl:part name="parameters" element="tns:IDCardCheckResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateCardPatInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateCardPatInfo" />
+  </wsdl:message>
+  <wsdl:message name="CreateCardPatInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateCardPatInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddDepositSoapIn">
+    <wsdl:part name="parameters" element="tns:AddDeposit" />
+  </wsdl:message>
+  <wsdl:message name="AddDepositSoapOut">
+    <wsdl:part name="parameters" element="tns:AddDepositResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetsfzySoapIn">
+    <wsdl:part name="parameters" element="tns:Getsfzy" />
+  </wsdl:message>
+  <wsdl:message name="GetsfzySoapOut">
+    <wsdl:part name="parameters" element="tns:GetsfzyResponse" />
+  </wsdl:message>
+  <wsdl:message name="BankAddDepositSoapIn">
+    <wsdl:part name="parameters" element="tns:BankAddDeposit" />
+  </wsdl:message>
+  <wsdl:message name="BankAddDepositSoapOut">
+    <wsdl:part name="parameters" element="tns:BankAddDepositResponse" />
+  </wsdl:message>
+  <wsdl:message name="AccSearchSoapIn">
+    <wsdl:part name="parameters" element="tns:AccSearch" />
+  </wsdl:message>
+  <wsdl:message name="AccSearchSoapOut">
+    <wsdl:part name="parameters" element="tns:AccSearchResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBaseCardPriceSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBaseCardPrice" />
+  </wsdl:message>
+  <wsdl:message name="GetBaseCardPriceSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBaseCardPriceResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetPeopleFeeStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:GetPeopleFeeStatus" />
+  </wsdl:message>
+  <wsdl:message name="GetPeopleFeeStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:GetPeopleFeeStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetGhlbSoapIn">
+    <wsdl:part name="parameters" element="tns:GetGhlb" />
+  </wsdl:message>
+  <wsdl:message name="GetGhlbSoapOut">
+    <wsdl:part name="parameters" element="tns:GetGhlbResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDoctorListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDoctorList" />
+  </wsdl:message>
+  <wsdl:message name="GetDoctorListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDoctorListResponse" />
+  </wsdl:message>
+  <wsdl:message name="OPRegistSoapIn">
+    <wsdl:part name="parameters" element="tns:OPRegist" />
+  </wsdl:message>
+  <wsdl:message name="OPRegistSoapOut">
+    <wsdl:part name="parameters" element="tns:OPRegistResponse" />
+  </wsdl:message>
+  <wsdl:message name="DOCKSListSoapIn">
+    <wsdl:part name="parameters" element="tns:DOCKSList" />
+  </wsdl:message>
+  <wsdl:message name="DOCKSListSoapOut">
+    <wsdl:part name="parameters" element="tns:DOCKSListResponse" />
+  </wsdl:message>
+  <wsdl:message name="DOCHBListSoapIn">
+    <wsdl:part name="parameters" element="tns:DOCHBList" />
+  </wsdl:message>
+  <wsdl:message name="DOCHBListSoapOut">
+    <wsdl:part name="parameters" element="tns:DOCHBListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBillInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBillInfo" />
+  </wsdl:message>
+  <wsdl:message name="GetBillInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBillInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="AutoOPBillChargeSoapIn">
+    <wsdl:part name="parameters" element="tns:AutoOPBillCharge" />
+  </wsdl:message>
+  <wsdl:message name="AutoOPBillChargeSoapOut">
+    <wsdl:part name="parameters" element="tns:AutoOPBillChargeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetItemDataSoapIn">
+    <wsdl:part name="parameters" element="tns:GetItemData" />
+  </wsdl:message>
+  <wsdl:message name="GetItemDataSoapOut">
+    <wsdl:part name="parameters" element="tns:GetItemDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="AppNoListSoapIn">
+    <wsdl:part name="parameters" element="tns:AppNoList" />
+  </wsdl:message>
+  <wsdl:message name="AppNoListSoapOut">
+    <wsdl:part name="parameters" element="tns:AppNoListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAppNoSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAppNo" />
+  </wsdl:message>
+  <wsdl:message name="GetAppNoSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAppNoResponse" />
+  </wsdl:message>
+  <wsdl:message name="PatChargeListSoapIn">
+    <wsdl:part name="parameters" element="tns:PatChargeList" />
+  </wsdl:message>
+  <wsdl:message name="PatChargeListSoapOut">
+    <wsdl:part name="parameters" element="tns:PatChargeListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDoctorDeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDoctorDe" />
+  </wsdl:message>
+  <wsdl:message name="GetDoctorDeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDoctorDeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetYYT_YDBGSoapIn">
+    <wsdl:part name="parameters" element="tns:GetYYT_YDBG" />
+  </wsdl:message>
+  <wsdl:message name="GetYYT_YDBGSoapOut">
+    <wsdl:part name="parameters" element="tns:GetYYT_YDBGResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetYYT_CTBGSoapIn">
+    <wsdl:part name="parameters" element="tns:GetYYT_CTBG" />
+  </wsdl:message>
+  <wsdl:message name="GetYYT_CTBGSoapOut">
+    <wsdl:part name="parameters" element="tns:GetYYT_CTBGResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetYYT_DTXDTBGSoapIn">
+    <wsdl:part name="parameters" element="tns:GetYYT_DTXDTBG" />
+  </wsdl:message>
+  <wsdl:message name="GetYYT_DTXDTBGSoapOut">
+    <wsdl:part name="parameters" element="tns:GetYYT_DTXDTBGResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetYYT_DTXYJCBGSoapIn">
+    <wsdl:part name="parameters" element="tns:GetYYT_DTXYJCBG" />
+  </wsdl:message>
+  <wsdl:message name="GetYYT_DTXYJCBGSoapOut">
+    <wsdl:part name="parameters" element="tns:GetYYT_DTXYJCBGResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetYYT_XDTBGSoapIn">
+    <wsdl:part name="parameters" element="tns:GetYYT_XDTBG" />
+  </wsdl:message>
+  <wsdl:message name="GetYYT_XDTBGSoapOut">
+    <wsdl:part name="parameters" element="tns:GetYYT_XDTBGResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetYYT_XXBGSoapIn">
+    <wsdl:part name="parameters" element="tns:GetYYT_XXBG" />
+  </wsdl:message>
+  <wsdl:message name="GetYYT_XXBGSoapOut">
+    <wsdl:part name="parameters" element="tns:GetYYT_XXBGResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetYYT_ZQGSZSYBGSoapIn">
+    <wsdl:part name="parameters" element="tns:GetYYT_ZQGSZSYBG" />
+  </wsdl:message>
+  <wsdl:message name="GetYYT_ZQGSZSYBGSoapOut">
+    <wsdl:part name="parameters" element="tns:GetYYT_ZQGSZSYBGResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateZYYJJSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateZYYJJ" />
+  </wsdl:message>
+  <wsdl:message name="UpdateZYYJJSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateZYYJJResponse" />
+  </wsdl:message>
+  <wsdl:message name="EditInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:EditInfo" />
+  </wsdl:message>
+  <wsdl:message name="EditInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:EditInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAdmByCardNoSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAdmByCardNo" />
+  </wsdl:message>
+  <wsdl:message name="GetAdmByCardNoSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAdmByCardNoResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBillDetailByAdSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBillDetailByAd" />
+  </wsdl:message>
+  <wsdl:message name="GetBillDetailByAdSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBillDetailByAdResponse" />
+  </wsdl:message>
+  <wsdl:message name="YPrintSoapIn">
+    <wsdl:part name="parameters" element="tns:YPrint" />
+  </wsdl:message>
+  <wsdl:message name="YPrintSoapOut">
+    <wsdl:part name="parameters" element="tns:YPrintResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetItemDataPrintSoapIn">
+    <wsdl:part name="parameters" element="tns:GetItemDataPrint" />
+  </wsdl:message>
+  <wsdl:message name="GetItemDataPrintSoapOut">
+    <wsdl:part name="parameters" element="tns:GetItemDataPrintResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetXFListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetXFList" />
+  </wsdl:message>
+  <wsdl:message name="GetXFListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetXFListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetChargetariffSoapIn">
+    <wsdl:part name="parameters" element="tns:GetChargetariff" />
+  </wsdl:message>
+  <wsdl:message name="GetChargetariffSoapOut">
+    <wsdl:part name="parameters" element="tns:GetChargetariffResponse" />
+  </wsdl:message>
+  <wsdl:message name="MainMethodSoapIn">
+    <wsdl:part name="parameters" element="tns:MainMethod" />
+  </wsdl:message>
+  <wsdl:message name="MainMethodSoapOut">
+    <wsdl:part name="parameters" element="tns:MainMethodResponse" />
+  </wsdl:message>
+  <wsdl:message name="MsgInterfaceSoapIn">
+    <wsdl:part name="parameters" element="tns:MsgInterface" />
+  </wsdl:message>
+  <wsdl:message name="MsgInterfaceSoapOut">
+    <wsdl:part name="parameters" element="tns:MsgInterfaceResponse" />
+  </wsdl:message>
+  <wsdl:message name="SapInterfaceSoapIn">
+    <wsdl:part name="parameters" element="tns:SapInterface" />
+  </wsdl:message>
+  <wsdl:message name="SapInterfaceSoapOut">
+    <wsdl:part name="parameters" element="tns:SapInterfaceResponse" />
+  </wsdl:message>
+  <wsdl:message name="MainMethod_HKSoapIn">
+    <wsdl:part name="parameters" element="tns:MainMethod_HK" />
+  </wsdl:message>
+  <wsdl:message name="MainMethod_HKSoapOut">
+    <wsdl:part name="parameters" element="tns:MainMethod_HKResponse" />
+  </wsdl:message>
+  <wsdl:message name="TestDBStatusHttpGetIn" />
+  <wsdl:message name="TestDBStatusHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="NetTestHttpGetIn">
+    <wsdl:part name="NetStatus" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="NetTestHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="IDCardCheckHttpGetIn">
+    <wsdl:part name="IDCardNo" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="IDCardCheckHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBaseCardPriceHttpGetIn" />
+  <wsdl:message name="GetBaseCardPriceHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetPeopleFeeStatusHttpGetIn">
+    <wsdl:part name="cardNo" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetPeopleFeeStatusHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="DOCHBListHttpGetIn" />
+  <wsdl:message name="DOCHBListHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="MsgInterfaceHttpGetIn">
+    <wsdl:part name="InputXml" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="MsgInterfaceHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="SapInterfaceHttpGetIn">
+    <wsdl:part name="InputXml" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SapInterfaceHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="TestDBStatusHttpPostIn" />
+  <wsdl:message name="TestDBStatusHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="NetTestHttpPostIn">
+    <wsdl:part name="NetStatus" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="NetTestHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="IDCardCheckHttpPostIn">
+    <wsdl:part name="IDCardNo" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="IDCardCheckHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetBaseCardPriceHttpPostIn" />
+  <wsdl:message name="GetBaseCardPriceHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetPeopleFeeStatusHttpPostIn">
+    <wsdl:part name="cardNo" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetPeopleFeeStatusHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="DOCHBListHttpPostIn" />
+  <wsdl:message name="DOCHBListHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="MsgInterfaceHttpPostIn">
+    <wsdl:part name="InputXml" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="MsgInterfaceHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="SapInterfaceHttpPostIn">
+    <wsdl:part name="InputXml" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SapInterfaceHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:portType name="HISWebServiceSoap">
+    <wsdl:operation name="TestDBStatus">
+      <wsdl:input message="tns:TestDBStatusSoapIn" />
+      <wsdl:output message="tns:TestDBStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="NetTest">
+      <wsdl:input message="tns:NetTestSoapIn" />
+      <wsdl:output message="tns:NetTestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IDCardCheck">
+      <wsdl:input message="tns:IDCardCheckSoapIn" />
+      <wsdl:output message="tns:IDCardCheckSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateCardPatInfo">
+      <wsdl:input message="tns:CreateCardPatInfoSoapIn" />
+      <wsdl:output message="tns:CreateCardPatInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddDeposit">
+      <wsdl:input message="tns:AddDepositSoapIn" />
+      <wsdl:output message="tns:AddDepositSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Getsfzy">
+      <wsdl:input message="tns:GetsfzySoapIn" />
+      <wsdl:output message="tns:GetsfzySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="BankAddDeposit">
+      <wsdl:input message="tns:BankAddDepositSoapIn" />
+      <wsdl:output message="tns:BankAddDepositSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AccSearch">
+      <wsdl:input message="tns:AccSearchSoapIn" />
+      <wsdl:output message="tns:AccSearchSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBaseCardPrice">
+      <wsdl:input message="tns:GetBaseCardPriceSoapIn" />
+      <wsdl:output message="tns:GetBaseCardPriceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPeopleFeeStatus">
+      <wsdl:input message="tns:GetPeopleFeeStatusSoapIn" />
+      <wsdl:output message="tns:GetPeopleFeeStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGhlb">
+      <wsdl:input message="tns:GetGhlbSoapIn" />
+      <wsdl:output message="tns:GetGhlbSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDoctorList">
+      <wsdl:input message="tns:GetDoctorListSoapIn" />
+      <wsdl:output message="tns:GetDoctorListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OPRegist">
+      <wsdl:input message="tns:OPRegistSoapIn" />
+      <wsdl:output message="tns:OPRegistSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DOCKSList">
+      <wsdl:input message="tns:DOCKSListSoapIn" />
+      <wsdl:output message="tns:DOCKSListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DOCHBList">
+      <wsdl:input message="tns:DOCHBListSoapIn" />
+      <wsdl:output message="tns:DOCHBListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBillInfo">
+      <wsdl:input message="tns:GetBillInfoSoapIn" />
+      <wsdl:output message="tns:GetBillInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AutoOPBillCharge">
+      <wsdl:input message="tns:AutoOPBillChargeSoapIn" />
+      <wsdl:output message="tns:AutoOPBillChargeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetItemData">
+      <wsdl:input message="tns:GetItemDataSoapIn" />
+      <wsdl:output message="tns:GetItemDataSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AppNoList">
+      <wsdl:input message="tns:AppNoListSoapIn" />
+      <wsdl:output message="tns:AppNoListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAppNo">
+      <wsdl:input message="tns:GetAppNoSoapIn" />
+      <wsdl:output message="tns:GetAppNoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PatChargeList">
+      <wsdl:input message="tns:PatChargeListSoapIn" />
+      <wsdl:output message="tns:PatChargeListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDoctorDe">
+      <wsdl:input message="tns:GetDoctorDeSoapIn" />
+      <wsdl:output message="tns:GetDoctorDeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_YDBG">
+      <wsdl:input message="tns:GetYYT_YDBGSoapIn" />
+      <wsdl:output message="tns:GetYYT_YDBGSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_CTBG">
+      <wsdl:input message="tns:GetYYT_CTBGSoapIn" />
+      <wsdl:output message="tns:GetYYT_CTBGSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_DTXDTBG">
+      <wsdl:input message="tns:GetYYT_DTXDTBGSoapIn" />
+      <wsdl:output message="tns:GetYYT_DTXDTBGSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_DTXYJCBG">
+      <wsdl:input message="tns:GetYYT_DTXYJCBGSoapIn" />
+      <wsdl:output message="tns:GetYYT_DTXYJCBGSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_XDTBG">
+      <wsdl:input message="tns:GetYYT_XDTBGSoapIn" />
+      <wsdl:output message="tns:GetYYT_XDTBGSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_XXBG">
+      <wsdl:input message="tns:GetYYT_XXBGSoapIn" />
+      <wsdl:output message="tns:GetYYT_XXBGSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_ZQGSZSYBG">
+      <wsdl:input message="tns:GetYYT_ZQGSZSYBGSoapIn" />
+      <wsdl:output message="tns:GetYYT_ZQGSZSYBGSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateZYYJJ">
+      <wsdl:input message="tns:UpdateZYYJJSoapIn" />
+      <wsdl:output message="tns:UpdateZYYJJSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="EditInfo">
+      <wsdl:input message="tns:EditInfoSoapIn" />
+      <wsdl:output message="tns:EditInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAdmByCardNo">
+      <wsdl:input message="tns:GetAdmByCardNoSoapIn" />
+      <wsdl:output message="tns:GetAdmByCardNoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBillDetailByAd">
+      <wsdl:input message="tns:GetBillDetailByAdSoapIn" />
+      <wsdl:output message="tns:GetBillDetailByAdSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="YPrint">
+      <wsdl:input message="tns:YPrintSoapIn" />
+      <wsdl:output message="tns:YPrintSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetItemDataPrint">
+      <wsdl:input message="tns:GetItemDataPrintSoapIn" />
+      <wsdl:output message="tns:GetItemDataPrintSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetXFList">
+      <wsdl:input message="tns:GetXFListSoapIn" />
+      <wsdl:output message="tns:GetXFListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetChargetariff">
+      <wsdl:input message="tns:GetChargetariffSoapIn" />
+      <wsdl:output message="tns:GetChargetariffSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MainMethod">
+      <wsdl:input message="tns:MainMethodSoapIn" />
+      <wsdl:output message="tns:MainMethodSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MsgInterface">
+      <wsdl:input message="tns:MsgInterfaceSoapIn" />
+      <wsdl:output message="tns:MsgInterfaceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SapInterface">
+      <wsdl:input message="tns:SapInterfaceSoapIn" />
+      <wsdl:output message="tns:SapInterfaceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MainMethod_HK">
+      <wsdl:input message="tns:MainMethod_HKSoapIn" />
+      <wsdl:output message="tns:MainMethod_HKSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="HISWebServiceHttpGet">
+    <wsdl:operation name="TestDBStatus">
+      <wsdl:input message="tns:TestDBStatusHttpGetIn" />
+      <wsdl:output message="tns:TestDBStatusHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="NetTest">
+      <wsdl:input message="tns:NetTestHttpGetIn" />
+      <wsdl:output message="tns:NetTestHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IDCardCheck">
+      <wsdl:input message="tns:IDCardCheckHttpGetIn" />
+      <wsdl:output message="tns:IDCardCheckHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBaseCardPrice">
+      <wsdl:input message="tns:GetBaseCardPriceHttpGetIn" />
+      <wsdl:output message="tns:GetBaseCardPriceHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPeopleFeeStatus">
+      <wsdl:input message="tns:GetPeopleFeeStatusHttpGetIn" />
+      <wsdl:output message="tns:GetPeopleFeeStatusHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DOCHBList">
+      <wsdl:input message="tns:DOCHBListHttpGetIn" />
+      <wsdl:output message="tns:DOCHBListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MsgInterface">
+      <wsdl:input message="tns:MsgInterfaceHttpGetIn" />
+      <wsdl:output message="tns:MsgInterfaceHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SapInterface">
+      <wsdl:input message="tns:SapInterfaceHttpGetIn" />
+      <wsdl:output message="tns:SapInterfaceHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="HISWebServiceHttpPost">
+    <wsdl:operation name="TestDBStatus">
+      <wsdl:input message="tns:TestDBStatusHttpPostIn" />
+      <wsdl:output message="tns:TestDBStatusHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="NetTest">
+      <wsdl:input message="tns:NetTestHttpPostIn" />
+      <wsdl:output message="tns:NetTestHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IDCardCheck">
+      <wsdl:input message="tns:IDCardCheckHttpPostIn" />
+      <wsdl:output message="tns:IDCardCheckHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBaseCardPrice">
+      <wsdl:input message="tns:GetBaseCardPriceHttpPostIn" />
+      <wsdl:output message="tns:GetBaseCardPriceHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPeopleFeeStatus">
+      <wsdl:input message="tns:GetPeopleFeeStatusHttpPostIn" />
+      <wsdl:output message="tns:GetPeopleFeeStatusHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DOCHBList">
+      <wsdl:input message="tns:DOCHBListHttpPostIn" />
+      <wsdl:output message="tns:DOCHBListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MsgInterface">
+      <wsdl:input message="tns:MsgInterfaceHttpPostIn" />
+      <wsdl:output message="tns:MsgInterfaceHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SapInterface">
+      <wsdl:input message="tns:SapInterfaceHttpPostIn" />
+      <wsdl:output message="tns:SapInterfaceHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="HISWebServiceSoap" type="tns:HISWebServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="TestDBStatus">
+      <soap:operation soapAction="http://tempuri.org/TestDBStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NetTest">
+      <soap:operation soapAction="http://tempuri.org/NetTest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IDCardCheck">
+      <soap:operation soapAction="http://tempuri.org/IDCardCheck" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateCardPatInfo">
+      <soap:operation soapAction="http://tempuri.org/CreateCardPatInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddDeposit">
+      <soap:operation soapAction="http://tempuri.org/AddDeposit" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Getsfzy">
+      <soap:operation soapAction="http://tempuri.org/Getsfzy" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BankAddDeposit">
+      <soap:operation soapAction="http://tempuri.org/BankAddDeposit" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AccSearch">
+      <soap:operation soapAction="http://tempuri.org/AccSearch" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBaseCardPrice">
+      <soap:operation soapAction="http://tempuri.org/GetBaseCardPrice" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPeopleFeeStatus">
+      <soap:operation soapAction="http://tempuri.org/GetPeopleFeeStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGhlb">
+      <soap:operation soapAction="http://tempuri.org/GetGhlb" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDoctorList">
+      <soap:operation soapAction="http://tempuri.org/GetDoctorList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OPRegist">
+      <soap:operation soapAction="http://tempuri.org/OPRegist" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DOCKSList">
+      <soap:operation soapAction="http://tempuri.org/DOCKSList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DOCHBList">
+      <soap:operation soapAction="http://tempuri.org/DOCHBList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBillInfo">
+      <soap:operation soapAction="http://tempuri.org/GetBillInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AutoOPBillCharge">
+      <soap:operation soapAction="http://tempuri.org/AutoOPBillCharge" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetItemData">
+      <soap:operation soapAction="http://tempuri.org/GetItemData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AppNoList">
+      <soap:operation soapAction="http://tempuri.org/AppNoList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAppNo">
+      <soap:operation soapAction="http://tempuri.org/GetAppNo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PatChargeList">
+      <soap:operation soapAction="http://tempuri.org/PatChargeList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDoctorDe">
+      <soap:operation soapAction="http://tempuri.org/GetDoctorDe" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_YDBG">
+      <soap:operation soapAction="http://tempuri.org/GetYYT_YDBG" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_CTBG">
+      <soap:operation soapAction="http://tempuri.org/GetYYT_CTBG" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_DTXDTBG">
+      <soap:operation soapAction="http://tempuri.org/GetYYT_DTXDTBG" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_DTXYJCBG">
+      <soap:operation soapAction="http://tempuri.org/GetYYT_DTXYJCBG" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_XDTBG">
+      <soap:operation soapAction="http://tempuri.org/GetYYT_XDTBG" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_XXBG">
+      <soap:operation soapAction="http://tempuri.org/GetYYT_XXBG" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_ZQGSZSYBG">
+      <soap:operation soapAction="http://tempuri.org/GetYYT_ZQGSZSYBG" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateZYYJJ">
+      <soap:operation soapAction="http://tempuri.org/UpdateZYYJJ" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EditInfo">
+      <soap:operation soapAction="http://tempuri.org/EditInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAdmByCardNo">
+      <soap:operation soapAction="http://tempuri.org/GetAdmByCardNo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBillDetailByAd">
+      <soap:operation soapAction="http://tempuri.org/GetBillDetailByAd" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="YPrint">
+      <soap:operation soapAction="http://tempuri.org/YPrint" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetItemDataPrint">
+      <soap:operation soapAction="http://tempuri.org/GetItemDataPrint" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetXFList">
+      <soap:operation soapAction="http://tempuri.org/GetXFList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetChargetariff">
+      <soap:operation soapAction="http://tempuri.org/GetChargetariff" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MainMethod">
+      <soap:operation soapAction="http://tempuri.org/MainMethod" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MsgInterface">
+      <soap:operation soapAction="http://tempuri.org/MsgInterface" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SapInterface">
+      <soap:operation soapAction="http://tempuri.org/SapInterface" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MainMethod_HK">
+      <soap:operation soapAction="http://tempuri.org/MainMethod_HK" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="HISWebServiceSoap12" type="tns:HISWebServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="TestDBStatus">
+      <soap12:operation soapAction="http://tempuri.org/TestDBStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NetTest">
+      <soap12:operation soapAction="http://tempuri.org/NetTest" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IDCardCheck">
+      <soap12:operation soapAction="http://tempuri.org/IDCardCheck" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateCardPatInfo">
+      <soap12:operation soapAction="http://tempuri.org/CreateCardPatInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddDeposit">
+      <soap12:operation soapAction="http://tempuri.org/AddDeposit" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Getsfzy">
+      <soap12:operation soapAction="http://tempuri.org/Getsfzy" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BankAddDeposit">
+      <soap12:operation soapAction="http://tempuri.org/BankAddDeposit" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AccSearch">
+      <soap12:operation soapAction="http://tempuri.org/AccSearch" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBaseCardPrice">
+      <soap12:operation soapAction="http://tempuri.org/GetBaseCardPrice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPeopleFeeStatus">
+      <soap12:operation soapAction="http://tempuri.org/GetPeopleFeeStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGhlb">
+      <soap12:operation soapAction="http://tempuri.org/GetGhlb" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDoctorList">
+      <soap12:operation soapAction="http://tempuri.org/GetDoctorList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OPRegist">
+      <soap12:operation soapAction="http://tempuri.org/OPRegist" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DOCKSList">
+      <soap12:operation soapAction="http://tempuri.org/DOCKSList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DOCHBList">
+      <soap12:operation soapAction="http://tempuri.org/DOCHBList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBillInfo">
+      <soap12:operation soapAction="http://tempuri.org/GetBillInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AutoOPBillCharge">
+      <soap12:operation soapAction="http://tempuri.org/AutoOPBillCharge" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetItemData">
+      <soap12:operation soapAction="http://tempuri.org/GetItemData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AppNoList">
+      <soap12:operation soapAction="http://tempuri.org/AppNoList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAppNo">
+      <soap12:operation soapAction="http://tempuri.org/GetAppNo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PatChargeList">
+      <soap12:operation soapAction="http://tempuri.org/PatChargeList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDoctorDe">
+      <soap12:operation soapAction="http://tempuri.org/GetDoctorDe" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_YDBG">
+      <soap12:operation soapAction="http://tempuri.org/GetYYT_YDBG" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_CTBG">
+      <soap12:operation soapAction="http://tempuri.org/GetYYT_CTBG" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_DTXDTBG">
+      <soap12:operation soapAction="http://tempuri.org/GetYYT_DTXDTBG" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_DTXYJCBG">
+      <soap12:operation soapAction="http://tempuri.org/GetYYT_DTXYJCBG" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_XDTBG">
+      <soap12:operation soapAction="http://tempuri.org/GetYYT_XDTBG" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_XXBG">
+      <soap12:operation soapAction="http://tempuri.org/GetYYT_XXBG" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetYYT_ZQGSZSYBG">
+      <soap12:operation soapAction="http://tempuri.org/GetYYT_ZQGSZSYBG" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateZYYJJ">
+      <soap12:operation soapAction="http://tempuri.org/UpdateZYYJJ" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EditInfo">
+      <soap12:operation soapAction="http://tempuri.org/EditInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAdmByCardNo">
+      <soap12:operation soapAction="http://tempuri.org/GetAdmByCardNo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBillDetailByAd">
+      <soap12:operation soapAction="http://tempuri.org/GetBillDetailByAd" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="YPrint">
+      <soap12:operation soapAction="http://tempuri.org/YPrint" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetItemDataPrint">
+      <soap12:operation soapAction="http://tempuri.org/GetItemDataPrint" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetXFList">
+      <soap12:operation soapAction="http://tempuri.org/GetXFList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetChargetariff">
+      <soap12:operation soapAction="http://tempuri.org/GetChargetariff" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MainMethod">
+      <soap12:operation soapAction="http://tempuri.org/MainMethod" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MsgInterface">
+      <soap12:operation soapAction="http://tempuri.org/MsgInterface" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SapInterface">
+      <soap12:operation soapAction="http://tempuri.org/SapInterface" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MainMethod_HK">
+      <soap12:operation soapAction="http://tempuri.org/MainMethod_HK" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="HISWebServiceHttpGet" type="tns:HISWebServiceHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="TestDBStatus">
+      <http:operation location="/TestDBStatus" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NetTest">
+      <http:operation location="/NetTest" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IDCardCheck">
+      <http:operation location="/IDCardCheck" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBaseCardPrice">
+      <http:operation location="/GetBaseCardPrice" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPeopleFeeStatus">
+      <http:operation location="/GetPeopleFeeStatus" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DOCHBList">
+      <http:operation location="/DOCHBList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MsgInterface">
+      <http:operation location="/MsgInterface" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SapInterface">
+      <http:operation location="/SapInterface" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="HISWebServiceHttpPost" type="tns:HISWebServiceHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="TestDBStatus">
+      <http:operation location="/TestDBStatus" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NetTest">
+      <http:operation location="/NetTest" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IDCardCheck">
+      <http:operation location="/IDCardCheck" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBaseCardPrice">
+      <http:operation location="/GetBaseCardPrice" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPeopleFeeStatus">
+      <http:operation location="/GetPeopleFeeStatus" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DOCHBList">
+      <http:operation location="/DOCHBList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MsgInterface">
+      <http:operation location="/MsgInterface" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SapInterface">
+      <http:operation location="/SapInterface" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="HISWebService">
+    <wsdl:port name="HISWebServiceSoap" binding="tns:HISWebServiceSoap">
+      <soap:address location="http://192.168.11.77:8082/HISWebService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="HISWebServiceSoap12" binding="tns:HISWebServiceSoap12">
+      <soap12:address location="http://192.168.11.77:8082/HISWebService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="HISWebServiceHttpGet" binding="tns:HISWebServiceHttpGet">
+      <http:address location="http://192.168.11.77:8082/HISWebService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="HISWebServiceHttpPost" binding="tns:HISWebServiceHttpPost">
+      <http:address location="http://192.168.11.77:8082/HISWebService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
