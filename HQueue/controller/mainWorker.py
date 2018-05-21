@@ -129,8 +129,10 @@ class WorkerMainController:
         for item in waitList:
             if item["dest"] not in {None, ""}:
                 if destPos != item["dest"]:
+                    cnt += 1
                     continue
             if item["status"] == "doing":
+                cnt += 1
                 continue
             # 判断locked 等属性
             property = str2Json(item["property"])
@@ -171,9 +173,11 @@ class WorkerMainController:
         cnt = 0
         for item in waitList:
             if item["dest"] not in {None,"","护士站"}:
-                if callerInfo["pos"] != item["dest"]:
+                if callerInfo["pos"] != item["dest"] and item["status"] == "prepare":
+                    cnt += 1
                     continue
             if item["status"] == "doing" :
+                cnt += 1
                 continue
             #判断locked 等属性
             property = str2Json(item["property"])
