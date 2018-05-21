@@ -180,6 +180,9 @@ def multiple_insert_sql(tablename, values):
     return sql_query
 
 def CachedGetValue(key):
+    """
+    Memcached缓存获取信息 key为字符串类型 返回Json
+    """
     try:
         mc = memcached_wrapper.getMemcached()
         value = mc.get(str(key).replace(' ',''))
@@ -195,6 +198,9 @@ def CachedGetValue(key):
         print value
 
 def CahedSetValue(key,value, timeout):
+    """
+    Memcached缓存设置信息 key为字符串类型 value为Json类型
+    """
     try:
         mc = memcached_wrapper.getMemcached()
         key_str = str(key).replace(' ', '')

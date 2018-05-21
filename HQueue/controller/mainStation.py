@@ -74,7 +74,7 @@ class StationMainController:
         return ret
 
     def getQueueListAll(self,inputData):
-        #用于分诊台护士站调用
+        #用于分诊台护士站  叫号器调用
         useCache = inputData.get("useCache",True)
         stationID = inputData["stationID"]
         queueID = inputData["queueID"]
@@ -89,7 +89,7 @@ class StationMainController:
         queue = DB.DBLocal.where("queueInfo",stationID = stationID,id = queueID).first()
         ret.update({"name": queue["name"], "workerOnline": str2List(queue["workerOnline"])})
 
-        vList = DB.DBLocal.where("visitor_view_data",stationID = stationID,queueID = queueID)
+        vList = DB.DBLocal.where("visitor_view_data",stationID = stationID,queueID = queueID).list()
         doingList = []
         prepareList = []
         waitingList = []

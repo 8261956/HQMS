@@ -118,20 +118,54 @@ class WorkerMainController:
         QueueDataController().visitorMoveby(inputData)
         return {"result" : "success"}
 
+    def checkPrepareList(self,stationID,waitList,waitNum,destPos):
+        """
+        呼叫时等候队列中的准备人员，取出要准备的列表
+        """
+        cnt = 0
+        out_cnt = 0
+        prepareList = []
+        for item in waitList:
+            if item["dest"] not in {None, ""}:
+                if destPos != item["dest"]:
+                    continue
+            if item["status"] == "doing":
+                continue
+            # 判断locked 等属性
+            property = str2Json(item["property"])
+            locked = property.get("locked", "0")
+            if locked == "0":
+                prepareOne = waitList[cnt + 1]
+                if prepareOne["status"] != "prepare" :
+                    info = {"status": "prepare", "dest": destPos}
+                    DB.DBLocal.update("visitor_local_data", where="id=$id and stationID=$stationID",
+                                      vars={"id": prepareOne["id"], "stationID": stationID}, **info)
+                prepareList.append(waitList[cnt + 1])
+                out_cnt += 1
+                if out_cnt >= waitNum:
+                    return prepareList
+                break
+            cnt += 1
+
     def callNext(self,inputData):
         ret = {}
         stationID = inputData["stationID"]
         queueID = inputData["queueID"]
         workerID = inputData["id"]
 
+        #得到队列策略信息
+        qInfo = DB.DBLocal.select("queueInfo",where = {"stationID": stationID, "id": queueID}).first()
+        sceneID = qInfo["sceneID"]
+        scene = SceneInterface().getSceneInfo({"sceneID": sceneID})
+        prepareNum = takeVal(scene,"waitNum",1)
         #修改队列最后在线医生
         queueInfo.QueueInfoInterface().addWorkerOnline(queueID,workerID)
         #修改队列进行中人员 且医生为当前医生的 为已完成
         lastOne = self.workerFinish(stationID,queueID,workerID)
         #修改呼叫人员状态改为Doing 呼叫医生改为当前医生
         #TODO : 完善呼叫 跳过目标不是自身呼叫器的患者，排队列表中是准备状态的患者 患者锁定等属性的判断
-        waitList = QueueDataController().getQueueVisitor(inputData,["waiting","prepare"])
-        nextOne = parpareOne = {}
+        waitList = self.getQueueListAll({"stationID":stationID,"queueID":queueID}).get("waitingList") #QueueDataController().getQueueVisitor(inputData,["waiting","prepare"])
+        prepareList = []
         callerInfo = self.getCallerInfo(inputData)
         cnt = 0
         for item in waitList:
@@ -143,16 +177,13 @@ class WorkerMainController:
             locked = property.get("locked","0")
             if locked == "0":
                 nextOne = item
-                nextOne["status"] = "doing"
-                nextOne["workerOnline"] = workerID
-                nextOne["workStartTime"] = getCurrentTime()
-                VisitorLocalInterface(stationID).edit(nextOne)
+                waitList.pop(item)
+                info = {"status" : "doing", "workerOnline" : workerID , "workStartTime" :  getCurrentTime(), "dest" : callerInfo["pos"]}
+                DB.DBLocal.update("visitor_local_data",where="id=$id and stationID=$stationID",
+                                           vars={"id": nextOne["id"], "stationID": stationID}, **info)
                 #TODO: 准备人员根据策略判定
-                try:
-                    parpareOne = waitList[cnt + 1]
-                except:
-                    parpareOne = {}
-                self.publishNew(inputData,callerInfo,lastOne,nextOne,parpareOne,ret)
+                parpareList = self.checkPrepareList(stationID,waitList,prepareNum,callerInfo["pos"])
+                self.publishNew(inputData,callerInfo,lastOne,nextOne,parpareList,scene,ret)
                 break
             cnt += 1
         return  ret
@@ -178,8 +209,9 @@ class WorkerMainController:
         nextOne["workStartTime"] = getCurrentTime()
         VisitorLocalInterface(stationID).edit(nextOne)
         nextOne["name"] = selectOne["name"]
-        lastOne = parpareOne = {}
-        self.publishNew(inputData,callerInfo,lastOne,nextOne,parpareOne,ret)
+        lastOne = {}
+        prepareList = []
+        self.publishNew(inputData,callerInfo,lastOne,nextOne,prepareList,ret)
         return ret
 
     def reCall(self,inputData):
@@ -200,11 +232,11 @@ class WorkerMainController:
             lastOne["name"] = doingOne["name"]
             #再次呼叫人员
             nextOne = lastOne
-            parpareOne = {}
-            self.publishNew(inputData,callerInfo,lastOne,nextOne,parpareOne,ret)
+            prepareList = []
+            self.publishNew(inputData,callerInfo,lastOne,nextOne,prepareList,ret)
         return  ret
 
-    def publishNew(self, inputData, caller,lastOne, nextOne, prepareOne, ret):
+    def publishNew(self, inputData, caller,lastOne, nextOne, prepareList, scene,ret):
         stationID = inputData["stationID"]
         queueID = inputData["queueID"]
         workerID = inputData["id"]
@@ -230,28 +262,9 @@ class WorkerMainController:
         key = {"type":"publish","stationID": stationID,"callerID": caller["id"], "action": "getStationList"}
         common.func.CachedClearValue(json.dumps(key))
 
-        #更新nextOne和prepareOne的信息
-        if nextOne:
-            where = {"id": nextOne["id"]}
-            next_visitor = DB.DBLocal.select("visitor_source_data",
-                                             where=where).first()
-            nextOne.update({"snumber": next_visitor.snumber})
-            nextOne.update({"cardID": next_visitor.cardID})
-        if prepareOne:
-            where = {"id": prepareOne["id"]}
-            prepare_visitor = DB.DBLocal.select("visitor_source_data",
-                                                where=where).first()
-            prepareOne.update({"snumber": prepare_visitor.snumber})
-            prepareOne.update(({"cardID": prepare_visitor.cardID}))
-
         # 转换呼叫音频
         cid = str(stationID) + "_" + nextOne["id"]
 
-        qInfo = DB.DBLocal.select("queueInfo",where = {"stationID": stationID, "id": queueID}).first()
-        sceneID = qInfo["sceneID"]
-        scene = SceneInterface().getSceneInfo({"sceneID": sceneID})
-
-        #TODO:解析sceneOutput
         doingOutput = ""
         prepareOutput = ""
         if nextOne:
@@ -260,7 +273,8 @@ class WorkerMainController:
             doingOutput = doingOutput.replace("$snumber",takeVal(nextOne,"snumber",""))
             doingOutput = doingOutput.replace("$cardID",takeVal(nextOne,"cardID",""))
             doingOutput = doingOutput.replace("$pos", pos)
-        if prepareOne :
+        #TODO ; 多个准备时语音的合成
+        for prepareOne in prepareList:
             prepareOutput = scene["prepareOutput"]
             prepareOutput = prepareOutput.replace("$name", takeVal(prepareOne,"name",""))
             prepareOutput = prepareOutput.replace("$snumber", takeVal(prepareOne,"snumber",""))
