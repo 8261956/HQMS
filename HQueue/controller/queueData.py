@@ -221,13 +221,13 @@ class QueueDataController:
         if int(takeVal(property,"prior","0")):
             return 4
         elif int(takeVal(property,"review","0")):
-            return 3
+            return 1
         elif int(takeVal(property,"orderType","0")):
             return 2
         elif int(takeVal(property,"delay","0")):
-            return 1
+            return 3
         elif int(takeVal(property,"pass","0")):
-            return 1
+            return 3
         return 0
 
     # 按照优先级 和策略计算插入在队列中的位置
