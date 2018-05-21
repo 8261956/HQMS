@@ -136,7 +136,8 @@ class PublishTVInterface:
                 vInfo = {"name": item["name"],
                          "id" : item["snumber"],
                          "cardID":item["cardID"],
-                         "status" : self.getVisitorStatus(**item)}
+                         "status" : self.getVisitorStatus(**item),
+                         "extStatus": item["status"]}
                 retlistInfo["watingList"].append(vInfo)
             #未激活列表
             retlistInfo["unactiveList"] = []
@@ -170,14 +171,6 @@ class PublishTVInterface:
         ret = retlistInfo
         return ret
 
-    # def getCallerList(self,inputData):
-    #     retList = {"list":[]}
-    #     stationID = inputData["stationID"]
-    #     callerList = inputData["callerID"]
-    #     for caller in callerList:
-    #         ret = self.getCallerPublish({"stationID" : stationID, "callerID" : caller})
-    #         retList["list"].append(ret)
-    #     return retList
     def getCallerList(self, inputData):
         stationID = inputData.get("stationID", None)
         callerList = inputData.get("callerID", None)
@@ -374,7 +367,8 @@ class PublishTVInterface:
                     "id" : item["snumber"],
                     "name" : item["name"],
                     "cardID" : item["cardID"],
-                    "status" : self.getVisitorStatus(**item)
+                    "status" : self.getVisitorStatus(**item),
+                    "extStatus" : item["status"]
                 }
                 waiting.append(waitingVisitor)
 
