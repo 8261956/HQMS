@@ -123,32 +123,28 @@ class WorkerMainController:
         """
         呼叫时等候队列中的准备人员，取出要准备的列表
         """
-        cnt = 0
         out_cnt = 0
         prepareList = []
         for item in waitList:
             if item["dest"] not in {None, ""}:
                 if destPos != item["dest"]:
-                    cnt += 1
                     continue
             if item["status"] == "doing":
-                cnt += 1
                 continue
             # 判断locked 等属性
             property = str2Json(item["property"])
             locked = property.get("locked", "0")
             if locked == "0":
-                prepareOne = waitList[cnt + 1]
+                prepareOne = item
                 if prepareOne["status"] != "prepare" :
                     info = {"status": "prepare", "dest": destPos}
                     DB.DBLocal.update("visitor_local_data", where="id=$id and stationID=$stationID",
                                       vars={"id": prepareOne["id"], "stationID": stationID}, **info)
-                prepareList.append(waitList[cnt + 1])
+                prepareList.append(item)
                 out_cnt += 1
                 if out_cnt >= waitNum:
                     return prepareList
                 break
-            cnt += 1
         return []
 
     def callNext(self,inputData):
@@ -170,14 +166,11 @@ class WorkerMainController:
         #TODO : 完善呼叫 跳过目标不是自身呼叫器的患者，排队列表中是准备状态的患者 患者锁定等属性的判断
         waitList = self.getQueueListAll({"stationID":stationID,"queueID":queueID,"useCache" : 0}).get("waitingList") #QueueDataController().getQueueVisitor(inputData,["waiting","prepare"])
         callerInfo = self.getCallerInfo(inputData)
-        cnt = 0
         for item in waitList:
             if item["dest"] not in {None,"","护士站"}:
                 if callerInfo["pos"] != item["dest"] and item["status"] == "prepare":
-                    cnt += 1
                     continue
             if item["status"] == "doing" :
-                cnt += 1
                 continue
             #判断locked 等属性
             property = str2Json(item["property"])
@@ -192,7 +185,6 @@ class WorkerMainController:
                 parpareList = self.checkPrepareList(stationID,waitList,prepareNum,callerInfo["pos"])
                 self.publishNew(inputData,callerInfo,lastOne,nextOne,parpareList,scene,ret)
                 break
-            cnt += 1
         return  ret
 
     def callSel(self,inputData):
