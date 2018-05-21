@@ -96,7 +96,8 @@ class WorkerMainController:
         return ret
 
     def getQueueListAll(self,inputData):
-        inputData["useCache"] = 1
+        if "useCache" not in inputData:
+            inputData["useCache"] = 1
         ret = mainStation.StationMainController().getQueueListAll(inputData)
         return ret
 
@@ -164,8 +165,7 @@ class WorkerMainController:
         lastOne = self.workerFinish(stationID,queueID,workerID)
         #修改呼叫人员状态改为Doing 呼叫医生改为当前医生
         #TODO : 完善呼叫 跳过目标不是自身呼叫器的患者，排队列表中是准备状态的患者 患者锁定等属性的判断
-        waitList = self.getQueueListAll({"stationID":stationID,"queueID":queueID}).get("waitingList") #QueueDataController().getQueueVisitor(inputData,["waiting","prepare"])
-        prepareList = []
+        waitList = self.getQueueListAll({"stationID":stationID,"queueID":queueID,"useCache" : 0}).get("waitingList") #QueueDataController().getQueueVisitor(inputData,["waiting","prepare"])
         callerInfo = self.getCallerInfo(inputData)
         cnt = 0
         for item in waitList:
