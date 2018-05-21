@@ -177,7 +177,7 @@ class WorkerMainController:
             locked = property.get("locked","0")
             if locked == "0":
                 nextOne = item
-                waitList.pop(item)
+                item["status"] = "doing"
                 info = {"status" : "doing", "workerOnline" : workerID , "workStartTime" :  getCurrentTime(), "dest" : callerInfo["pos"]}
                 DB.DBLocal.update("visitor_local_data",where="id=$id and stationID=$stationID",
                                            vars={"id": nextOne["id"], "stationID": stationID}, **info)
