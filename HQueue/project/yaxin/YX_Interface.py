@@ -446,7 +446,8 @@ def httpPostRegist(blh,ywlx,dldm,fydl,sourceInfo,inPara1 = "",inPara2 = "",inPar
         if ret is not None:
             retInfo = ret
         num += 1
-        registList.append(ret)
+        sourceInfo["snumber"] = ret["snumber"]
+        registList.append(sourceInfo)
         print "regist item ok :", sourceItem["id"] ,sourceItem.get("name","")
     retInfo.update({"registList" : registList})
     return retInfo
