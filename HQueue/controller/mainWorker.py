@@ -172,6 +172,8 @@ class WorkerMainController:
             if item["dest"] not in {None,""}:
                 if callerInfo["pos"] != item["dest"]:
                     continue
+            if item["status"] == "doing" :
+                continue
             #判断locked 等属性
             property = str2Json(item["property"])
             locked = property.get("locked","0")
