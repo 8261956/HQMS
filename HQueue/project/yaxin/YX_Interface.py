@@ -416,12 +416,12 @@ def httpPostRegist(blh,ywlx,dldm,fydl,sourceInfo,inPara1 = "",inPara2 = "",inPar
     :return:
     """
     retList = PostRegist(blh,ywlx,dldm,fydl,inPara1,inPara2,inPara3,inPara4,inPara5,inPara6)
-    sourceItem = {}
     retInfo = {}
     registTime = getCurrentTime()
     num = 0
     registList = []
     for item in retList:
+        sourceItem = {}
         if ywlx == TYPE_FAYAO:
             sourceItem["id"] = blh + registTime
         elif ywlx == TYPE_YIJI:
