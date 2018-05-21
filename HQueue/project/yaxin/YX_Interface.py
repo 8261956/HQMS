@@ -435,12 +435,13 @@ def httpPostRegist(blh,ywlx,dldm,fydl,sourceInfo,inPara1 = "",inPara2 = "",inPar
             sourceItem["rev1"] = item["ZXSJ"].get("_text", "")
         sourceInfo.update(sourceItem)
         VisitorManager().visitor_quick_add(sourceInfo)
-        retInfo = DBLocal.where("visitor_view_data",id = sourceItem["id"]).first()
+        ret = DBLocal.where("visitor_view_data",id = sourceItem["id"]).first()
+        if ret is not None:
+            retInfo = ret
         num += 1
         registList.append(sourceInfo)
         print "regist item ok :", sourceItem["id"] ,sourceItem.get("name","")
-    if retInfo is not None:
-        retInfo.update({"registList" : registList})
+    retInfo.update({"registList" : registList})
     return retInfo
 
 
