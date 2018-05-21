@@ -123,6 +123,8 @@ class WorkerMainController:
         """
         呼叫时等候队列中的准备人员，取出要准备的列表
         """
+        if waitNum == 0:
+            return []
         out_cnt = 0
         prepareList = []
         for item in waitList:
