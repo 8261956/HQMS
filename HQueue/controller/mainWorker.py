@@ -196,13 +196,19 @@ class WorkerMainController:
         visitorID = inputData["visitorID"]
 
         callerInfo = self.getCallerInfo(inputData)
+
+        #得到队列策略信息
+        qInfo = DB.DBLocal.select("queueInfo",where = {"stationID": stationID, "id": queueID}).first()
+        sceneID = qInfo["sceneID"]
+        scene = SceneInterface().getSceneInfo({"sceneID": sceneID})
+
         # TODO : 完善呼叫 跳过目标不是自身呼叫器的患者，排队列表中是准备状态的患者 患者锁定等属性的判断
         # 修改队列最后在线医生
         queueInfo.QueueInfoInterface().addWorkerOnline(queueID, workerID)
         if inputData.get("mode") == "ONE":
             lastOne = self.workerFinish(stationID, queueID, workerID)
         # 修改呼叫人员状态改为Doing 呼叫医生改为当前医生
-        selectOne = VisitorLocalInterface(stationID).getInfo({"id": visitorID})
+        selectOne = DB.DBLocal.select("visitor_view_data",where = {"id": visitorID})
         nextOne = {"id": visitorID, "stationID" :stationID}
         nextOne["status"] = "doing"
         nextOne["workerOnline"] = workerID
@@ -211,7 +217,7 @@ class WorkerMainController:
         nextOne["name"] = selectOne["name"]
         lastOne = {}
         prepareList = []
-        self.publishNew(inputData,callerInfo,lastOne,nextOne,prepareList,ret)
+        self.publishNew(inputData,callerInfo,lastOne,selectOne,prepareList,scene,ret)
         return ret
 
     def reCall(self,inputData):
@@ -220,20 +226,25 @@ class WorkerMainController:
         queueID = inputData["queueID"]
         workerID = inputData["id"]
 
+        #得到队列策略信息
+        qInfo = DB.DBLocal.select("queueInfo",where = {"stationID": stationID, "id": queueID}).first()
+        sceneID = qInfo["sceneID"]
+        scene = SceneInterface().getSceneInfo({"sceneID": sceneID})
+
         #修改队列最后在线医生
         queueInfo.QueueInfoInterface().addWorkerOnline(queueID, workerID)
         callerInfo = self.getCallerInfo(inputData)
         #修改队列进行中人员 且医生为当前医生的 为已完成
-        doingOne = DB.DBLocal.where('visitor_local_data', stationID=stationID ,queueID = queueID\
+        doingOne = DB.DBLocal.where('visitor_view_data', stationID=stationID ,queueID = queueID\
                                      ,status = "doing", workerOnline = workerID).first()
         lastOne = {"id": "","stationID":stationID, "name": "", "status": "waiting"}
         if doingOne is not None:
             lastOne["id"] = doingOne["id"]
             lastOne["name"] = doingOne["name"]
             #再次呼叫人员
-            nextOne = lastOne
+            nextOne = doingOne
             prepareList = []
-            self.publishNew(inputData,callerInfo,lastOne,nextOne,prepareList,ret)
+            self.publishNew(inputData,callerInfo,lastOne,nextOne,prepareList,scene,ret)
         return  ret
 
     def publishNew(self, inputData, caller,lastOne, nextOne, prepareList, scene,ret):
