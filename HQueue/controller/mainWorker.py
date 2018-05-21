@@ -119,12 +119,17 @@ class WorkerMainController:
         QueueDataController().visitorMoveby(inputData)
         return {"result" : "success"}
 
-    def checkPrepareList(self,stationID,waitList,waitNum,destPos):
+    def checkPrepareList(self,stationID,waitList,waitNum,destPos,scene):
         """
         呼叫时等候队列中的准备人员，取出要准备的列表
         """
         if waitNum == 0:
             return []
+        scnProperty = str2List(scene.get("property",""))
+        if "AUTO_PREPARE" in scnProperty:
+            auto_prepare = 1
+        else:
+            auto_prepare = 0
         out_cnt = 0
         prepareList = []
         for item in waitList:
@@ -139,9 +144,10 @@ class WorkerMainController:
             if locked == "0":
                 prepareOne = item
                 if prepareOne["status"] != "prepare" :
-                    info = {"status": "prepare", "dest": destPos}
-                    DB.DBLocal.update("visitor_local_data", where="id=$id and stationID=$stationID",
-                                      vars={"id": prepareOne["id"], "stationID": stationID}, **info)
+                    if auto_prepare:
+                        info = {"status": "prepare", "dest": destPos}
+                        DB.DBLocal.update("visitor_local_data", where="id=$id and stationID=$stationID",
+                                          vars={"id": prepareOne["id"], "stationID": stationID}, **info)
                 prepareList.append(item)
                 out_cnt += 1
                 if out_cnt >= waitNum:
@@ -184,7 +190,7 @@ class WorkerMainController:
                 DB.DBLocal.update("visitor_local_data",where="id=$id and stationID=$stationID",
                                            vars={"id": nextOne["id"], "stationID": stationID}, **info)
                 #TODO: 准备人员根据策略判定
-                parpareList = self.checkPrepareList(stationID,waitList,prepareNum,callerInfo["pos"])
+                parpareList = self.checkPrepareList(stationID,waitList,prepareNum,callerInfo["pos"],scene)
                 self.publishNew(inputData,callerInfo,lastOne,nextOne,parpareList,scene,ret)
                 break
         return  ret
