@@ -165,7 +165,12 @@ class StationMainController:
 
                 vInfo["status"] = "finish" if int(value) else "waiting"
             elif property == "prepare":
-                vInfo["status"] = "prepare" if int(value) else "waiting"
+                if value != "":
+                    vInfo["status"] = "prepare"
+                else:
+                    vInfo["status"] = "waiting"
+                vInfo["dest"] = value
+
             elif property == "prior":
                 #TODO:  添加优先的排序设置
                 """oldProperty = str2Json(vInfo["property"])

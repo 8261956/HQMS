@@ -170,7 +170,7 @@ class WorkerMainController:
         callerInfo = self.getCallerInfo(inputData)
         cnt = 0
         for item in waitList:
-            if item["dest"] not in {None,""}:
+            if item["dest"] not in {None,"","护士站"}:
                 if callerInfo["pos"] != item["dest"]:
                     continue
             if item["status"] == "doing" :

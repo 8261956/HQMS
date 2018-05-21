@@ -127,6 +127,9 @@ class PublishTVInterface:
             #进行中列表
             retlistInfo["watingList"] = []
             for item in waitingList:
+                if item["status"] == "prepare" :
+                    if item["dest"] != callerList[0]["pos"] and item["dest"] != "护士站":
+                        continue
                 property = str2Json(item["property"])
                 if property.get("lock", "0") != "0":
                     continue
@@ -361,6 +364,9 @@ class PublishTVInterface:
             # 获取呼叫队列中当前排队的信息
             queueInfo.update({"listNum": len(queueList["waitingList"])})
             for item in queueList["waitingList"]:
+                if item["status"] == "prepare" :
+                    if item["dest"] != caller["pos"] and item["dest"] != "护士站":
+                        continue
                 property = str2Json(item["property"])
                 if property.get("lock","0") != "0":
                     continue
