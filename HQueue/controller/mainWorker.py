@@ -147,6 +147,7 @@ class WorkerMainController:
                     return prepareList
                 break
             cnt += 1
+        return []
 
     def callNext(self,inputData):
         ret = {}
