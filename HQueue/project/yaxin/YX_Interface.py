@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 from collections import OrderedDict
 import common.xmlDict as XML
 from common.DBBase import DBLocal
-from  common.func import getCurrentTime,checkPostAction,getCurrentYear
+from  common.func import getCurrentTime,checkPostAction,getCurrentYear,CachedGetValue,CahedSetValue
 
 BASE_DIR=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
@@ -122,6 +122,11 @@ def InqDoctorList(type,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPar
     :param inPara: 预留字段
     :return:
     """
+    key = {"func": "InqDoctorList", "type": type }
+    value = CachedGetValue(json.dumps(key))
+    if value != False:
+        return value
+
     d = OrderedDict()
     d["type"] = str(type)
     d["inPara1"] = str(inPara1)
@@ -136,6 +141,8 @@ def InqDoctorList(type,inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPar
     _xml = ET.fromstring(ret.encode('utf-8'))
     xmlRet = XML.build_dict(_xml)
     retList = getResultList(xmlRet)
+
+    CahedSetValue(json.dumps(key), retList, 600)
     return retList
 
 def InqQueueList(ksdm,ghrq,time_flag,ysdm = "",inPara1 = "",inPara2 = "",inPara3 = "",inPara4 = "",inPara5 = "",inPara6 = ""):
