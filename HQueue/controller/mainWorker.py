@@ -211,7 +211,7 @@ class WorkerMainController:
         if inputData.get("mode") == "ONE":
             lastOne = self.workerFinish(stationID, queueID, workerID)
         # 修改呼叫人员状态改为Doing 呼叫医生改为当前医生
-        selectOne = DB.DBLocal.select("visitor_view_data",where = {"id": visitorID})
+        selectOne = DB.DBLocal.select("visitor_view_data",where = {"id": visitorID}).first()
         nextOne = {"id": visitorID, "stationID" :stationID}
         nextOne["status"] = "doing"
         nextOne["workerOnline"] = workerID
