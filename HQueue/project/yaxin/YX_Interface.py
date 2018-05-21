@@ -445,11 +445,11 @@ def httpPostRegist(blh,ywlx,dldm,fydl,sourceInfo,inPara1 = "",inPara2 = "",inPar
         ret = DBLocal.where("visitor_view_data",id = sourceItem["id"]).first()
         if ret is not None:
             retInfo = ret
-        num += 1
-        sourceInfo["snumber"] = ret["snumber"]
-        regItem = sourceInfo.copy()
-        registList.append(regItem)
-        print "----regist item ok ---:", sourceItem["id"] ,sourceItem.get("name",""),sourceItem.get("queue","")
+            sourceInfo["snumber"] = ret["snumber"]
+            num += 1
+            regItem = sourceInfo.copy()
+            registList.append(regItem)
+            print "----regist item ok ---:", sourceItem["id"] ,sourceItem.get("name",""),sourceItem.get("queue","")
     retInfo.update({"registList" : registList})
     return retInfo
 
