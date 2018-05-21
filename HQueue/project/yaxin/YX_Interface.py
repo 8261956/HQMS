@@ -311,7 +311,7 @@ def ExternSourceQueueList():
         qName = d["KSMC"].get("_text","")
         dName = d["NAME"].get("_text","") 
         qList.append(qName+dName)
-        print qName+dName
+        #print qName+dName
 
     classList = InqDoctorList("02")
     cDict = {}
@@ -319,7 +319,7 @@ def ExternSourceQueueList():
         cCode = item["DM"].get("_text","")
         cName = item["MC"].get("_text","")
         cDict[cCode] = cName
-        print cCode,cName
+        #print cCode,cName
 
 
     doctorList = InqDoctorList("03")
@@ -328,7 +328,7 @@ def ExternSourceQueueList():
         qName = d["PYM"].get("_text","")
         dName = d["MC"].get("_text","")
         qList.append(qCode + "|" + qName + "|" + dName)
-        print qName+dName
+        #print qName+dName
 
     doctorList = InqDoctorList("04")
     for d in doctorList:
@@ -338,7 +338,7 @@ def ExternSourceQueueList():
         classCode = d["DLDM"].get("_text", "")
         className = cDict.get(classCode,"")
         qList.append(className + "|" + qCode + "|" + dName)
-        print className+qCode + classCode
+        #print className+qCode + classCode
 
     return qList
 
@@ -438,6 +438,7 @@ def httpPostRegist(blh,ywlx,dldm,fydl,sourceInfo,inPara1 = "",inPara2 = "",inPar
         retInfo = DBLocal.where("visitor_view_data",id = sourceItem["id"]).first()
         num += 1
         registList.append(sourceInfo)
+        print "regist item ok :", sourceItem["id"] ,sourceItem.get("name","")
     retInfo.update({"registList" : registList})
     return retInfo
 
