@@ -126,7 +126,8 @@ class WorkerMainController:
         if waitNum == 0:
             return []
         scnProperty = scene.get("property",{})
-        if scnProperty != {}:
+        print scnProperty
+        if takeVal(scnProperty,"AUTO_PREPARE",0) == 1:
             auto_prepare = 1
         else:
             auto_prepare = 0
