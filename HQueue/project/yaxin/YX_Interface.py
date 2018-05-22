@@ -19,7 +19,7 @@ wsdl_url = "file:///home/clear/HQMS/HQueue/project/yaxin/HISWebService.asmx?WSDL
 esb_url = "http://133.0.14.140:8280/main/queue"
 his_url = "http://192.168.11.77:8082/HISWebService.asmx?WSDL"
 
-ESB_ENABLE = 0
+ESB_ENABLE = 1
 
 TYPE_FAYAO = "01"
 TYPE_YIJI = "02"
