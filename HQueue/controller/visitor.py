@@ -4,7 +4,7 @@
 import sys, copy, time, datetime,json,web
 import queueInfo
 import common.config as cfg
-from common.func import LogOut,getNecessaryPara,getCurrentDate,getCurrentTime,list2Dict,checkPostAction
+from common.func import LogOut,getNecessaryPara,getCurrentDate,getCurrentTime,list2Dict,checkPostAction,str2List
 from queueData import VisitorLocalInterface,QueueDataController
 from mainStation import StationMainController
 from queueInfo import QueueInfoInterface
@@ -163,25 +163,29 @@ class VisitorManager:
 
     def visitor_quick_add(self,data):
         data = dict(data)
-        queueFilter = str(getNecessaryPara(data, "queue"))
-        queueInfo = QueueInfoInterface().checkQueueInfo(queueFilter)
+        filter = str(getNecessaryPara(data, "queue"))
+        queueInfo = QueueInfoInterface().checkQueueInfo(filter)
         print  "queueInfo: " , queueInfo
         if queueInfo is None:
             return
         stationID = queueInfo["stationID"]
         queueID = queueInfo["id"]
+        #得到队列关键字的全部信息
+        queueFilter = str2List(queueInfo.get("filter",""))
         scene = SceneInterface().getSceneInfo({"sceneID": queueInfo["sceneID"]})
         if "id" not in data:
             timestamp = int(time.time() * 1000000)
             data["id"] = str(stationID) + str(queueID) + str(timestamp)
         id = data.get("id")
-        sourceList = DB.DBLocal.select("visitor_source_data",where = {"queue" : queueFilter}).list()
+        sourceList = DB.DBLocal.select("visitor_source_data", where="queue IN $filter",
+                                         vars={"filter": queueFilter}).list()
         sourceDict = list2Dict(sourceList)
         print "sourceList size: ", len(sourceList)
         if id not in sourceDict:
             # 患者信息不存在 插入患者信息
             sourceItem = data
             if sourceItem.get("snumber",None) in {None,0} :
+                #TODO: 考虑一个队列多个队列关键字的情况
                 sourceItem["snumber"] = str(len(sourceList) + 1)
             if sourceItem.get("registTime","") in {None,""} :
                 sourceItem["registTime"] = getCurrentTime()
@@ -198,7 +202,7 @@ class VisitorManager:
                 print "find visitor %s need update" % str(data["id"])
                 interface = VisitorSourceInterface()
                 interface.edit(data)
-                QueueDataController.updateVisitor(stationID, queueID, queueInfo, scene)
+                QueueDataController().updateVisitor(stationID, queueID, queueInfo, scene)
 
         result = {"result": "success"}
         return result
