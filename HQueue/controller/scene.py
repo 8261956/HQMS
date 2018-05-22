@@ -67,7 +67,7 @@ class SceneInterface(object):
             "priorCldAge" : kwargs.get("priorCldAge" , 8),
             "workDays": kwargs.get("workDays", 1),
 
-            "property" : json2Str(kwargs.get("property", ""))
+            "property" : json2Str(kwargs.get("property", {}))
         }
 
         return values
